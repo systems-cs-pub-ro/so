@@ -66,7 +66,7 @@ static ssize_t nasty_read(struct file *file, char __user *buf, size_t count, lof
 		return 0;
 
 	/*  make sure that we read at least 1 character */
-	rcount = 1 + random32() % MAX_CHUNK_SIZE; 
+	rcount = 1 + prandom_u32() % MAX_CHUNK_SIZE; 
 	
 	/* ... and don't cross the borders */
 	if (rcount > count)
@@ -99,7 +99,7 @@ static ssize_t nasty_write(struct file *file, const char __user *buf, size_t cou
 		return -ENOSPC;
 
 	/*  make sure that we write at least 1 character */
-	rcount = 1 + random32() % MAX_CHUNK_SIZE; 
+	rcount = 1 + prandom_u32() % MAX_CHUNK_SIZE; 
 	
 	/* ... and don't cross the borders */
 	if (rcount > count)
