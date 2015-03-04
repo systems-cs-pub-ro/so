@@ -1,0 +1,38 @@
+#README, 04-lib
+
+Pentru a putea folosi biblioteca partajata trebuie 
+exportata variabila LD_LIBRARY_PATH
+
+Pentru a determina ce biblioteci partajate foloseste un executabil 
+se poate folosi comanda ldd.
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ make 
+gcc -Wall   -c -o main.o main.c
+gcc -Wall   -c -o sample.o sample.c
+gcc -Wall   -c -o hexdump.o hexdump.c
+ar rc libhexdump_a.a sample.o hexdump.o
+gcc -o main_a main.o -lhexdump_a -L.
+gcc -Wall -fPIC -shared -o libhexdump_so.so sample.o hexdump.o
+gcc -o main_so main.o -lhexdump_so -L.
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ ls
+hexdump.c  hexdump.h  hexdump.o  libhexdump_a.a  libhexdump_so.so  main_a  main.c  main.o  main_so  Makefile  README  sample.c  sample.o
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ ./main_a 
+50 2f                                            P/ 
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ ./main_so 
+./main_so: error while loading shared libraries: libhexdump_so.so: cannot open shared object file: No such file or directory
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ ldd main_so 
+	linux-gate.so.1 =>  (0x00dfc000)
+	libhexdump_so.so => not found
+	libc.so.6 => /lib/tls/i686/cmov/libc.so.6 (0x00110000)
+	/lib/ld-linux.so.2 (0x004ec000)
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+
+dan@mozart:~/school/so/laboratoare/lab01/sol/lin/04-lib$ ./main_so 
+d6 da 47 91 1b 1a 13 a1 1f b5 04 c7 62 41 22 54  ..G.........b 
+
+

@@ -1,0 +1,23 @@
+CC = cl
+L = link
+CFLAGS = /nologo /W3 /DDLL_IMPORTS
+
+all: bounds_dynamic.exe
+
+bounds_dynamic.exe: bounds.obj bounds_dynamic.lib
+	$(L) /nologo /out:$@ $**
+
+bounds_dynamic.lib: bounds_dynamic.dll
+
+bounds_dynamic.dll: min.obj max.obj
+	$(L) /nologo /dll /out:$@ /implib:bounds_dynamic.lib $**
+
+min.obj: min.c
+	$(CC) $(CFLAGS) /c $**
+max.obj: max.c
+	$(CC) $(CFLAGS) /c $**
+bounds.obj: bounds.c
+	$(CC) $(CFLAGS) /c $**
+
+clean:
+	del /Q /F *.obj *.lib *.dll *.exe  *.exp

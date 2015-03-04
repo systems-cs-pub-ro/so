@@ -1,0 +1,4 @@
+#README, 02-ops
+
+La definirea macro-ului B_NUMBER trebuie folosite paranteze 
+pentru a garanta ordinea operatiilor

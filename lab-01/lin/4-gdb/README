@@ -1,0 +1,53 @@
+#README, 03-gdb
+
+dan@mozart:~/school/so/laboratoare/lab01/skel/lin/03-gdb$ gdb fault
+(gdb) run
+Starting program: /home/dan/school/so/laboratoare/lab01/skel/lin/03-gdb/fault 
+Program received signal SIGSEGV, Segmentation fault.
+0x0804842c in print_array (v=0xbffff43c, n=5) at fault.c:9
+9			printf("%d ", v[i]);
+(gdb) bt
+#0  0x0804842c in print_array (v=0xbffff43c, n=5) at fault.c:9
+#1  0x080484ea in show_inv (v=0xbffff43c, n=5) at fault.c:28
+#2  0x08048554 in main () at fault.c:37
+(gdb) print i
+$1 = 753
+(gdb) print v[i]
+Cannot access memory at address 0xc0000000
+
+Observam ca se incearca accesarea unei zone de memorie nealocata. De ce?
+Pentru ca vectorul v are doar 5 elemente si se incearca printarea elementului 
+cu numarul 753.
+Totusi de ce nu am primit eroare mai devreme? Desi vectorul v are 5 elemente alocate
+eroarea se primeste doar la accesarea celui de-al 753-lea element?
+Raspunsul in Laboratorul de Memorie Virtuala.
+
+OK. Corectam eroarea.
+
+8c8
+< 	for(i = 0; i < n; i++) {
+---
+> 	for(i = 0; i < ARRAY_MAX_SIZE; i++) {
+
+Incercam din nou sa rulam programul.
+
+dan@mozart:~/school/so/laboratoare/lab01/skel/lin/03-gdb$ gdb fault
+(gdb) run
+Program received signal SIGFPE, Arithmetic exception.
+0x080484ae in inv_sum (v=0xbffff43c, n=5) at fault.c:20
+20			isum += 1/v[i];
+(gdb) print v[i]
+$1 = 0
+
+De data aceasta problema apare datorita unei impartiri la 0.
+
+Corectam si aceasta problema.
+
+for (i = 0; i < n; i++)
+	if (!v[i])
+		continue;
+        isum += 1/v[i];
+
+Totul ruleaza OK acum, insa rezultatul aparent este 0, intrucat toate operatiile 
+sunt cu numere intregi :). Remember 1/1000 => 0 , 1/1000.0 => 0.001
+
