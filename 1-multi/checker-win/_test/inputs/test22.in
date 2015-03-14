@@ -1,0 +1,10 @@
+add stan
+add zohar
+print_bucket 123 _test/outputs/test22.out.1
+add mariann
+add friedman
+add hilde
+print_bucket 11 _test/outputs/test22.out.2
+add battista
+print_bucket 1 _test/outputs/test22.out.1
+print
