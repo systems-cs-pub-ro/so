@@ -8,6 +8,7 @@
 
 # ----------------- General declarations and util functions ------------------ #
 PRIVATE_TOKEN=""
+REPO_NAME="l3-so-assignments"
 REPO_ID=""
 REPO_URL=""
 SSH_KEY=""
@@ -71,10 +72,10 @@ generate_ssh_key()
 
 setup_user_profile()
 {
-        echo "Adding SSH key ..."
+        echo "Adding SSH public key to GitLab ..."
 
         # read SSH key title
-        read -p "Please provide a title for the SSH key: " title
+        read -p "Please provide a title for your SSH public key: " title
 
         # add SSH key to user profile
         res=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"   \
@@ -82,38 +83,62 @@ setup_user_profile()
                 --data-urlencode "title=$title"             \
                 --data-urlencode "key=$SSH_KEY")
         if [ $? -ne 0 ]; then
-                echo "internal error: Could not add SSH key ... exiting"
+                echo "internal error: Could not add SSH public key ... exiting"
                 exit 1
         fi
 
         # get key ID
         id=$(echo $res | jq -r '.id')
         if [ "$id" == "null" ]; then
-                echo "error: Adding SSH key failed ... exiting"
+                echo "error: Adding SSH public key failed ... exiting"
                 exit 1
         else
-                echo "You have successfully added your SSH key!"
+                echo "Your SSH public key was successfully added to GitLab!"
         fi
 }
 
 check_existing_assignment_repo()
 {
-        # this should check if there already is an l3-so-assignments repo
-        # if there is, we only need to pull current homework
-        # from github repo
-        # We obtain REPO_ID, REPO_URL
+        # checks if there already is an "l3-so-assignments" repo
+        # TODO: if there is, we only need to pull current homework
         # returns true if already exists/false otherwise
-        :
+        echo "Checking $REPO_NAME repo on GitLab ..."
+
+        # get all repos
+        repos=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"     \
+               "$GITLAB_API_URL/projects/owned")
+        if [ $? -ne 0 ]; then
+                echo "internal error: Could not get all repos ... exiting"
+                exit 1
+        fi
+
+        # compute number of repos
+        num_repos=$(echo $repos | jq -r '. | length')
+
+        # search "l3-so-assignments" repo
+        for i in $(seq 0 $num_repos); do
+                name=$(echo $repos | jq -r ".[$i] | .name")
+                if [ "$name" == "$REPO_NAME" ]; then
+                        REPO_ID=$(echo $repos | jq -r ".[$i] | .id")
+                        REPO_URL=$(echo $repos | jq -r ".[$i] | .ssh_url_to_repo")
+                        echo "$REPO_NAME repo was found!"
+                        echo "Your $REPO_NAME repo URL is $REPO_URL"
+                        return 0
+                fi
+        done
+
+        echo "$REPO_NAME repo was not found!"
+        return 1
 }
 
 create_so_assignment_repo()
 {
-        echo "Creating GitLab repo ..."
+        echo "Creating $REPO_NAME repo on GitLab ..."
 
         # create "l3-so-assignments" repo
         res=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"           \
                 "$GITLAB_API_URL/projects"                          \
-                --data-urlencode "name=l3-so-assignments"           \
+                --data-urlencode "name=$REPO_NAME"                  \
                 --data-urlencode "visibility_level=0"               \
                 --data-urlencode "import_url=$SO_ASSIGNMENTS_URL")
         if [ $? -ne 0 ]; then
@@ -127,13 +152,13 @@ create_so_assignment_repo()
                 echo "error: Creating repo failed ... exiting"
                 exit 1
         else
-                echo "You have successfully created your GitLab repo!"
+                echo "Your $REPO_NAME repo was successfully created!"
         fi
 
         # get repo URL
         REPO_URL=$(echo $res | jq -r '.ssh_url_to_repo')
 
-        echo "Your GitLab repo URL is $REPO_URL"
+        echo "Your $REPO_NAME repo URL is $REPO_URL"
 }
 
 add_asist_so_assignment_group()
@@ -147,11 +172,11 @@ add_asist_so_assignment_group()
 # First check requirements
 check_and_install_requirements
 
-# TODO: the following lines are only for testing purposes - need refactoring
 gitlab_authenticate
+
+# TODO: the following lines are only for testing purposes - need refactoring
 SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
 setup_user_profile
-create_so_assignment_repo
 # end-of-testing-section
 
 # check if the user wants to use SSH key
@@ -176,6 +201,9 @@ check_existing_assignment_repo
 # if no:
 #       create_so_assignment_repo
 #       add_asist_so_assignment_group
+if [ $? -ne 0 ]; then
+    create_so_assignment_repo
+fi
 
 # TODO: add other functionalities
 # (e.g. pull from github repo, help, arguments, etc.)
