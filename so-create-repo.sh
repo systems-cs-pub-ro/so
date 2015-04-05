@@ -14,6 +14,7 @@ REPO_URL=""
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so-assignments.git"
+TIMEOUT=15
 
 check_and_install_requirements()
 {
@@ -39,21 +40,21 @@ gitlab_authenticate()
                 --data-urlencode "login=$username"      \
                 --data-urlencode "password=$password")
         if [ $? -ne 0 ]; then
-                echo "internal error: Could not create session ... exiting"
+                echo -e "internal error: Could not create session ... exiting\n"
                 exit 1
         fi
 
         # get private token
         PRIVATE_TOKEN=$(echo $session | jq -r '.private_token')
         if [ "$PRIVATE_TOKEN" == "null" ]; then
-                echo "error: Authentication failed ... exiting"
+                echo -e "error: Authentication failed ... exiting\n"
                 exit 1
         fi
 
         # get name
         name=$(echo $session | jq -r '.name')
 
-        echo "Hi, $name! You have successfully authenticated!"
+        echo -e "Hi, $name! You have successfully authenticated!\n"
 }
 
 check_ssh_key()
@@ -83,17 +84,17 @@ setup_user_profile()
                 --data-urlencode "title=$title"             \
                 --data-urlencode "key=$SSH_KEY")
         if [ $? -ne 0 ]; then
-                echo "internal error: Could not add SSH public key ... exiting"
+                echo -e "internal error: Could not add SSH public key ... exiting\n"
                 exit 1
         fi
 
         # get key ID
         id=$(echo $res | jq -r '.id')
         if [ "$id" == "null" ]; then
-                echo "error: Adding SSH public key failed ... exiting"
+                echo -e "error: Adding SSH public key failed ... exiting\n"
                 exit 1
         else
-                echo "Your SSH public key was successfully added to GitLab!"
+                echo -e "Your SSH public key was successfully added to GitLab!\n"
         fi
 }
 
@@ -108,7 +109,7 @@ check_existing_assignment_repo()
         repos=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"     \
                "$GITLAB_API_URL/projects/owned")
         if [ $? -ne 0 ]; then
-                echo "internal error: Could not get all repos ... exiting"
+                echo -e "internal error: Could not get all repos ... exiting\n"
                 exit 1
         fi
 
@@ -122,12 +123,12 @@ check_existing_assignment_repo()
                         REPO_ID=$(echo $repos | jq -r ".[$i] | .id")
                         REPO_URL=$(echo $repos | jq -r ".[$i] | .ssh_url_to_repo")
                         echo "$REPO_NAME repo was found!"
-                        echo "Your $REPO_NAME repo URL is $REPO_URL"
+                        echo -e "Your $REPO_NAME repo URL is $REPO_URL\n"
                         return 0
                 fi
         done
 
-        echo "$REPO_NAME repo was not found!"
+        echo -e "$REPO_NAME repo was not found!\n"
         return 1
 }
 
@@ -142,14 +143,14 @@ create_so_assignment_repo()
                 --data-urlencode "visibility_level=0"               \
                 --data-urlencode "import_url=$SO_ASSIGNMENTS_URL")
         if [ $? -ne 0 ]; then
-                echo "internal error: Could not create repo ... exiting"
+                echo -e "internal error: Could not create repo ... exiting\n"
                 exit 1
         fi
 
         # get repo ID
         REPO_ID=$(echo $res | jq -r '.id')
         if [ "$REPO_ID" == "null" ]; then
-                echo "error: Creating repo failed ... exiting"
+                echo -e "error: Creating repo failed ... exiting\n"
                 exit 1
         else
                 echo "Your $REPO_NAME repo was successfully created!"
@@ -158,7 +159,40 @@ create_so_assignment_repo()
         # get repo URL
         REPO_URL=$(echo $res | jq -r '.ssh_url_to_repo')
 
-        echo "Your $REPO_NAME repo URL is $REPO_URL"
+        echo -e "Your $REPO_NAME repo URL is $REPO_URL\n"
+}
+
+update_so_assignment_repo()
+{
+        echo "Updating $REPO_NAME repo on GitLab ..."
+
+        git push origin master
+
+        echo -e "Your $REPO_NAME repo is up-to-date!\n"
+}
+
+create_so_assignment_clone()
+{
+        echo "Creating $REPO_NAME local clone ..."
+
+        git clone $REPO_URL
+
+        cd $REPO_NAME
+        git remote add upstream $SO_ASSIGNMENTS_URL
+        cd -
+
+        echo -e "Your $REPO_NAME local clone was successfully created!\n"
+}
+
+update_so_assignment_clone()
+{
+        echo "Updating $REPO_NAME local clone ..."
+
+        git fetch upstream
+        git checkout master
+        git merge upstream/master
+
+        echo -e "Your $REPO_NAME local clone is up-to-date!\n"
 }
 
 add_asist_so_assignment_group()
@@ -202,7 +236,12 @@ check_existing_assignment_repo
 #       create_so_assignment_repo
 #       add_asist_so_assignment_group
 if [ $? -ne 0 ]; then
-    create_so_assignment_repo
+        create_so_assignment_repo
+
+        echo "Waiting $TIMEOUT seconds ..."
+        sleep $TIMEOUT
+
+        create_so_assignment_clone
 fi
 
 # TODO: add other functionalities
