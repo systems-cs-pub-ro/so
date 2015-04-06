@@ -12,6 +12,8 @@ PRIVATE_TOKEN=""
 REPO_NAME="l3-so-assignments"
 REPO_ID=""
 REPO_URL=""
+REPO_SSH_URL=""
+REPO_HTTPS_URL=""
 SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
@@ -20,13 +22,41 @@ TIMEOUT=30
 
 check_and_install_requirements()
 {
-        # git, curl, ssh, jq
-        # if not present install them
+        # Packets required: git, curl, ssh, jq
 
+        # if not present install them
         # show progress after each installed packet
         # if one packet fails to install, the script fails
         # exit if it fails
-        :
+
+        INSTALLER=$(which apt-get)
+        if [ -z $INSTALLER ]; then
+                INSTALLER=$(which yum)
+        fi
+
+        if [ -z $INSTALLER ]; then
+                echo -e "error: Distribution not supported. Please contribute to
+                this script in order to add support for your distribution\n"
+                exit 1
+        fi
+
+        echo -e "Checking system requirements ...\n"
+        PACKAGES=( git curl ssh jq )
+
+        for package in ${PACKAGES[@]}; do
+                which $package > /dev/null
+                if [ $? -ne 0 ]; then
+                        echo -e "info: $package not available on the system. Installing...\n"
+                        sudo $INSTALLER install $package -y
+                        if [ $? -ne 0 ]; then
+                                echo -e "error: Failed installing $package. Aborting ...\n"
+                                exit 1
+                        fi
+                else
+                        echo "info: $package already available on the system"
+                fi
+        done
+        echo ""
 }
 
 gitlab_authenticate()
@@ -61,8 +91,12 @@ gitlab_authenticate()
 
 check_ssh_key()
 {
-        # check if already exists a SSH key on this machine
+        # check if already exists a SSH key on this machine. We take the first
+        # available SSH key. If there are more than one, it will only take the first one
         # if yes, obtain key and return true, else return false
+        # We assume a public SSH key has name.pub
+        SSH_KEY_NAME=$(ls -lh ~/.ssh/ | grep ".pub" | tr -s " " | cut -d ' ' -f 9 | head -n 1)
+        SSH_KEY_PATH="${HOME}/.ssh/$SSH_KEY_NAME"
         SSH_KEY=$(cat $SSH_KEY_PATH 2> /dev/null)
         return $?
 }
@@ -76,6 +110,7 @@ generate_ssh_key()
 
         ssh-keygen -t rsa -C "$USER"
         ssh-add
+        SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
         SSH_KEY=$(cat $SSH_KEY_PATH 2> /dev/null)
 }
 
@@ -164,8 +199,17 @@ create_so_assignment_repo()
                 echo "Your $REPO_NAME repo was successfully created!"
         fi
 
-        # get repo URL
-        REPO_URL=$(echo $res | jq -r '.ssh_url_to_repo')
+        # get SSH repo URL
+        REPO_SSH_URL=$(echo $res | jq -r '.ssh_url_to_repo')
+        # get HTTPS repo URL
+        REPO_HTTPS_URL=$(echo $res | jq -r '.http_url_to_repo')
+        USE_SSH="$1"
+
+        if [ $USE_SSH = "yes" ]; then
+                REPO_URL=$REPO_SSH_URL
+        else
+                REPO_URL=$REPO_HTTPS_URL
+        fi
 
         echo -e "Your $REPO_NAME repo URL is $REPO_URL\n"
 }
@@ -217,32 +261,25 @@ check_and_install_requirements
 # authenticate
 gitlab_authenticate
 
-# check if the user wants to use SSH key
-# prompt question:
-# if yes:
-#       check_ssh_key
-#       if already exists
-#               do setup_user_profile
-#       else
-#               do generate_ssh_key
-#               do setup_user_profile
-#       fi
-# if no:
-#       inform the user that add each push he/she will be asked for credentials
-# OBS: be very verbose in the actions the script executes
-
 # check if the user has the "l3-so-assignments" repo on GitLab
 check_existing_assignment_repo
 
 if [ $? -ne 0 ]; then
-        check_ssh_key
-        if [ $? -ne 0 ]; then
-                generate_ssh_key
+        # check if the user wants to use SSH key
+        read -p "Would you like to use SSH with git? [yes/no] " use_ssh
+
+        if [ $use_ssh = "yes" ]; then
+               check_ssh_key
+               if [ $? -ne 0 ]; then
+                       generate_ssh_key
+               fi
+                setup_user_profile
+        else
+                echo -ne "\ninfo: Not using an SSH key. All git actions will be done through HTTPS."
+                echo -e " This means each time you will be asked for your curs.cs.pub.ro credentials\n"
         fi
 
-        setup_user_profile
-
-        create_so_assignment_repo
+        create_so_assignment_repo $use_ssh
 
         echo "Waiting $TIMEOUT seconds ..."
         sleep $TIMEOUT
