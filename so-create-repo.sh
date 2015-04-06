@@ -7,14 +7,16 @@
 #
 
 # ----------------- General declarations and util functions ------------------ #
+USER=""
 PRIVATE_TOKEN=""
 REPO_NAME="l3-so-assignments"
 REPO_ID=""
 REPO_URL=""
+SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so-assignments.git"
-TIMEOUT=15
+TIMEOUT=30
 
 check_and_install_requirements()
 {
@@ -52,28 +54,34 @@ gitlab_authenticate()
         fi
 
         # get name
-        name=$(echo $session | jq -r '.name')
+        USER=$(echo $session | jq -r '.name')
 
-        echo -e "Hi, $name! You have successfully authenticated!\n"
+        echo -e "Hi, $USER! You have successfully authenticated!\n"
 }
 
 check_ssh_key()
 {
         # check if already exists a SSH key on this machine
         # if yes, obtain key and return true, else return false
-        :
+        SSH_KEY=$(cat $SSH_KEY_PATH 2> /dev/null)
+        return $?
 }
 
 generate_ssh_key()
 {
         # function to generate SSH key if the user wants to use SSH, else
         # defaults into using HTTPS
-        :
+
+        echo -e "No SSH keys were found! Generating a new pair ...\n"
+
+        ssh-keygen -t rsa -C "$USER"
+        ssh-add
+        SSH_KEY=$(cat $SSH_KEY_PATH 2> /dev/null)
 }
 
 setup_user_profile()
 {
-        echo "Adding SSH public key to GitLab ..."
+        echo "Adding SSH public key ($SSH_KEY_PATH) to GitLab ..."
 
         # read SSH key title
         read -p "Please provide a title for your SSH public key: " title
@@ -206,12 +214,8 @@ add_asist_so_assignment_group()
 # First check requirements
 check_and_install_requirements
 
+# authenticate
 gitlab_authenticate
-
-# TODO: the following lines are only for testing purposes - need refactoring
-SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
-setup_user_profile
-# end-of-testing-section
 
 # check if the user wants to use SSH key
 # prompt question:
@@ -227,15 +231,17 @@ setup_user_profile
 #       inform the user that add each push he/she will be asked for credentials
 # OBS: be very verbose in the actions the script executes
 
+# check if the user has the "l3-so-assignments" repo on GitLab
 check_existing_assignment_repo
 
-# if yes:
-#       check_asist_so_assignment_group
-#       if no: add_asist_so_assignment_group
-# if no:
-#       create_so_assignment_repo
-#       add_asist_so_assignment_group
 if [ $? -ne 0 ]; then
+        check_ssh_key
+        if [ $? -ne 0 ]; then
+                generate_ssh_key
+        fi
+
+        setup_user_profile
+
         create_so_assignment_repo
 
         echo "Waiting $TIMEOUT seconds ..."
