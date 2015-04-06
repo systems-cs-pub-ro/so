@@ -1,0 +1,13 @@
+echo '#include <stdio.h>' > main.c
+echo 'int main(void)' >> main.c
+cat ../test_04_mid_part.txt >> main.c
+echo 'return 0;' >> main.c
+echo '}' >> main.c
+gcc -o main.exe main.c
+./main.exe 2> NULL >> out.txt
+cp out.txt out2.txt
+./main.exe &> out2.txt
+cp out2.txt out3.txt
+./main.exe > NULL 2>> out3.txt
+rm main.exe
+exit

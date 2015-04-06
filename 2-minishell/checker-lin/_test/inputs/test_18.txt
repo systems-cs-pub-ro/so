@@ -1,0 +1,3 @@
+./executabil_care_nu_exista
+true && ./executabil_care_nu_exista
+quit

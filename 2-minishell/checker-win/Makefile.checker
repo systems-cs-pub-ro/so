@@ -1,0 +1,10 @@
+.PHONY: all run build-pre build-post
+
+all: build-pre run build-post
+
+build-pre:
+
+build-post:
+
+run:
+	@./run_all.sh
