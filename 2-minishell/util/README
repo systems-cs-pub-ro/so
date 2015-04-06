@@ -1,0 +1,66 @@
+== Compilare ==
+
+=== Compilare exemple ===
+
+Pentru a compila exemplele ce folosesc parser-ul:
+
+Pe Linux:
+make
+
+Pe alte platforme:
+make PALTFORM=cygwin
+make PALTFORM=djgpp
+make PALTFORM=mingw
+
+Folosind make pentru cl sau nmake, intai seteaza variabilele de mediu
+necesare pentru cl, apoi:
+make PLATFORM=windows
+<<sau>>
+nmake
+
+Pentru a seta variabilele de mediu necesare poti fie sa folosesti
+"Visual Studio 2005 Command Prompt" din Start Menu, fie sa rulezi direct
+.bat-ul necesar (calea catre el este: "%VS80COMNTOOLS%vsvars32.bat"
+pentru Visual Studio 2005 si "%VS71COMNTOOLS%vsvars32.bat" pentru 2003;
+pentru alte versiuni ar trebui sa fie ceva asemanator caii "C:\Program
+Files\Microsoft Visual Studio .NET 2003\Common7\Tools\vsvars32.bat").
+
+=== Compilare parser ===
+
+Parser-ul este reprezentat de doua fisiere obiect:
+* parser.tab.o - implementarea analizorului sintactic
+* parser.yy.o - implementarea analizorului lexical
+
+=== Utilizare parser ===
+
+Pentru utilizarea parserului se realizeaza linking-ul cu cele doua fisiere
+obiect de mai sus. Aveti, practic, nevoie doar de fisierele parser.yy.c,
+parser.tab.c, parser.h, parser.tab.h si fisierele Makefile (GNUMakefile
+pe Linux si makefile pe Windows) pentru compilarea surselor.
+
+Puteti porni de la fisierele Makefile ale parser-ului sau puteti crea
+un fisier Makefile propriu.
+
+== Rulare exemple ==
+
+"CUseParser"		- exemplu de folosire a parser-ului in C
+"UseParser"		- exemplu de folosire a parser-ului in C++
+"DisplayStructure"	- citeste mai multe comenzi si afiseaza structura
+			  arborelui rezultat
+
+Mai multe teste pot fi gasite in directorul tests:
+cd tests
+../DisplayStructure &>small_tests.out <small_tests.txt
+../DisplayStructure &>ugly_tests.out <ugly_tests.txt
+../DisplayStructure &>negative_tests.out <negative_tests.txt
+
+Atentie: Parserul va esua cu eroare de caracter necunoscut daca folositi
+parserul de Linux (ce considera sfarsit de linie '\n') pe fisiere
+de Windows (sfarsit de linie "\r\n") deoarece la sfarsitul liniilor
+(returnate de getline()) va ramane un '\r' neurmat de '\n'. Invers merge
+(parser de Windows cu fisiere Linux). Fisierele de test sunt cu conventia
+Linux ('\n').
+
+== Alte informatii ==
+
+Detalii despre parser pot fi gasite si in fisierul "parser.h".
