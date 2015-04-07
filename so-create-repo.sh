@@ -319,6 +319,8 @@ if [ $? -ne 0 ]; then
         sleep $TIMEOUT
 
         create_so_assignment_clone
+else
+        update_so_assignment_clone
 fi
 
 # TODO: add other functionalities
