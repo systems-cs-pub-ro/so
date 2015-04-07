@@ -165,9 +165,12 @@ check_existing_assignment_repo()
                 name=$(echo $repos | jq -r ".[$i] | .name")
                 if [ "$name" == "$REPO_NAME" ]; then
                         REPO_ID=$(echo $repos | jq -r ".[$i] | .id")
-                        REPO_URL=$(echo $repos | jq -r ".[$i] | .ssh_url_to_repo")
+                        REPO_SSH_URL=$(echo $repos | jq -r ".[$i] | .ssh_url_to_repo")
+                        REPO_HTTPS_URL=$(echo $repos | jq -r ".[$i] | .http_url_to_repo")
+
                         echo "$REPO_NAME repo was found!"
-                        echo -e "Your $REPO_NAME repo URL is $REPO_URL\n"
+                        echo "Your $REPO_NAME repo SSH URL is $REPO_SSH_URL"
+                        echo -e "Your $REPO_NAME repo HTTPS URL is $REPO_HTTPS_URL\n"
                         return 0
                 fi
         done
@@ -221,6 +224,11 @@ update_so_assignment_repo()
 
         git push origin master
 
+        if [ $? -ne 0 ]; then
+                echo -e "error: Could not update repo ... exiting\n"
+                exit 1
+        fi
+
         echo -e "Your $REPO_NAME repo is up-to-date!\n"
 }
 
@@ -229,6 +237,11 @@ create_so_assignment_clone()
         echo "Creating $REPO_NAME local clone ..."
 
         git clone $REPO_URL
+
+        if [ $? -ne 0 ]; then
+                echo -e "error: Could not create local clone ... exiting\n"
+                exit 1
+        fi
 
         cd $REPO_NAME
         git remote add upstream $SO_ASSIGNMENTS_URL
@@ -241,9 +254,14 @@ update_so_assignment_clone()
 {
         echo "Updating $REPO_NAME local clone ..."
 
-        git fetch upstream
-        git checkout master
+        git fetch upstream &&
+        git checkout master &&
         git merge upstream/master
+
+        if [ $? -ne 0 ]; then
+                echo -e "error: Could not update local clone ... exiting\n"
+                exit 1
+        fi
 
         echo -e "Your $REPO_NAME local clone is up-to-date!\n"
 }
