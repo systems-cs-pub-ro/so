@@ -1,0 +1,110 @@
+= VMSIM TEST SUITE ==
+
+Test suite for virtual machine simulator (Operating Systems assignment)
+
+http://elf.cs.pub.ro/so/wiki/teme/tema-3
+http://elf.cs.pub.ro/so/res/teme/
+
+== FILES ==
+
+README
+	* this file
+
+Makefile.checker
+	* Makefile for automating the build process on Linux
+
+run_all.sh
+	* script to run all tests defined in vmsim_test.c on Linux
+
+vmsim.h
+	* vmsim library interface
+
+vmsim_test.c
+	* actual implementation of the test suite
+	* OS independent
+
+vmsim_test.h
+	* declaration of test functions with OS specific implementation
+	* specific to the test suite
+
+vmsim_test_lin.c
+	* Linux specific implementation of generic interic interface
+
+common.h
+	* declaration of wrapped OS specific structures
+	* declaration of useful functions with OS specific implementation
+	* generic calls usually related to file I/O
+
+common_lin.c
+	* Linux specific implementation of generic interic interface
+
+run_test.h
+	* useful macros for testing
+
+debug.h
+	* debugging macros
+
+util.h
+	* useful macros for generic use (error processing)
+
+== BUILDING ==
+
+The local folder must contain the vmsim library file (libvmsim.so).
+
+Use the Makefile to properly build the vmsim_test executable:
+
+	make -f Makefile.checker
+
+This command will also run all tests and print out the results.
+
+== RUNNING ==
+
+In order to run the test suite you can either use the run_all.sh
+script or run the vmsim_test executable.
+
+The run_all.sh script runs all tests and computes assigment grade (90
+points maximum):
+
+	./run_all.sh
+
+In order to run a specific test pass the test number (1 .. 33) to the
+vmsim_test executable. The loader must be able to locate the library file
+(libvmsim.so) (use LD_LIBRARY_PATH):
+
+	LD_LIBRARY_PATH=. ./vmsim_test 12
+
+Most tests do not invoke the vmsim_cleanup call. Make sure you remove any
+temporary files created (RAM and swap files).
+
+== TESTS ==
+
+Tests are basically unit tests. A single function in the test_fun_array (see
+vmsim_test.c) is called each time the vimsim_test executable is invoked,
+testing a single functionality (and assuming previous tests have been run and
+passed).
+
+The EXIT_IF_FAIL macro (see run_test.c) is unnecessary since after each test, the
+program completes.
+
+Each test function follows the unit test pattern: initialization, action,
+evaluation.  The test macro (see run_test.h) is invoked at the end of each test
+for evaluating and grading the test.
+
+== DEBUGGING ==
+
+The debug.h header file consists of several macros useful for debugging
+(dprintf, dlog). There are multiple uses of these macros throughout the above
+files.
+
+In order to turn debug messages on, you must define the DEBUG macro, either in
+a header file, or, I suggest, in the Makefile. The LOG_LEVEL macro limits the
+log message types that are to be printed, by default LOG_WARNING (see enum in
+debug.h). You may redefine it in a header file or in the Makefile.
+
+Rapid enabling of debug messages is achieved by commenting out the CPPFLAGS
+line in the Makefile. It turns on debugging and enabled all log messages
+(LOG_DEBUG).
+
+== OTHER ==
+
+srand48() and drand48() are used for generating random numbers.

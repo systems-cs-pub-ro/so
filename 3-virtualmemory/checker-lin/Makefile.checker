@@ -1,0 +1,33 @@
+CFLAGS = -Wall -g
+LIBS = -L. -lvmsim
+DIR = _test
+TEST_EXEC = $(DIR)/run_test
+OBJECTS = run_test common_lin vmsim_test vmsim_test_lin
+
+.PHONY: all clean_ram_swap clean run pack build-pre build-post
+
+all: build-pre run build-post
+
+object_files = $(addprefix $(DIR)/, $(OBJECTS))
+objects = $(addsuffix .o, $(object_files))
+
+build-pre:
+	@cd _test && make all && cd ..
+
+$(TEST_EXEC): $(objects)
+	$(CC) $(CFLAGS) $^ $(LIBS) -o $@
+
+build-post: $(TEST_EXEC) clean_ram_swap
+
+run: $(TEST_EXEC)
+	@export LD_LIBRARY_PATH=. && ./run_all.sh
+
+pack:
+	zip -r run_test_lin.zip _test/ Makefile.checker \
+		run_all.sh README
+
+clean: clean_ram_swap
+	@-rm -f *~ _test/*.o $(TEST_EXEC)
+
+clean_ram_swap:
+	@-rm -f ram* swap*

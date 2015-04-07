@@ -1,0 +1,23 @@
+test_exec = _test/run_test.exe
+objects = _test/vmsim_test.obj _test/vmsim_test_win.obj _test/common_win.obj _test/run_test.obj
+
+all: build-pre run build-post
+
+build-pre:
+	cd _test && nmake all && cd ..
+
+$(test_exec): build-pre libvmsim.dll
+	$(CC) $(CFLAGS) /Fe$@ $(objects) libvmsim.lib
+
+build-post: $(test_exec) clean_ram_swap
+
+run: run_tests clean_ram_swap
+
+run_tests: $(test_exec)
+	@bash ./run_all.sh
+
+clean: clean_ram_swap
+	cd _test && nmake clean && cd ..
+
+clean_ram_swap:
+	@-del /Q ram* swa*
