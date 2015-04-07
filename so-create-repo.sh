@@ -18,6 +18,7 @@ SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so-assignments.git"
+SO_TEAM=(70 79 454 550)
 TIMEOUT=30
 
 check_and_install_requirements()
@@ -249,8 +250,21 @@ update_so_assignment_clone()
 
 add_asist_so_assignment_group()
 {
-        # based on REPO_ID we add new project members
-        :
+        echo "Adding the SO team members as reporters ..."
+
+        # based on REPO_ID we add new project members as reporters
+        for member in ${SO_TEAM[@]}; do
+                res=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"           \
+                        "$GITLAB_API_URL/projects/$REPO_ID/members"         \
+                        --data-urlencode "user_id=$member"                  \
+                        --data-urlencode "access_level=20")
+                if [ $? -ne 0 ]; then
+                        echo -e "internal error: Could not add new member ... exiting\n"
+                        exit 1
+                fi
+        done
+
+        echo -e "Now you can get your code reviewed!\n"
 }
 
 # -------------------------------- Run script -------------------------------- #
@@ -269,10 +283,10 @@ if [ $? -ne 0 ]; then
         read -p "Would you like to use SSH with git? [yes/no] " use_ssh
 
         if [ $use_ssh = "yes" ]; then
-               check_ssh_key
-               if [ $? -ne 0 ]; then
-                       generate_ssh_key
-               fi
+                check_ssh_key
+                if [ $? -ne 0 ]; then
+                        generate_ssh_key
+                fi
                 setup_user_profile
         else
                 echo -ne "\ninfo: Not using an SSH key. All git actions will be done through HTTPS."
@@ -280,6 +294,8 @@ if [ $? -ne 0 ]; then
         fi
 
         create_so_assignment_repo $use_ssh
+
+        add_asist_so_assignment_group
 
         echo "Waiting $TIMEOUT seconds ..."
         sleep $TIMEOUT
