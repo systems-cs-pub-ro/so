@@ -145,7 +145,6 @@ setup_user_profile()
 check_existing_assignment_repo()
 {
         # checks if there already is an "l3-so-assignments" repo
-        # TODO: if there is, we only need to pull current homework
         # returns true if already exists/false otherwise
         echo "Checking $REPO_NAME repo on GitLab ..."
 
