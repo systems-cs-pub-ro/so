@@ -1,0 +1,57 @@
+#
+#  Testing Framework
+#
+#  2015, Operating Systems
+#
+
+# Basic structure: #
+
+> Makefile.checker
+> README
+> run_all.bash
+> _test  > run_test
+         > inputs
+         > outputs
+         > ref
+
+# run_all.bash #
+
+Simple bash script that will run each test (by calling the run_test program),
+add the results and print the final grade. It will also call init and cleanup
+functions for the testing environment, before and after running the test suite.
+
+# run_test #
+
+The main program that implements the test suite. It runs a specific test
+depending on the test id/number received as a parameter. If the received
+first parameter is init or cleanup, it will run the init, respectively cleanup
+functions mentioned above.
+
+It can be implemented in any language (e.g. bash, C or python),
+depending on the tested homework.
+
+The program can be split up in 4 main sections:
+1. General declarations and util functions
+- Defines global variables, macros, debug function, etc.
+- For example, we recommend using basic_test method, that will
+implement the common functionality of the test suite
+and that can be called from most of the tests.
+
+2. Init and cleanup
+- Defines init and cleanup methods not only for the whole
+testing environment but also for each individual test.
+
+3. Test suite
+- Defines each individual test function and adds it in a global array and
+next to it the points given for that test. As a recommendation, each test
+should clearly specify its scope in the methods name - e.g. the tested
+functionality, stress test, etc.
+
+4. Main
+- Runs the test specified as a parameter.
+
+# Data files #
+
+There will be 3 directories that can be used for storing
+the input, output or reference files.
+

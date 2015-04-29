@@ -32,7 +32,7 @@ Now, a new directory is available: l3-so-assignments. You can interact with your
     cd l3-so-assignments
     git push
 
-After the private repo on GitLab is successfully created, you can use the script to update your local clone in case the SO public repo suffers modification or new content is provided. For these subsequent updates the script must be run from within the clone directory.
+After the private repo on GitLab is successfully created, you can use the script to update your local clone in case the SO public repo suffers modifications or new content is provided. For these subsequent updates the script must be run from within the clone directory.
 
 We recommend not to run directly the instance of the script available in the clone directory because, through an update, it can be the subject to modifications.
 
