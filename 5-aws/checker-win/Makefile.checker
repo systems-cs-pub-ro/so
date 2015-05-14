@@ -1,0 +1,17 @@
+.PHONY: all clean run pack build-pre build-post
+
+all: run
+
+build-pre:
+
+build-post:
+
+run:
+	./run_tests_win.bash
+
+pack:
+	zip -r aws_test_win.zip _test/ Makefile.checker NMakefile.checker \
+		run_tests_win.bash README nc.exe
+
+clean:
+	-rm -f *~

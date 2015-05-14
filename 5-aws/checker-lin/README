@@ -1,0 +1,56 @@
+= AWS TEST SUITE ==
+
+Test suite for asynchronous web server (Operating Systems assignment)
+
+http://ocw.cs.pub.ro/courses/so/teme/tema-5
+
+== FILES ==
+
+README
+	* this file
+
+Makefile.checker
+	* Makefile for automating the build process
+
+run_all.sh
+	* script to run all tests defined in scripts in _test/
+
+== BUILDING ==
+
+The local directory must contain the asynchronous web server executable
+(aws). Use the Makefile.checker to properly build the sockop_preload.so
+library:
+
+	make -f Makefile.checker
+
+This command will also run all tests and print out the results.
+
+== RUNNING ==
+
+In order to run the test suite run the run_all.sh script.
+
+The run_all.sh script runs all tests and computes assignment grade (90
+points maximum):
+
+	./run_all.sh
+
+In order to run a specific test ... pass the test number (1 .. 35) to
+the _test/run_test.sh script.
+
+Tests use the static/ and dynamic/ folders. These folders are created and
+removed using the "init" and "cleanup" arguments to _test/run_test.sh.
+
+== TESTS ==
+
+Tests are basically unit tests.
+
+Each test function follows the unit test patter: initialization, action,
+evaluation.
+
+Each test starts the server, creates a given context, checks for validity and
+then terminates the server process.
+
+== DEBUGGING ==
+
+Logs are collected in test.log and wget.log files.
+
