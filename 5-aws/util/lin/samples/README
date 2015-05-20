@@ -20,13 +20,13 @@ $ wget http://localhost:28282
 
 Start the server and use telnet to connect to server and send messages. The
 server will reply with the same message. The server listens for connections
-on port 48484.
+on port 42424.
 
 # on one console
 $ ./epoll_echo_server
 
 # on the second, third, ... console
-$ telnet localhost 48484
+$ telnet localhost 42424
 
 The server uses epoll for multiplexing connections and receiving
 notifications (input - EPOLLIN and output - EPOLLOUT). A specialized
