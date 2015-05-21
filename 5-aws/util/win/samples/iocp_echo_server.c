@@ -150,7 +150,7 @@ static void connection_schedule_socket_send(struct connection *conn)
 			flags,
 			&conn->send_ov,
 			NULL);
-	if (rc != SOCKET_ERROR || WSAGetLastError() != WSA_IO_PENDING)
+	if (rc && (rc != SOCKET_ERROR || WSAGetLastError() != WSA_IO_PENDING))
 		exit(EXIT_FAILURE);
 }
 
@@ -174,7 +174,7 @@ static void connection_schedule_socket_receive(struct connection *conn)
 			&flags,
 			&conn->recv_ov,
 			NULL);
-	if (rc != SOCKET_ERROR || WSAGetLastError() != WSA_IO_PENDING)
+	if (rc && (rc != SOCKET_ERROR || WSAGetLastError() != WSA_IO_PENDING))
 		exit(EXIT_FAILURE);
 }
 

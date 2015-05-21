@@ -14,7 +14,7 @@ resource and then receive a reply. You may also use a GUI browser. The server
 URL should be http://localhost:28282.
 
 ; on one console
-> ./http_reply_once
+> ./http_reply_once.exe
 
 ; on the second console
 > wget http://localhost:28282
