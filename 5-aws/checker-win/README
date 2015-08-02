@@ -9,36 +9,36 @@ http://ocw.cs.pub.ro/courses/so/teme/tema-5
 README
 	* this file
 
-Makefile.checker
-	* Makefile for automating the build process
+GNUmakefile and NMakefile.checker
+	* Makefiles for automating the build process
 
-run_tests_win.bash
+run_all.sh
 	* script to run all tests defined in scripts in _test/
 
 == BUILDING (in Cygwin) ==
 
 The local directory must contain the asynchronous web server executable
 (aws.exe) and the asynchronous web server object (aws.obj).
-Use the Makefile.checker:
+Use the GNUmakefile:
 
-	make -f Makefile.checker
+	make all
 
 This command will also run all tests and print out the results.
 
 == RUNNING (in Cygwin) ==
 
-In order to run the test suite run the run_tests_win.bash script.
+In order to run the test suite run the run_all.sh script.
 
-The run_tests_win.bash script runs all tests and computes assignment grade (90
+The run_all.sh script runs all tests and computes assignment grade (90
 points maximum):
 
-	./run_tests_win.bash
+	./run_all.sh
 
 In order to run a specific test ... pass the test number (1 .. 33) to
-the _test/aws_test.bash script.
+the _test/run_test.sh script.
 
 Tests use the static/ and dynamic/ folders. These folders are created and
-removed using the "init" and "cleanup" arguments to _test/aws_test.bash.
+removed using the "init" and "cleanup" arguments to _test/run_test.sh.
 
 == TESTS ==
 

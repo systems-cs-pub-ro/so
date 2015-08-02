@@ -2,7 +2,7 @@
 
 first_test=1
 last_test=33
-script=aws_test.bash
+script=run_test.sh
 log_file=test.log
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
 CHECKPATCH_ARGS="
@@ -66,14 +66,16 @@ check_source()
 	fi
 }
 
-# Call init to set up testing environment.
+# Call init to set up testing environment
 bash ./_test/"$script" init
 
 # Check the sources using checkpatch
 check_source
 
 for i in $(seq $first_test $last_test); do
+	echo "=== Enter test $i ===" &>> $log_file
 	bash ./_test/"$script" $i 2>> $log_file
+	echo "=== Exit test $i ===" &>> $log_file
 done | tee results.txt
 
 cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
