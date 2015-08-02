@@ -73,7 +73,9 @@ bash ./_test/"$script" init
 check_source
 
 for i in $(seq $first_test $last_test); do
+	echo "=== Enter test $i ===" &>> $log_file
 	bash ./_test/"$script" $i 2>> $log_file
+	echo "=== Exit test $i ===" &>> $log_file
 done | tee results.txt
 
 cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
