@@ -60,6 +60,7 @@ check_source()
 		printf "failed  [00/90]\n"
 	fi
 }
+
 # Call init to set up testing environment
 timeout $timeout ./_test/"$script" init
 
@@ -68,6 +69,9 @@ check_source
 
 for i in $(seq $first_test $last_test); do
 	timeout $timeout ./_test/"$script" $i
+	if [ $? -eq 124 ]; then
+		printf "%02d) timeout.................................................failed  [00/90]\n" $i
+	fi
 done | tee results.txt
 
 cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
@@ -80,7 +84,7 @@ BEGIN {
 }
 
 END {
-    printf "\n%66s  [%02d/90]\n", "Total:", sum;
+	printf "\n%66s  [%02d/90]\n", "Total:", sum;
 }'
 
 # Cleanup testing environment

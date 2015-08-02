@@ -22,7 +22,7 @@ run: $(TEST_EXEC)
 
 pack:
 	zip -r run_test_lin.zip _test/ Makefile.checker \
-		NMakefile.checker GNUmakefile run_all.sh README
+		run_all.sh README
 
 clean:
 	-rm -f *~ _test/*.o $(TEST_EXEC)

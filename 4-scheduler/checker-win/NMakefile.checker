@@ -17,7 +17,8 @@ run: $(test_exec)
 
 pack:
 	zip -r run_test_win.zip _test/ NMakefile.checker \
-			GNUmakefile run_all.sh README
+		GNUmakefile run_all.sh README
 
 clean:
 	@-cd _test && nmake clean && cd ..
+

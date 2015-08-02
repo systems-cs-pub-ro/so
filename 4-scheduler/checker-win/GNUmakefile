@@ -17,7 +17,6 @@ bclean:
 	-rm -f $(BAT_TARGETS) *~
 
 pack:
-	-rm -f vmsim_test_win.zip
-	zip -r run_test_lin.zip _test/ NMakefile.checker \
+	zip -r run_test_win.zip _test/ NMakefile.checker \
 		GNUmakefile run_all.sh README
 

@@ -68,10 +68,13 @@ timeout $timeout ./_test/"$script" init
 check_source
 
 for i in $(seq $first_test $last_test); do
-    timeout $timeout ./_test/"$script" $i
+	timeout $timeout ./_test/"$script" $i
+	if [ $? -eq 124 ]; then
+		printf "%02d) timeout.................................................failed  [00/90]\n" $i
+	fi
 done | tee results.txt
 
-cat results.txt | grep '\[.*\]' | awk -F '[] /[]+' '
+cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
 BEGIN {
 	sum = 0
 }
