@@ -77,7 +77,7 @@ static inline int w_epoll_update_fd_inout(int epollfd, int fd)
 	ev.events = EPOLLIN | EPOLLOUT;
 	ev.data.fd = fd;
 
-	return epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev);
+	return epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &ev);
 }
 
 static inline int w_epoll_remove_fd(int epollfd, int fd)
