@@ -8,6 +8,14 @@
 #  endif
 #endif
 
+#ifdef _MSC_VER
+/* speaking of MS, they do not implement standard C;
+ * YY_USE_CONST is defined only if __STDC__ is defined;
+ * here is alread too late to redefine YY_USE_CONST so
+ * we use pragma instead ^^.
+ */
+#pragma warning(disable:4090)
+#endif /* _MSC_VER */
 
 #ifdef __MINGW32_VERSION
 #  ifndef _NO_OLDNAMES
@@ -252,7 +260,7 @@ void globalParseAnotherString(const char * str)
 void globalEndParsing()
 {
 	if (haveOneBufferState) {
-		yy_delete_buffer(myState);
+		yylex_destroy();
 		haveOneBufferState = false;
 	}
 }

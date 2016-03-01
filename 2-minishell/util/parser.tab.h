@@ -1,10 +1,8 @@
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* Bison interface for Yacc-like parsers in C
 
-/* Skeleton interface for Bison's Yacc-like parsers in C
-
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,75 +30,82 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-
-/* Tokens.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-	enum yytokentype {
-		NOT_ACCEPTED_CHAR = 258,
-		INVALID_ENVIRONMENT_VAR = 259,
-		UNEXPECTED_EOF = 260,
-		CHARS_AFTER_EOL = 261,
-		END_OF_FILE = 262,
-		END_OF_LINE = 263,
-		BLANK = 264,
-		REDIRECT_OE = 265,
-		REDIRECT_O = 266,
-		REDIRECT_E = 267,
-		INDIRECT = 268,
-		REDIRECT_APPEND_E = 269,
-		REDIRECT_APPEND_O = 270,
-		WORD = 271,
-		ENV_VAR = 272,
-		SEQUENTIAL = 273,
-		PARALLEL = 274,
-		CONDITIONAL_ZERO = 275,
-		CONDITIONAL_NZERO = 276,
-		PIPE = 277
-};
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yydebug;
 #endif
 
+/* Token type.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+  enum yytokentype
+  {
+    NOT_ACCEPTED_CHAR = 258,
+    INVALID_ENVIRONMENT_VAR = 259,
+    UNEXPECTED_EOF = 260,
+    CHARS_AFTER_EOL = 261,
+    END_OF_FILE = 262,
+    END_OF_LINE = 263,
+    BLANK = 264,
+    REDIRECT_OE = 265,
+    REDIRECT_O = 266,
+    REDIRECT_E = 267,
+    INDIRECT = 268,
+    REDIRECT_APPEND_E = 269,
+    REDIRECT_APPEND_O = 270,
+    WORD = 271,
+    ENV_VAR = 272,
+    SEQUENTIAL = 273,
+    PARALLEL = 274,
+    CONDITIONAL_NZERO = 275,
+    CONDITIONAL_ZERO = 276,
+    PIPE = 277
+  };
+#endif
 
+/* Value type.  */
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
+{
+#line 221 "parser.y" /* yacc.c:1909  */
 
-#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE {
-
-/* Line 1676 of yacc.c  */
-#line 221 "parser.y"
-
-	command_t *command_un;
-	const char *string_un;
+	command_t * command_un;
+	const char * string_un;
 	redirect_t redirect_un;
-	simple_command_t *simple_command_un;
-	word_t *exe_un;
-	word_t *params_un;
-	word_t *word_un;
+	simple_command_t * simple_command_un;
+	word_t * exe_un;
+	word_t * params_un;
+	word_t * word_un;
 
-
-
-/* Line 1676 of yacc.c  */
-#line 86 "parser.tab.h"
-} YYSTYPE;
+#line 87 "parser.tab.h" /* yacc.c:1909  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-extern YYSTYPE yylval;
-
-#if !defined YYLTYPE && !defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE {
-	int first_line;
-	int first_column;
-	int last_line;
-	int last_column;
-} YYLTYPE;
-# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
 # define YYLTYPE_IS_DECLARED 1
 # define YYLTYPE_IS_TRIVIAL 1
 #endif
 
-extern YYLTYPE yylloc;
 
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
+int yyparse (void);
+
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
