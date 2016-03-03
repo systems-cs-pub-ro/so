@@ -11,11 +11,13 @@ last_test=33
 script=run_test
 TEST_TIMEOUT=10
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
+CHECKPATCH_IGNORE_FLAGS="
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS"
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
 	--terse
-	--ignore SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE
+	--ignore $CHECKPATCH_IGNORE_FLAGS
 	--show-types"
 
 check_source()

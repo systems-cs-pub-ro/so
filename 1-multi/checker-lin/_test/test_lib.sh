@@ -14,11 +14,13 @@ EXIT_IF_FAIL=0
 DEBUG_=0
 # checkpatch.pl URL
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
+CHECKPATCH_IGNORE_FLAGS="
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS"
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
 	--terse
-	--ignore SPLIT_STRING,SSCANF_TO_KSTRTO
+	--ignore $CHECKPATCH_IGNORE_FLAGS
 	--show-types"
 
 DEBUG()
