@@ -3,5 +3,5 @@ true || echo "test" > out_nzero1.txt
 false || echo "test" > out_nzero2.txt
 true && echo "test" > out_zero1.txt
 false && echo "test" > out_zero2.txt
-echo "beta" > out_par1.txt & echo "alfa" > out_par2.txt
+echo "beta" > out_par1.txt && echo "alfa" > out_par2.txt
 exit
