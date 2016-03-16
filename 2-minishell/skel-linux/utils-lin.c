@@ -260,10 +260,8 @@ char *read_line()
 		}
 
 		instr = realloc(instr, instr_length + CHUNK_SIZE + 1);
-		if (instr == NULL) {
-			free(ret);
-			return instr;
-		}
+		if (instr == NULL)
+			break;
 
 		memset(instr + instr_length, 0, CHUNK_SIZE);
 		strcat(instr, chunk);
