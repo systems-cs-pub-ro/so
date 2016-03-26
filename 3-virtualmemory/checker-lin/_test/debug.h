@@ -50,7 +50,7 @@ enum {
 #if defined DEBUG
 #define dprintf(format, ...)					\
 	fprintf(stderr, " [%s(), %s:%u] " format,		\
-			__func__, __FILE__, __LINE__,	\
+			__FUNCTION__, __FILE__, __LINE__,	\
 			##__VA_ARGS__)
 #else
 #define dprintf(format, ...)					\
@@ -73,3 +73,4 @@ enum {
 #endif
 
 #endif
+

@@ -14,11 +14,9 @@ $(TARGETS): % : cmd_build.%.bat
 	cmd.exe /E:ON /V:ON /T:0E /C $<
 
 bclean:
-	make -C _test bclean
 	-rm -f $(BAT_TARGETS) *~
 
 pack:
-	-rm -f vmsim_test_win.zip
-	zip -r vmsim_test_win.zip _test/ NMakefile.checker GNUMakefile \
-		run_tests_win.bash README vmsim-checker.sln \
-		vmsim-checker.vcproj
+	zip -r run_test_win.zip _test/ NMakefile.checker \
+		GNUmakefile run_all.sh README
+

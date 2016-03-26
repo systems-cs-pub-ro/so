@@ -7,7 +7,7 @@
 #
 
 first_test=1
-last_test=33
+last_test=34
 script=run_test
 TEST_TIMEOUT=10
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
@@ -76,12 +76,12 @@ check_source()
 check_source
 
 for i in $(seq $first_test $last_test); do
-    timeout $TEST_TIMEOUT ./_test/"$script" $i
+	timeout $TEST_TIMEOUT ./_test/"$script" $i
 done | tee results.txt
 
 cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
 BEGIN {
-    sum=0
+	sum=0
 }
 
 {
@@ -95,3 +95,4 @@ END {
 # Cleanup testing environment
 ./_test/"$script" cleanup
 rm -f results.txt
+

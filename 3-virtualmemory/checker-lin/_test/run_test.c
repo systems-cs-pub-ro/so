@@ -1,23 +1,19 @@
-/* scheduler functions */
+#include "run_test.h"
+
+#include "vmsim_test.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
 
-#include "run_test.h"
-/* custom tests */
-#include "vmsim_test.h"
-
-/* Enable/disable exiting when program fails. */
-/* #define EXIT_IF_FAIL */
 #define max_points 90
 
 /* global variables used by the test */
 static char *description;
 static int points;
 static unsigned long test_index;
-
 
 /* prints the header specified aligned with the other output */
 static void print_header(const char *header)
@@ -37,9 +33,6 @@ static void print_header(const char *header)
 void test_do_fail(void)
 {
 	printf("failed  [ 0/%02d]\n", points);
-#ifdef EXIT_IF_FAIL
-	exit(EXIT_FAILURE);
-#endif
 }
 
 void test_do_pass(void)
@@ -73,34 +66,30 @@ static int cleanup_world(void)
 }
 
 struct run_test_t test_fun_array[] = {
-	{ test_vmsim_init_exception_set,
-		"Test vmsim init exception set",			2 },
-	{ test_vmsim_cleanup_exception_unset,
-		"Test vmsim cleanup exception unset",			2 },
-	{ test_vm_alloc_more_physical_than_virtual,
-		"Test vm_alloc more pysical than virtual",		2 },
-	{ test_vm_alloc_arguments_ok,
+	{ test_vmsim_init_exception,
+		"Test vmsim_init exception",				2 },
+	{ test_vmsim_cleanup_exception,
+		"Test vmsim_cleanup exception",				2 },
+	{ test_vm_alloc_arguments,
 		"Test vm_alloc arguments",				2 },
-	{ test_vm_alloc_start_ok,
-		"Test vm_alloc start",					2 },
-	{ test_vm_alloc_ram_handle_ok,
+	{ test_vm_alloc_start_addr,
+		"Test vm_alloc start address",				2 },
+	{ test_vm_alloc_ram_handle,
 		"Test vm_alloc ram handle",				2 },
-	{ test_vm_alloc_swap_handle_ok,
+	{ test_vm_alloc_swap_handle,
 		"Test vm_alloc swap handle",				2 },
 	{ test_vm_alloc_ram_size,
 		"Test vm_alloc ram size",				2 },
 	{ test_vm_alloc_swap_size,
 		"Test vm_alloc swap size",				2 },
-	{ test_vm_free_bad_start,
-		"Test vm_free bad start",				3 },
-	{ test_vm_free_arguments_ok,
-		"Test vm_free arguments",				3 },
-	{ test_vm_free_start_unset,
-		"Test vm_free arguments unset",				3 },
-	{ test_vm_free_ram_handle_unset,
-		"Test vm_free ram handle unset",			3 },
-	{ test_vm_free_swap_handle_unset,
-		"Test vm_free swap handle unset",			3 },
+	{ test_vm_free_arguments,
+		"Test vm_free arguments",				2 },
+	{ test_vm_free_start_addr,
+		"Test vm_free start address",				2 },
+	{ test_vm_free_ram_handle,
+		"Test vm_free ram handle",				2 },
+	{ test_vm_free_swap_handle,
+		"Test vm_free swap handle",				2 },
 	{ test_mapping_is_set_in_handler,
 		"Test mapping is set in handler",			3 },
 	{ test_mapping_read_results_in_one_fault,
@@ -119,6 +108,8 @@ struct run_test_t test_fun_array[] = {
 		"Test mapping two faults per page write",		3 },
 	{ test_mapping_mixed_faults,
 		"Test mapping mixed faults",				3 },
+	{ test_page_is_cleared_at_first_allocation,
+		"Test page is cleared at first allocation",		3 },
 	{ test_mapping_write_is_carried_through_to_file,
 		"Test mapping write is carried through to file",	3 },
 	{ test_mapping_multiple_writes_fill_ram,
@@ -135,10 +126,14 @@ struct run_test_t test_fun_array[] = {
 		"Test swap in",						3 },
 	{ test_clean_page_is_not_swapped_out,
 		"Test clean page is not swapped out",			3 },
-	{ test_vm_alloc_multiple_arguments_ok,
+	{ test_page_has_read_prot_after_swap_in,
+		"Test page has read protection after swap in",		3 },
+	{ test_page_content_is_not_accessed_from_swap,
+		"Test page content is not accessed from swap",		3 },
+	{ test_vm_alloc_multiple_arguments,
 		"Test vm_alloc multiple arguments",			3 },
 	{ test_vm_alloc_multiple_get_faults,
-		"Test vm_alloc multiple get faults",			3 }
+		"Test vm_alloc multiple get faults",			3 },
 };
 
 /* custom main testing thread */
@@ -176,12 +171,12 @@ int main(int argc, char **argv)
 	last_test = sizeof(test_fun_array) / sizeof(struct run_test_t) - 1;
 	if (test_index < 0 || test_index > last_test) {
 		fprintf(stderr, "Error: Test index is out of range"
-				"(1 < test_index <= %lu).\n", last_test);
+				"(1 <= test_index <= %lu).\n", last_test + 1);
 		return -1;
 	}
 
 	/* randomize time quantums */
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	description = test_fun_array[test_index].description;
 	points = test_fun_array[test_index].points;
@@ -189,3 +184,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+

@@ -3,7 +3,7 @@
  *
  * implementations in vmsim_test_{lin,win}.h
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
 
 #ifdef __cplusplus
@@ -19,14 +19,9 @@ size_t vmsim_test_get_num_faults(void);
 void vmsim_test_set_num_faults(size_t num_faults);
 
 /* reset number of faults */
-#define vmsim_test_reset_faults()		\
-	vmsim_test_set_num_faults(0)
+#define vmsim_test_reset_faults() vmsim_test_set_num_faults(0)
 
 #if defined(_WIN32)
-
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT	0x501	/* vectored exception handler */
-#endif
 
 #include <windows.h>
 LONG vmsim_test_exception_handler(PEXCEPTION_POINTERS info);
@@ -47,3 +42,4 @@ void vmsim_test_segv_handler(int signum, siginfo_t *info, void *context);
 #ifdef __cplusplus
 }
 #endif
+

@@ -1,8 +1,10 @@
 /*
  * virtual machine simulator - useful functions for Linux test suite
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
+
+#include "common.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -12,16 +14,12 @@
 #include <unistd.h>
 #include <signal.h>
 
-#include "vmsim_aux.h"
-#include "common.h"
-
-/* expect page fault - testing purposes */
+/* count page faults - testing purposes */
 static size_t sig_handler_num_calls;
 
-/*
+/**
  * SIGSEGV handler
  */
-
 void vmsim_test_segv_handler(int signum, siginfo_t *info, void *context)
 {
 	w_exception_handler_t handler;
@@ -49,3 +47,4 @@ void vmsim_test_set_num_faults(size_t num_faults)
 {
 	sig_handler_num_calls = num_faults;
 }
+

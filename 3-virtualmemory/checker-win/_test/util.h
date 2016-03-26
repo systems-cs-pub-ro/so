@@ -1,11 +1,11 @@
 /*
  * useful structures/macros
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
 
 #ifndef UTIL_H_
-#define UTIL_H_		1
+#define UTIL_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,3 +70,4 @@ static VOID PrintLastError(const PCHAR message)
 #endif
 
 #endif
+

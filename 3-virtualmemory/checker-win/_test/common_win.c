@@ -1,20 +1,18 @@
 /*
  * common wrappers for Windows
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
+
+#include "common.h"
+#include "util.h"
+#include "debug.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#define _WIN32_WINNT	0x501	/* vectored exception handler */
-
 #include <windows.h>
-
-#include "common.h"
-#include "debug.h"
-#include "util.h"
 
 #define HANDLER_CALL_FIRST	1
 
@@ -27,20 +25,18 @@ w_size_t w_get_page_size(void)
 	return info.dwAllocationGranularity;
 }
 
-/*
+/**
  * empty ExceptionHandler
- *   for testing purposes only; it would not make sense using it
+ * for testing purposes only; it would not make sense using it
  */
-
 LONG empty_exception_handler(PEXCEPTION_POINTERS ExceptionInfo)
 {
 	return EXCEPTION_CONTINUE_EXECUTION;
 }
 
-/*
+/**
  * add a new vectored exception handler
  */
-
 w_ptr_t w_add_exception_handler(w_exception_handler_t handler)
 {
 	PVOID h;
@@ -107,6 +103,9 @@ w_handle_t w_open_file(const char *name, w_mode_t mode)
 	return handle;
 }
 
+/**
+ * returns file size if successful, 0 otherwise
+ */
 w_size_t w_get_file_size_by_handle(w_handle_t handle)
 {
 	w_size_t size;
@@ -132,11 +131,11 @@ w_boolean_t w_read_file(w_handle_t handle, w_ptr_t buf, w_size_t size)
 	w_size_t bytesRead;
 
 	if (ReadFile(
-				handle,
-				buf,
-				size,
-				&bytesRead,
-				NULL) == FALSE)
+			handle,
+			buf,
+			size,
+			&bytesRead,
+			NULL) == FALSE)
 		return FALSE;
 
 	return TRUE;
@@ -147,11 +146,11 @@ w_boolean_t w_write_file(w_handle_t handle, w_ptr_t buf, w_size_t size)
 	w_size_t bytesWritten;
 
 	if (WriteFile(
-				handle,
-				buf,
-				size,
-				&bytesWritten,
-				NULL) == FALSE)
+			handle,
+			buf,
+			size,
+			&bytesWritten,
+			NULL) == FALSE)
 		return FALSE;
 
 	return TRUE;
@@ -212,3 +211,4 @@ w_boolean_t w_sync_mapping(w_ptr_t addr, w_size_t num_pages)
 
 	return TRUE;
 }
+

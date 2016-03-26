@@ -1,11 +1,8 @@
 /*
  * virtual memory simulator - test suite
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
-
-#include <stdlib.h>
-#include <string.h>
 
 #include "run_test.h"
 
@@ -16,11 +13,12 @@
 /* useful headers */
 #include "debug.h"
 
-
+#include <stdlib.h>
+#include <string.h>
 
 w_size_t get_random_byte_mapping_position(w_size_t num_pages)
 {
-	return (w_size_t) (drand48() * num_pages * p_sz);
+	return (w_size_t) (rand() % (num_pages * p_sz));
 }
 
 void fill_file(w_handle_t handle, w_size_t size, char byte)
@@ -40,11 +38,11 @@ void fill_file(w_handle_t handle, w_size_t size, char byte)
 	}
 }
 
-#define zero_file(handle, size)		fill_file(handle, size, 0)
+#define zero_file(handle, size) fill_file(handle, size, 0)
 
-int read_byte_from_file(w_handle_t handle, w_size_t pos)
+char read_byte_from_file(w_handle_t handle, w_size_t pos)
 {
-	int value;
+	char value;
 
 	w_set_file_pointer(handle, pos);
 	w_read_file(handle, &value, 1);
@@ -52,71 +50,83 @@ int read_byte_from_file(w_handle_t handle, w_size_t pos)
 	return value;
 }
 
-/* Init function sets signal handler. */
-void test_vmsim_init_exception_set(void)
+/* check that init function sets signal handler */
+void test_vmsim_init_exception(void)
 {
+	w_boolean_t rc = TRUE;
 	w_exception_handler_t current_handler;
 
 	w_set_exception_handler(empty_exception_handler);
-	vmsim_init();
+	rc &= vmsim_init();
 
 	w_get_current_exception_handler(&current_handler);
+	rc &= current_handler != empty_exception_handler;
 
-	vmsim_cleanup();
-
-	basic_test(current_handler != empty_exception_handler);
-}
-
-/* Cleanup restores old signal handler. */
-void test_vmsim_cleanup_exception_unset(void)
-{
-	w_exception_handler_t current_handler;
-
-	w_set_exception_handler(empty_exception_handler);
-	vmsim_init();
-	vmsim_cleanup();
-
-	w_get_current_exception_handler(&current_handler);
-	basic_test(current_handler == empty_exception_handler);
-}
-
-/* Cannot have more physical than virtual pages. */
-void test_vm_alloc_more_physical_than_virtual(void)
-{
-	vm_map_t map;
-	w_boolean_t rc;
-	const w_size_t num_pages = 10;
-	const w_size_t num_frames = 11;
-
-	vmsim_init();
-	rc = vm_alloc(num_pages, num_frames, &map);
-
-	vmsim_cleanup();
-
-	basic_test(rc == FALSE);
-}
-
-/* Handle wrong parameters gracefully. */
-void test_vm_alloc_arguments_ok(void)
-{
-	vm_map_t map;
-	w_boolean_t rc;
-	const w_size_t num_pages = 10;
-	const w_size_t num_frames = 4;
-
-	vmsim_init();
-	dlog(LOG_DEBUG, "vmsim_init called\n");
-	rc = vm_alloc(num_pages, num_frames, &map);
-	dlog(LOG_DEBUG, "vm_alloc called\n");
-
-	vm_free(map.start);
-	vmsim_cleanup();
+	rc &= vmsim_cleanup();
 
 	basic_test(rc == TRUE);
 }
 
-/* Allocation goes smoothly. */
-void test_vm_alloc_start_ok(void)
+/* check that cleanup restores old signal handler */
+void test_vmsim_cleanup_exception(void)
+{
+	w_boolean_t rc = TRUE;
+	w_exception_handler_t current_handler;
+
+	w_set_exception_handler(empty_exception_handler);
+	rc &= vmsim_init();
+
+	w_get_current_exception_handler(&current_handler);
+	rc &= current_handler != empty_exception_handler;
+
+	rc &= vmsim_cleanup();
+
+	w_get_current_exception_handler(&current_handler);
+	rc &= current_handler == empty_exception_handler;
+
+	basic_test(rc == TRUE);
+}
+
+static w_boolean_t test_vm_alloc_good_arguments(void)
+{
+	vm_map_t map;
+	w_boolean_t rc;
+	const w_size_t num_frames = 4;
+	const w_size_t num_pages = 8;
+
+	vmsim_init();
+	rc = vm_alloc(num_pages, num_frames, &map);
+
+	vm_free(map.start);
+	vmsim_cleanup();
+
+	return rc;
+}
+
+static w_boolean_t test_vm_alloc_bad_arguments(void)
+{
+	vm_map_t map;
+	w_boolean_t rc;
+	const w_size_t num_frames = 4;
+	const w_size_t num_pages = 2;
+
+	vmsim_init();
+	rc = vm_alloc(num_pages, num_frames, &map);
+
+	vmsim_cleanup();
+
+	return rc;
+}
+
+/* check 'vm_alloc' parameters */
+void test_vm_alloc_arguments(void)
+{
+	basic_test(test_vm_alloc_good_arguments() == TRUE &&
+		test_vm_alloc_bad_arguments() == FALSE);
+}
+
+/* check that virtual memory allocation goes smoothly */
+void test_vm_alloc_start_addr(void)
 {
 	vm_map_t map;
 	w_boolean_t rc;
@@ -129,7 +139,7 @@ void test_vm_alloc_start_ok(void)
 	dlog(LOG_DEBUG, "vm_alloc called\n");
 
 	/* if mapping's protection can be changed, the mapping is OK */
-	rc = w_protect_mapping(map.start, num_pages, PROTECTION_WRITE);
+	rc = w_protect_mapping(map.start, num_pages, PROTECTION_READ);
 	dlog(LOG_DEBUG, "w_protect_mapping called\n");
 
 	vm_free(map.start);
@@ -138,8 +148,8 @@ void test_vm_alloc_start_ok(void)
 	basic_test(rc == TRUE);
 }
 
-/* RAM file is valid after allocation. */
-void test_vm_alloc_ram_handle_ok(void)
+/* check that RAM file is valid after allocation */
+void test_vm_alloc_ram_handle(void)
 {
 	vm_map_t map;
 	w_boolean_t rc;
@@ -160,8 +170,8 @@ void test_vm_alloc_ram_handle_ok(void)
 	basic_test(rc == TRUE);
 }
 
-/* Swap file is valid after allocation. */
-void test_vm_alloc_swap_handle_ok(void)
+/* check that swap file is valid after allocation */
+void test_vm_alloc_swap_handle(void)
 {
 	vm_map_t map;
 	w_boolean_t rc;
@@ -179,7 +189,7 @@ void test_vm_alloc_swap_handle_ok(void)
 	basic_test(rc == TRUE);
 }
 
-/* RAM file size is correct. */
+/* check RAM file size */
 void test_vm_alloc_ram_size(void)
 {
 	vm_map_t map;
@@ -198,7 +208,7 @@ void test_vm_alloc_ram_size(void)
 	basic_test(size == num_frames * p_sz);
 }
 
-/* Swap file size is correct. */
+/* check swap file size */
 void test_vm_alloc_swap_size(void)
 {
 	vm_map_t map;
@@ -217,100 +227,111 @@ void test_vm_alloc_swap_size(void)
 	basic_test(size == num_pages * p_sz);
 }
 
-/* Free invalid address. */
-void test_vm_free_bad_start(void)
+static w_boolean_t test_vm_free_good_arguments(void)
 {
 	vm_map_t map;
 	w_boolean_t rc;
 	const w_size_t num_pages = 10;
 	const w_size_t num_frames = 4;
-	w_ptr_t start;
 
 	vmsim_init();
 	vm_alloc(num_pages, num_frames, &map);
+
+	rc = vm_free(map.start);
+	vmsim_cleanup();
+
+	return rc;
+}
+
+static w_boolean_t test_vm_free_bad_arguments(void)
+{
+	vm_map_t map;
+	w_boolean_t rc;
+
+	vmsim_init();
+
 	map.start = NULL;
-
 	rc = vm_free(map.start);
+
 	vmsim_cleanup();
 
-	basic_test(rc == FALSE);
+	return rc;
 }
 
-/* Free works. */
-void test_vm_free_arguments_ok(void)
+/* check 'vm_free' arguments */
+void test_vm_free_arguments(void)
+{
+	basic_test(test_vm_free_good_arguments() == TRUE &&
+		test_vm_free_bad_arguments() == FALSE);
+}
+
+/* check that free actually unmaps a zone */
+void test_vm_free_start_addr(void)
 {
 	vm_map_t map;
-	w_boolean_t rc;
+	w_boolean_t rc_before_free, rc_after_free;
 	const w_size_t num_pages = 10;
 	const w_size_t num_frames = 4;
 
 	vmsim_init();
 	vm_alloc(num_pages, num_frames, &map);
 
-	rc = vm_free(map.start);
+	rc_before_free = w_protect_mapping(map.start, num_pages,
+		PROTECTION_READ);
+	vm_free(map.start);
+	rc_after_free = w_protect_mapping(map.start, num_pages,
+		PROTECTION_READ);
+
 	vmsim_cleanup();
 
-	basic_test(rc == TRUE);
+	basic_test(rc_before_free == TRUE && rc_after_free == FALSE);
 }
 
-/* Free actually unmaps a zone. */
-void test_vm_free_start_unset(void)
+/* check that after free, RAM file in invalid */
+void test_vm_free_ram_handle(void)
 {
 	vm_map_t map;
-	w_boolean_t rc;
+	w_boolean_t rc_before_free, rc_after_free;
 	const w_size_t num_pages = 10;
 	const w_size_t num_frames = 4;
 
 	vmsim_init();
 	vm_alloc(num_pages, num_frames, &map);
-	vm_free(map.start);
 
-	rc = w_protect_mapping(map.start, num_pages, PROTECTION_NONE);
+	rc_before_free = w_handle_is_valid(map.ram_handle);
+	vm_free(map.start);
+	rc_after_free = w_handle_is_valid(map.ram_handle);
+
 	vmsim_cleanup();
 
-	basic_test(rc == FALSE);
+	basic_test(rc_before_free == TRUE && rc_after_free == FALSE);
 }
 
-/* After free, ram file in invalid. */
-void test_vm_free_ram_handle_unset(void)
+/* check that after free, swap file is invalid */
+void test_vm_free_swap_handle(void)
 {
 	vm_map_t map;
-	w_boolean_t rc;
-	const w_size_t num_pages = 10;
-	const w_size_t num_frames = 5;
-
-	vmsim_init();
-	vm_alloc(num_pages, num_frames, &map);
-	vm_free(map.start);
-
-	rc = w_handle_is_valid(map.ram_handle);
-	vmsim_cleanup();
-
-	basic_test(rc == FALSE);
-}
-
-/* After free, swap file is invalid. */
-void test_vm_free_swap_handle_unset(void)
-{
-	vm_map_t map;
-	w_boolean_t rc;
+	w_boolean_t rc_before_free, rc_after_free;
 	const w_size_t num_pages = 10;
 	const w_size_t num_frames = 4;
 
 	vmsim_init();
 	vm_alloc(num_pages, num_frames, &map);
-	vm_free(map.start);
 
-	rc = w_handle_is_valid(map.swap_handle);
+	rc_before_free = w_handle_is_valid(map.swap_handle);
+	vm_free(map.start);
+	rc_after_free = w_handle_is_valid(map.swap_handle);
+
 	vmsim_cleanup();
 
-	basic_test(rc == FALSE);
+	basic_test(rc_before_free == TRUE && rc_after_free == FALSE);
 }
 
-/* Handler is called at page fault. */
+/* check that handler is called at page fault */
 void test_mapping_is_set_in_handler(void)
 {
 	vm_map_t map;
+	char tmp;
 	const w_size_t num_pages = 10;
 	const w_size_t num_frames = 4;
 
@@ -320,8 +341,8 @@ void test_mapping_is_set_in_handler(void)
 
 	vmsim_test_reset_faults();
 
-	/* do write; force exception handler call */
-	((char *) map.start)[0] = 0;
+	/* do read; force exception handler call */
+	tmp = ((char *) map.start)[0];
 
 	vm_free(map.start);
 	vmsim_cleanup();
@@ -329,7 +350,7 @@ void test_mapping_is_set_in_handler(void)
 	basic_test(vmsim_test_get_num_faults() != 0);
 }
 
-/* Do read; only one fault should result. */
+/* do read; only one fault should result */
 void test_mapping_read_results_in_one_fault(void)
 {
 	vm_map_t map;
@@ -353,7 +374,7 @@ void test_mapping_read_results_in_one_fault(void)
 	basic_test(vmsim_test_get_num_faults() == 1);
 }
 
-/* Do write; should result in two faults. */
+/* do write; should result in two faults */
 void test_mapping_write_results_in_two_faults(void)
 {
 	vm_map_t map;
@@ -376,7 +397,7 @@ void test_mapping_write_results_in_two_faults(void)
 	basic_test(vmsim_test_get_num_faults() == 2);
 }
 
-/* Do read, then do write; write should result in a single fault. */
+/* do read, then do write; write should result in a single fault */
 void test_mapping_write_after_read_results_in_one_fault(void)
 {
 	vm_map_t map;
@@ -401,7 +422,7 @@ void test_mapping_write_after_read_results_in_one_fault(void)
 	basic_test(vmsim_test_get_num_faults() == 1);
 }
 
-/* Do read; second read in same page should not fault. */
+/* do read; second read in same page should not fault */
 void test_mapping_read_after_read_no_faults(void)
 {
 	vm_map_t map;
@@ -428,7 +449,7 @@ void test_mapping_read_after_read_no_faults(void)
 	basic_test(vmsim_test_get_num_faults() == 0);
 }
 
-/* Do write; second write in same page should not fault. */
+/* do write; second write in same page should not fault */
 void test_mapping_write_after_write_no_faults(void)
 {
 	vm_map_t map;
@@ -454,7 +475,7 @@ void test_mapping_write_after_write_no_faults(void)
 	basic_test(vmsim_test_get_num_faults() == 0);
 }
 
-/* Do page fault when reading -- demand paging. */
+/* do page fault when reading -- demand paging */
 void test_mapping_one_fault_per_page_read(void)
 {
 	vm_map_t map;
@@ -471,7 +492,7 @@ void test_mapping_one_fault_per_page_read(void)
 	vmsim_test_reset_faults();
 	for (i = 0; i < num_pages; i++) {
 		pos = get_random_byte_mapping_position(1);
-		dlog(LOG_DEBUG, "read from page %ld\n", i);
+		dlog(LOG_DEBUG, "read from page %u\n", i);
 		tmp = ((char *) map.start)[i * p_sz + pos];
 	}
 
@@ -481,7 +502,7 @@ void test_mapping_one_fault_per_page_read(void)
 	basic_test(vmsim_test_get_num_faults() == num_pages);
 }
 
-/* Do page fault when writing -- demand paging. */
+/* do page fault when writing -- demand paging */
 void test_mapping_two_faults_per_page_write(void)
 {
 	vm_map_t map;
@@ -527,6 +548,7 @@ void test_mapping_mixed_faults(void)
 		pos = get_random_byte_mapping_position(1);
 		/* do page fault when reading -- demand paging */
 		tmp = ((char *) map.start)[i * p_sz + pos];
+		/* when reading, one page fault occurs */
 		expected_faults++;
 	}
 
@@ -545,6 +567,37 @@ void test_mapping_mixed_faults(void)
 	basic_test(vmsim_test_get_num_faults() == expected_faults);
 }
 
+/* check that page is cleared at first time allocation in RAM */
+void test_page_is_cleared_at_first_allocation(void)
+{
+	vm_map_t map;
+	char tmp, value;
+	const w_size_t offset = 10;
+
+	vmsim_init();
+	w_set_exception_handler(vmsim_test_segv_handler);
+	vm_alloc(2, 1, &map);
+
+	/* fault first page (write) */
+	*((char *) map.start + 0 * p_sz + offset) = MAGIC;
+
+	/* fault second page (read-only) */
+	tmp = *((char *) map.start + 1 * p_sz + offset);
+
+	w_sync_mapping(map.start, 2);
+
+	w_set_file_pointer(map.ram_handle, 0 * p_sz + offset);
+	w_read_file(map.ram_handle, &value, 1);
+
+	dlog(LOG_LEVEL, "value = %02x, tmp = %02x\n", value, tmp);
+
+	vm_free(map.start);
+	vmsim_cleanup();
+
+	basic_test(value == 0 && tmp == 0);
+}
+
+/* check that a write is carried through to file */
 void test_mapping_write_is_carried_through_to_file(void)
 {
 	vm_map_t map;
@@ -581,6 +634,7 @@ void test_mapping_write_is_carried_through_to_file(void)
 	basic_test(byte_found == TRUE);
 }
 
+/* check that multiple writes fill the RAM */
 void test_mapping_multiple_writes_fill_ram(void)
 {
 	vm_map_t map;
@@ -656,15 +710,15 @@ void test_mapping_multiple_writes_do_not_overwrite_ram(void)
 
 			tmp = read_byte_from_file(map.ram_handle, offset);
 			if (tmp == MAGIC) {
-				dlog(LOG_DEBUG, "match found, frame index: %ld,"
-				     " offset: %ld\n", i, offset);
+				dlog(LOG_DEBUG, "match found, frame index:"
+					"%u, offset: %u\n", i, offset);
 				match_count++;
 				break;
 			}
 		}
 	}
 
-	dlog(LOG_DEBUG, "match count: %ld\n", match_count);
+	dlog(LOG_DEBUG, "match count: %u\n", match_count);
 
 	vm_free(map.start);
 	vmsim_cleanup();
@@ -673,6 +727,7 @@ void test_mapping_multiple_writes_do_not_overwrite_ram(void)
 	basic_test(match_count == num_frames);
 }
 
+/* test swap out */
 void test_swap_out(void)
 {
 	vm_map_t map;
@@ -691,13 +746,13 @@ void test_swap_out(void)
 	/* zero swap for further checking */
 	zero_file(map.swap_handle, num_pages * p_sz);
 
-	offset_array = malloc((num_frames+1) * sizeof(*offset_array));
+	offset_array = malloc((num_frames + 1) * sizeof(*offset_array));
 
 	/*
 	 * at most num_frame pages will be backed by RAM
-	 * the (num_frame+1)-th access will result in a swap out;
+	 * the (num_frame + 1)-th access will result in a swap out
 	 */
-	for (i = 0; i < num_frames+1; i++) {
+	for (i = 0; i < num_frames + 1; i++) {
 		offset_array[i] = get_random_byte_mapping_position(1);
 		*((char *) map.start + i * p_sz + offset_array[i]) = MAGIC;
 	}
@@ -707,20 +762,20 @@ void test_swap_out(void)
 
 	/* go through swap to look for swapped pages */
 	for (i = 0; i < num_pages; i++) {
-		for (j = 0; j < num_frames+1; j++) {
+		for (j = 0; j < num_frames + 1; j++) {
 			w_size_t offset = i * p_sz + offset_array[j];
 
 			tmp = read_byte_from_file(map.swap_handle, offset);
 			if (tmp == MAGIC) {
-				dlog(LOG_DEBUG, "match found, frame index: %ld,"
-				     " offset: %ld\n", i, offset);
+				dlog(LOG_DEBUG, "match found, frame index:"
+					"%u, offset: %u\n", i, offset);
 				match_count++;
 				break;
 			}
 		}
 	}
 
-	dlog(LOG_DEBUG, "match count: %ld\n", match_count);
+	dlog(LOG_DEBUG, "match count: %u\n", match_count);
 
 	vm_free(map.start);
 	vmsim_cleanup();
@@ -729,6 +784,7 @@ void test_swap_out(void)
 	basic_test(match_count > 0);
 }
 
+/* check that initial read-only page is swapped out */
 void test_initial_readonly_page_is_swapped_out(void)
 {
 	vm_map_t map;
@@ -748,10 +804,9 @@ void test_initial_readonly_page_is_swapped_out(void)
 
 	/*
 	 * at most num_frame pages will be backed by RAM
-	 * the (num_frame+1)-th access will result in a swap out (initial
-	 * read-only)
+	 * the (num_frame + 1)-th access will result in a swap out
 	 */
-	for (i = 0; i < num_frames+1; i++) {
+	for (i = 0; i < num_frames + 1; i++) {
 		offset = get_random_byte_mapping_position(1);
 		tmp = *((char *) map.start + i * p_sz + offset);
 		/* sync ram file to ensure proper swap out */
@@ -763,8 +818,8 @@ void test_initial_readonly_page_is_swapped_out(void)
 		tmp = read_byte_from_file(map.swap_handle, i * p_sz + offset);
 		dlog(LOG_DEBUG, "tmp = %02x\n", tmp);
 		if (tmp != ~MAGIC) {
-			dlog(LOG_DEBUG, "match found, frame index: %ld,"
-			     " offset: %ld\n", i, offset);
+			dlog(LOG_DEBUG, "match found, frame index:"
+				"%u, offset: %u\n", i, offset);
 			match_found = TRUE;
 		}
 	}
@@ -777,7 +832,8 @@ void test_initial_readonly_page_is_swapped_out(void)
 	basic_test(match_found == TRUE);
 }
 
-/* after pages are swapped, access to those pages results in faults */
+/* check that after pages are swapped,
+ * access to those pages results in faults */
 void test_swap_in_faults(void)
 {
 	vm_map_t map;
@@ -785,7 +841,6 @@ void test_swap_in_faults(void)
 	const w_size_t num_frames = 4;
 	w_size_t i;
 	w_size_t offset;
-	char x;
 
 	vmsim_init();
 	w_set_exception_handler(vmsim_test_segv_handler);
@@ -799,18 +854,16 @@ void test_swap_in_faults(void)
 
 	dlog(LOG_INFO, "all pages faulted\n");
 
-	/*
-	 * at most num_frame pages will be backed by RAM; at least the
-	 * num-frame+1)-th page is in swap; it will cause a page fault
-	 */
-
 	vmsim_test_reset_faults();
 
-	/* fault num_frame+1 pages */
-	for (i = 0; i < num_frames+1; i++) {
+	/*
+	 * at most num_frame pages will be backed by RAM;
+	 * at least the (num_frame + 1)-th page is in swap;
+	 * it will cause a page fault
+	 */
+	for (i = 0; i < num_frames + 1; i++) {
 		offset = get_random_byte_mapping_position(1);
-		x = *(volatile char *)((char *) map.start + i * p_sz + offset);
-		(void)x;
+		*((char *) map.start + i * p_sz + offset) = MAGIC;
 	}
 
 	vm_free(map.start);
@@ -819,6 +872,7 @@ void test_swap_in_faults(void)
 	basic_test(vmsim_test_get_num_faults() > 0);
 }
 
+/* test swap in */
 void test_swap_in(void)
 {
 	vm_map_t map;
@@ -845,12 +899,11 @@ void test_swap_in(void)
 	fill_file(map.swap_handle, num_pages * p_sz, ~MAGIC);
 
 	/*
-	 * at most num_frame pages will be backed by RAM; at least the
-	 * num-frame+1)-th page is in swap; it will be swapped in
+	 * at most num_frame pages will be backed by RAM;
+	 * at least the (num_frame + 1)-th page is in swap;
+	 * it will be swapped in
 	 */
-
-	/* fault num_frame+1 pages */
-	for (i = 0; i < num_frames+1; i++) {
+	for (i = 0; i < num_frames + 1; i++) {
 		offset = get_random_byte_mapping_position(1);
 		*((char *) map.start + i * p_sz + offset) = MAGIC;
 	}
@@ -872,10 +925,7 @@ void test_swap_in(void)
 	basic_test(match_found == TRUE);
 }
 
-/*
- * test whether clean pages are swapped out (it shouldn't happen)
- */
-
+/* test whether clean pages are swapped out (it shouldn't happen) */
 void test_clean_page_is_not_swapped_out(void)
 {
 	vm_map_t map;
@@ -922,7 +972,80 @@ void test_clean_page_is_not_swapped_out(void)
 	basic_test(value1 == ~MAGIC && value2 == ~MAGIC);
 }
 
-void test_vm_alloc_multiple_arguments_ok(void)
+/* check that page has read protection after swap in */
+void test_page_has_read_prot_after_swap_in(void)
+{
+	vm_map_t map;
+	const w_size_t offset1 = 10;
+	const w_size_t offset2 = 20;
+
+	vmsim_init();
+	w_set_exception_handler(vmsim_test_segv_handler);
+	vm_alloc(2, 1, &map);
+
+	/* fault first page (write) */
+	*((char *) map.start + 0 * p_sz + offset1) = MAGIC;
+	w_sync_mapping(map.start, 2);
+
+	/* fault second page (write) -- first page goes to swap */
+	*((char *) map.start + 1 * p_sz + offset2) = MAGIC;
+	w_sync_mapping(map.start, 2);
+
+	vmsim_test_reset_faults();
+
+	/* fault first page (write) */
+	*((char *) map.start + 0 * p_sz + offset1) = MAGIC;
+	w_sync_mapping(map.start, 2);
+
+	vm_free(map.start);
+	vmsim_cleanup();
+
+	basic_test(vmsim_test_get_num_faults() == 2);
+}
+
+/* check that page content is not accessed from swap */
+void test_page_content_is_not_accessed_from_swap(void)
+{
+	vm_map_t map;
+	char tmp, byte1, byte2;
+	const w_size_t offset1 = 10;
+	const w_size_t offset2 = 20;
+
+	vmsim_init();
+	w_set_exception_handler(vmsim_test_segv_handler);
+	vm_alloc(2, 1, &map);
+
+	/* fault first page (write) */
+	*((char *) map.start + 0 * p_sz + offset1) = MAGIC;
+	w_sync_mapping(map.start, 2);
+
+	/* fault second page (write) -- first page goes to swap */
+	*((char *) map.start + 1 * p_sz + offset2) = 2 * MAGIC;
+	w_sync_mapping(map.start, 2);
+
+	vmsim_test_reset_faults();
+
+	/* fault first page (read-only) -- second page goes to swap */
+	tmp = *((char *) map.start + 0 * p_sz + offset1);
+
+	/* fault second page (read-only) -- first page goes to swap */
+	tmp = *((char *) map.start + 1 * p_sz + offset2);
+
+	/* fault first page (read-only) -- second page goes to swap */
+	byte1 = *((char *) map.start + 0 * p_sz + offset1);
+
+	/* fault second page (read-only) -- first page goes to swap */
+	byte2 = *((char *) map.start + 1 * p_sz + offset2);
+
+	vm_free(map.start);
+	vmsim_cleanup();
+
+	basic_test(vmsim_test_get_num_faults() == 4 &&
+		(byte1 == MAGIC && byte2 == 2 * MAGIC));
+}
+
+/* check that multiple allocations create different maps */
+void test_vm_alloc_multiple_arguments(void)
 {
 	vm_map_t map1, map2;
 	const w_size_t num_pages = 10;
@@ -930,6 +1053,9 @@ void test_vm_alloc_multiple_arguments_ok(void)
 	w_ptr_t start1, start2;
 	w_handle_t ram_handle1, ram_handle2;
 	w_handle_t swap_handle1, swap_handle2;
+
+	memset(&map1, 0, sizeof(vm_map_t));
+	memset(&map2, 0, sizeof(vm_map_t));
 
 	vmsim_init();
 	w_set_exception_handler(vmsim_test_segv_handler);
@@ -952,6 +1078,7 @@ void test_vm_alloc_multiple_arguments_ok(void)
 			swap_handle1 != swap_handle2);
 }
 
+/* test multiple allocations */
 void test_vm_alloc_multiple_get_faults(void)
 {
 	const w_size_t num_mappings = 6;
@@ -977,6 +1104,7 @@ void test_vm_alloc_multiple_get_faults(void)
 			pos = get_random_byte_mapping_position(1);
 			/* do page fault when reading -- demand paging */
 			tmp = ((char *) maps[mcount].start)[i * p_sz + pos];
+			/* when reading, one page fault occurs */
 			expected_faults++;
 		}
 
@@ -997,6 +1125,4 @@ void test_vm_alloc_multiple_get_faults(void)
 
 	basic_test(vmsim_test_get_num_faults() == expected_faults);
 }
-/**/
-
 

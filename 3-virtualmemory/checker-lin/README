@@ -1,11 +1,10 @@
-= VMSIM TEST SUITE ==
+#
+#  3 - Virtual Memory (Linux)
+#
+#  2016, Operating Systems
+#
 
-Test suite for virtual machine simulator (Operating Systems assignment)
-
-http://elf.cs.pub.ro/so/wiki/teme/tema-3
-http://elf.cs.pub.ro/so/res/teme/
-
-== FILES ==
+# Archive:
 
 README
 	* this file
@@ -28,7 +27,7 @@ vmsim_test.h
 	* specific to the test suite
 
 vmsim_test_lin.c
-	* Linux specific implementation of generic interic interface
+	* Linux specific implementation of generic interface
 
 common.h
 	* declaration of wrapped OS specific structures
@@ -36,7 +35,7 @@ common.h
 	* generic calls usually related to file I/O
 
 common_lin.c
-	* Linux specific implementation of generic interic interface
+	* Linux specific implementation of generic interface
 
 run_test.h
 	* useful macros for testing
@@ -47,50 +46,42 @@ debug.h
 util.h
 	* useful macros for generic use (error processing)
 
-== BUILDING ==
+# Build:
 
-The local folder must contain the vmsim library file (libvmsim.so).
-
-Use the Makefile to properly build the vmsim_test executable:
+The local directory must contain the vmsim library (libvmsim.so).
+Use the Makefile.checker to properly build the run_test executable:
 
 	make -f Makefile.checker
 
 This command will also run all tests and print out the results.
 
-== RUNNING ==
+# Run:
 
-In order to run the test suite you can either use the run_all.sh
-script or run the vmsim_test executable.
+In order to run the test suite you can either use the run_all.sh script or
+the run_test executable. The loader must be able to locate the library
+(libscheduler.so) (use LD_LIBRARY_PATH).
 
-The run_all.sh script runs all tests and computes assigment grade (90
-points maximum):
+The run_all.sh script runs all tests and computes assignment grade (90 points
+maximum):
 
-	./run_all.sh
+	LD_LIBRARY_PATH=. ./run_all.sh
 
-In order to run a specific test pass the test number (1 .. 33) to the
-vmsim_test executable. The loader must be able to locate the library file
-(libvmsim.so) (use LD_LIBRARY_PATH):
+In order to run a specific test, pass the test number (1 .. 20) to the run_test
+executable:
 
-	LD_LIBRARY_PATH=. ./vmsim_test 12
+	LD_LIBRARY_PATH=. ./_test/run_test 1
 
-Most tests do not invoke the vmsim_cleanup call. Make sure you remove any
-temporary files created (RAM and swap files).
-
-== TESTS ==
+# Tests:
 
 Tests are basically unit tests. A single function in the test_fun_array (see
 vmsim_test.c) is called each time the vimsim_test executable is invoked,
 testing a single functionality (and assuming previous tests have been run and
 passed).
 
-The EXIT_IF_FAIL macro (see run_test.c) is unnecessary since after each test, the
-program completes.
-
 Each test function follows the unit test pattern: initialization, action,
-evaluation.  The test macro (see run_test.h) is invoked at the end of each test
-for evaluating and grading the test.
+evaluation.
 
-== DEBUGGING ==
+# Debug:
 
 The debug.h header file consists of several macros useful for debugging
 (dprintf, dlog). There are multiple uses of these macros throughout the above
@@ -105,6 +96,3 @@ Rapid enabling of debug messages is achieved by commenting out the CPPFLAGS
 line in the Makefile. It turns on debugging and enabled all log messages
 (LOG_DEBUG).
 
-== OTHER ==
-
-srand48() and drand48() are used for generating random numbers.

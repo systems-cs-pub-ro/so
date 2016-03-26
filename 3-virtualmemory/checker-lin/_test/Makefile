@@ -5,13 +5,14 @@ CFLAGS = -Wall -g -Wno-unused
 
 all: run_test.o vmsim_test_lin.o common_lin.o vmsim_test.o
 
-run_test.o: run_test.c run_test.h vmsim.h util.h debug.h common.h
+run_test.o: run_test.c run_test.h vmsim_test.h
 
-vmsim_test_lin.o: vmsim_test_lin.c run_test.h
+vmsim_test_lin.o: vmsim_test_lin.c common.h
 
-common_lin.o: common_lin.c common.h
+common_lin.o: common_lin.c common.h util.h debug.h
 
-vmsim_test.o: vmsim_test.c vmsim_test.h
+vmsim_test.o: vmsim_test.c run_test.h vmsim.h vmsim_aux.h debug.h
 
 clean:
 	-rm -f *~ *.o
+

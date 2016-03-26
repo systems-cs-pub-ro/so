@@ -1,33 +1,27 @@
 /*
  * virtual machine simulator - useful functions for Windows test suite
  *
- * 2011, Operating Systems
+ * 2016, Operating Systems
  */
+
+#include "common.h"
+#include "debug.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT	0x501	/* vectored exception handler */
-#endif
-
 #include <windows.h>
 
-#include "vmsim_test.h"
-#include "common.h"
-#include "debug.h"
-
-/* count page fault - testing purposes */
+/* count page faults - testing purposes */
 static DWORD exception_handler_num_calls;
 
-/*
+/**
  * exception handler for testing purpose
  *
- * increments the number of calls and returns; OS will call next
- * vectored handler
+ * increments the number of calls and returns;
+ * OS will call next vectored handler
  */
-
 LONG vmsim_test_exception_handler(PEXCEPTION_POINTERS info)
 {
 	EXCEPTION_RECORD *er = info->ExceptionRecord;
@@ -54,3 +48,4 @@ void vmsim_test_set_num_faults(size_t num_faults)
 {
 	exception_handler_num_calls = num_faults;
 }
+
