@@ -6,47 +6,47 @@
 
 # Archive:
 
-README
+> README
 	* this file
 
-NMakefile.checker
+> NMakefile.checker
 	* Makefile for automating the build process on Windows
 
-GNUmakefile
+> GNUmakefile
 	* cygwin wrapper over NMakefile.checker
 
-run_all.sh
+> run_all.sh
 	* script to run all tests defined in vmsim_test.c from Cygwin
 
-vmsim.h
+> vmsim.h
 	* vmsim library interface
 
-vmsim_test.c
+> vmsim_test.c
 	* actual implementation of the test suite
 	* OS independent
 
-vmsim_test.h
+> vmsim_test.h
 	* declaration of test functions with OS specific implementation
 	* specific to the test suite
 
-vmsim_test_win.c
+> vmsim_test_win.c
 	* Windows specific implementation of generic interface
 
-common.h
+> common.h
 	* declaration of wrapped OS specific structures
 	* declaration of useful functions with OS specific implementation
 	* generic calls usually related to file I/O
 
-common_win.c
+> common_win.c
 	* Windows specific implementation of generic interface
 
-run_test.h
+> run_test.h
 	* useful macros for testing
 
-debug.h
+> debug.h
 	* debugging macros
 
-util.h
+> util.h
 	* useful macros for generic use (error processing)
 
 # Build (in Cygwin):
