@@ -1,5 +1,5 @@
 #
-#  3 - Virtual Memory (Linux)
+#  3 - Virtual Memory (Windows)
 #
 #  2016, Operating Systems
 #
@@ -51,8 +51,8 @@
 
 # Build (in Cygwin):
 
-The local directory must contain the vmsim library (libscheduler.dll) and
-its associated import library (libscheduler.lib). Use the GNUmakefile
+The local directory must contain the vmsim library (libvmsim.dll) and
+its associated import library (libvmsim.lib). Use the GNUmakefile
 to properly build the run_test.exe executable:
 
 	make all
