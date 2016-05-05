@@ -31,8 +31,14 @@ check_and_install_requirements()
         # exit if it fails
 
         INSTALLER=$(which apt-get)
+        SUDO=sudo
         if [ -z $INSTALLER ]; then
                 INSTALLER=$(which yum)
+        fi
+        
+        if [ -z $INSTALLER ]; then
+                INSTALLER=$(which brew)
+                SUDO=""
         fi
 
         if [ -z $INSTALLER ]; then
@@ -48,7 +54,7 @@ check_and_install_requirements()
                 which $package > /dev/null
                 if [ $? -ne 0 ]; then
                         echo -e "info: $package not available on the system. Installing...\n"
-                        sudo $INSTALLER install $package -y
+                        $SUDO $INSTALLER install $package -y
                         if [ $? -ne 0 ]; then
                                 echo -e "error: Failed installing $package. Aborting ...\n"
                                 exit 1
