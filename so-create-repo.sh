@@ -34,6 +34,10 @@ check_and_install_requirements()
         if [ -z $INSTALLER ]; then
                 INSTALLER=$(which yum)
         fi
+        
+        if [ -z $INSTALLER ]; then
+                INSTALLER=$(which brew)
+        fi
 
         if [ -z $INSTALLER ]; then
                 echo -e "error: Distribution not supported. Please contribute to
