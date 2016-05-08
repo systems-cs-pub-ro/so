@@ -38,7 +38,9 @@ We recommend not to run directly the instance of the script available in the clo
 
 Limitations
 -----------
-The script has support only for the Linux distributions which use apt or yum as the package installer.
+The script has support for:
+- the Linux distributions which use apt or yum as the package manager
+- the OS X versions which use Homebrew as the package manager
 
 A short time is needed between creating the repo on GitLab and cloning it, in order to allow GitLab to fully update his local databases. The script is configured to wait for 30 seconds. You might try to increase this timeout if cloning still fails.
 

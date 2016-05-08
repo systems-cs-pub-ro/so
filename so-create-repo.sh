@@ -35,7 +35,7 @@ check_and_install_requirements()
         if [ -z $INSTALLER ]; then
                 INSTALLER=$(which yum)
         fi
-        
+
         if [ -z $INSTALLER ]; then
                 INSTALLER=$(which brew)
                 SUDO=""
