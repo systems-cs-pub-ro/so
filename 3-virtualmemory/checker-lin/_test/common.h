@@ -7,10 +7,6 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define p_sz		w_get_page_size()
 #define MAGIC		0x12
 
@@ -89,10 +85,6 @@ w_boolean_t w_delete_file(const char *name);
 
 w_boolean_t w_protect_mapping(w_ptr_t addr, w_size_t size, w_prot_t protection);
 w_boolean_t w_sync_mapping(w_ptr_t addr, w_size_t num_pages);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 

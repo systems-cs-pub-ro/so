@@ -7,10 +7,6 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,10 +60,6 @@ static VOID PrintLastError(const PCHAR message)
 			exit(EXIT_FAILURE);		\
 		}					\
 	} while (0)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 

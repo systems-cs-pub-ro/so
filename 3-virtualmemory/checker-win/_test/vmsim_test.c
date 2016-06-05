@@ -208,13 +208,11 @@ static w_boolean_t test_vm_free_good_arguments(void)
 
 static w_boolean_t test_vm_free_bad_arguments(void)
 {
-	vm_map_t map;
 	w_boolean_t rc;
 
 	vmsim_init();
 
-	map.start = NULL;
-	rc = vm_free(map.start);
+	rc = vm_free(NULL);
 
 	vmsim_cleanup();
 

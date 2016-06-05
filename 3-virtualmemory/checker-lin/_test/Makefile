@@ -1,3 +1,4 @@
+CC = gcc
 #CPPFLAGS = -DDEBUG -DLOG_LEVEL=LOG_DEBUG
 CFLAGS = -Wall -g -Wno-unused
 

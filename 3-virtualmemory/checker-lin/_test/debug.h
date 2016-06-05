@@ -14,10 +14,6 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_	1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 
 /* log levels */
@@ -66,10 +62,6 @@ enum {
 #else
 #define dlog(level, format, ...)				\
 	do {} while (0)
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif

@@ -16,7 +16,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-size_t w_get_page_size(void)
+w_size_t w_get_page_size(void)
 {
 	return getpagesize();
 }

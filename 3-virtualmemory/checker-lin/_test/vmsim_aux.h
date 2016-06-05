@@ -6,9 +6,8 @@
  * 2016, Operating Systems
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef VMSIM_AUX_H_
+#define VMSIM_AUX_H_
 
 #include "common.h"
 
@@ -39,7 +38,5 @@ void vmsim_test_segv_handler(int signum, siginfo_t *info, void *context);
   #error "Unknown platform"
 #endif
 
-#ifdef __cplusplus
-}
 #endif
 

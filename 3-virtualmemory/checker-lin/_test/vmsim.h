@@ -7,10 +7,6 @@
 #ifndef VMSIM_H_
 #define VMSIM_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "common.h"
 
 /* virtual memory mapping encapsulation; initialized by vm_alloc */
@@ -49,10 +45,6 @@ FUNC_DECL_PREFIX w_boolean_t vm_alloc(w_size_t num_pages, w_size_t num_frames,
  * implementation has to close handles corresponding to RAM and swap files
  */
 FUNC_DECL_PREFIX w_boolean_t vm_free(w_ptr_t start);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 
