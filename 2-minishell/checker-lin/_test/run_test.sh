@@ -15,7 +15,7 @@ MAIN_TEST_DIR="_test/outputs"
 INPUT_DIR="_test/inputs"
 REFS_DIR="_test/refs"
 LOG_FILE="/dev/null"
-max_points=90
+max_points=95
 TEST_TIMEOUT=30
 
 TEST_LIB=_test/test_lib.sh
@@ -178,6 +178,7 @@ test_exec_failed()
 
 
 test_fun_array=(								\
+	test_coding_style	"Sources check"				5	\
 	test_output		"Testing commands without arguments"	3	\
 	test_output		"Testing commands with arguments"	2	\
 	test_common		"Testing simple redirect operators"	5	\

@@ -6,15 +6,15 @@
 # 2012, Operating Systems
 #
 
-first_test=1
+first_test=0
 last_test=18
 script=./_test/run_test.sh
 
 # Call init to set up testing environment
 bash "$script" init
 
-# check the source
-bash "$script" check
+# check the source (disabled, part of tests now)
+#bash "$script" check
 
 for i in $(seq $first_test $last_test); do
    bash "$script" $i
@@ -30,7 +30,7 @@ BEGIN {
 }
 
 END {
-    printf "\n%66s  [%02d/90]\n", "Total:", sum;
+    printf "\n%66s  [%02d/95]\n", "Total:", sum;
 }'
 
 # Cleanup testing environment
