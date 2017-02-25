@@ -138,13 +138,12 @@ check_source()
 		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +2 | \
 		sort -u -t":" -k4,4  | head -n 20)
 	echo "$OUT"
-	# duplicate basic_test code :(
-	printf "00) Sources check..........................................."
-	if [ -z "$OUT" ]; then
-		test_do_pass 0
-	else
-		test_do_fail 0
-	fi
+}
+
+test_coding_style()
+{
+	check_source
+	basic_test [ -z "$OUT" ] 
 }
 
 check_tests()
@@ -186,7 +185,7 @@ run_tests()
 		exit 0
 	fi
 
-	arr_index=$((($test_index - 1) * 3))
+	arr_index=$(($test_index * 3))
 	last_test=$((${#test_fun_array[@]} / 3))
 	description=${test_fun_array[$(($arr_index + 1))]}
 	points=${test_fun_array[$(($arr_index + 2))]}
