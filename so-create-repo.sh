@@ -18,7 +18,7 @@ SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so-assignments.git"
-SO_TEAM=(311 454 550 915 916)
+SO_TEAM=(454 915 916)
 TIMEOUT=30
 MAKE_CLONE="no"
 
