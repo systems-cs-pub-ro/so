@@ -143,7 +143,8 @@ check_source()
 test_coding_style()
 {
 	check_source
-	basic_test [ -z "$OUT" ] 
+	[ -n "$src_files" -a -z "$OUT" ]
+	basic_test [ $? -eq 0 ] 
 }
 
 check_tests()
