@@ -175,8 +175,13 @@ setup_user_profile()
         # get key ID
         id=$(echo $res | jq -r '.id')
         if [ "$id" == "null" ]; then
-                echo -e "error: Adding SSH public key failed ... exiting\n"
-                exit 1
+                message=$(echo $res | jq -r '.message | .fingerprint | .[0]')
+                if [ "$message" == "has already been taken" ]; then
+                        echo -e "Your SSH public key is already added to GitLab!\n"
+                else
+                        echo -e "error: Adding SSH public key failed ... exiting\n"
+                        exit 1
+                fi
         else
                 echo -e "Your SSH public key was successfully added to GitLab!\n"
         fi
