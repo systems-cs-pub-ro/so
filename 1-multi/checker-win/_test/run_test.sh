@@ -3,7 +3,7 @@
 #
 # Tema1 Test Suite
 #
-# 2012, Operating Systems
+# 2012-2017, Operating Systems
 #
 
 # ----------------- General declarations and util functions ------------------ #
@@ -12,7 +12,7 @@ INPUT_DIR=_test/inputs
 REF_DIR=_test/ref
 OUT_DIR=_test/outputs
 EXEC_NAME=./tema1
-max_points=90
+max_points=95
 
 TEST_LIB=_test/test_lib.sh
 
@@ -171,6 +171,7 @@ test_stress3()
 }
 
 test_fun_array=(												\
+	test_coding_style	"Sources check"				5	\
 	test_size_1				"Test add file"					2	\
 	test_size_1_stdin		"Test add stdin"				2	\
 	test_files_1			"Test print file"				2	\
