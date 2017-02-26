@@ -36,6 +36,11 @@ After the private repo on GitLab is successfully created, you can use the script
 
 We recommend not to run directly the instance of the script available in the clone directory because, through an update, it can be the subject to modifications.
 
+In case you already have the l3-so-assignments private repo on GitLab and you just want to create a new local clone (and not to update the current one) then run the script with --clone parameter:
+
+    bash so-create-repo.sh --clone
+
+
 Limitations
 -----------
 The script has support for:

@@ -20,6 +20,40 @@ GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so-assignments.git"
 SO_TEAM=(311 454 550 915 916)
 TIMEOUT=30
+MAKE_CLONE="no"
+
+print_help()
+{
+        echo "$(basename "$0") [-h|--help] [-c|--clone]"
+        echo "  -h      print this help"
+        echo "  -c      create local clone"
+}
+
+parse_cmd_line_args()
+{
+        while [[ $# -gt 0 ]]; do
+                param="$1"
+
+                case $param in
+                        -h|--help)
+                                print_help
+                                exit 0
+                                ;;
+
+                        -c|--clone)
+                                MAKE_CLONE="yes"
+                                ;;
+
+                        *)
+                                echo -e "error: Unknown parameter $param\n"
+                                print_help
+                                exit 1
+                                ;;
+                esac
+
+                shift
+        done
+}
 
 check_and_install_requirements()
 {
@@ -212,9 +246,9 @@ create_so_assignment_repo()
         REPO_SSH_URL=$(echo $res | jq -r '.ssh_url_to_repo')
         # get HTTPS repo URL
         REPO_HTTPS_URL=$(echo $res | jq -r '.http_url_to_repo')
-        USE_SSH="$1"
 
-        if [ $USE_SSH = "yes" ]; then
+        use_ssh="$1"
+        if [ "$use_ssh" == "yes" ]; then
                 REPO_URL=$REPO_SSH_URL
         else
                 REPO_URL=$REPO_HTTPS_URL
@@ -292,7 +326,10 @@ add_asist_so_assignment_group()
 
 # -------------------------------- Run script -------------------------------- #
 
-# First check requirements
+# parse command line arguments
+parse_cmd_line_args $@
+
+# check requirements
 check_and_install_requirements
 
 # authenticate
@@ -305,7 +342,7 @@ if [ $? -ne 0 ]; then
         # check if the user wants to use SSH key
         read -p "Would you like to use SSH with git? [yes/no] " use_ssh
 
-        if [ $use_ssh = "yes" ]; then
+        if [ "$use_ssh" == "yes" ]; then
                 check_ssh_key
                 if [ $? -ne 0 ]; then
                         generate_ssh_key
@@ -325,11 +362,19 @@ if [ $? -ne 0 ]; then
 
         create_so_assignment_clone
 else
-        update_so_assignment_clone
-fi
+        if [ "$MAKE_CLONE" == "yes" ]; then
+                check_ssh_key
+                if [ $? -eq 0 ]; then
+                        REPO_URL=$REPO_SSH_URL
+                else
+                        REPO_URL=$REPO_HTTPS_URL
+                fi
 
-# TODO: add other functionalities
-# (e.g. pull from github repo, help, arguments, etc.)
+                create_so_assignment_clone
+        else
+                update_so_assignment_clone
+        fi
+fi
 
 exit 0
 
