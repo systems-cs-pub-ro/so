@@ -186,6 +186,18 @@ test_invalid2()
 	cleanup_test
 }
 
+test_ldd()
+{
+    init_test
+    ldd $EXEC_NAME | grep libhash.so | \
+        awk -F '=>' ' { print $1 } ' | \
+        tr "\t" " " | tr -d " " > ldd.out
+    echo "libhash.so" > ldd.ref
+    basic_test compare ldd.out ldd.ref
+    rm -f ldd.out ldd.ref
+    cleanup_test
+}
+
 test_fun_array=(												\
 	test_coding_style	"Sources check"				5	\
 	test_size_1				"Test add file"					2	\
@@ -202,22 +214,23 @@ test_fun_array=(												\
 	test_size_1				"Test remove one"				2	\
 	test_size_256_stdin		"Test remove same hash"			2	\
 	test_size_256			"Test remove different hash"	3	\
-	test_size_256_stdin		"Test remove non existing"		3	\
+	test_size_256_stdin		"Test remove non existing"		2	\
 	test_size_256			"Test clear"					2	\
 	test_size_256_stdin		"Test clear and add"			2	\
 	test_size_256			"Test remove and clear"			3	\
 	test_size_256_stdin		"Test find"						2	\
-	test_files_1			"Test find files"				3	\
+	test_files_1			"Test find files"				2	\
 	test_size_256			"Test print bucket"				2	\
-	test_files_2			"Test print bucket files"		3	\
-	test_size_256_stdin		"Test halve"					5	\
-	test_size_256			"Test double"					5	\
-	test_size_256_stdin		"Test halve double"				5	\
+	test_files_2			"Test print bucket files"		2	\
+	test_size_256_stdin		"Test halve"					4	\
+	test_size_256			"Test double"					4	\
+	test_size_256_stdin		"Test halve double"				4	\
 	test_stress1			"Test stress 1"					5	\
 	test_stress2 			"Test stress 2"					5	\
 	test_stress3 			"Test stress 3"					5	\
-	test_invalid1 			"Test invalid argument 1"		3 	\
-	test_invalid2 			"Test invalid argument 2" 		3 	\
+	test_invalid1 			"Test invalid argument 1"		2 	\
+	test_invalid2 			"Test invalid argument 2" 		2 	\
+    test_ldd                "Test dynamic link"             10   \
 	)
 
 # ---------------------------------------------------------------------------- #

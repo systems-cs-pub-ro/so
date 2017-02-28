@@ -5,9 +5,10 @@
 #
 # 2012-2017, Operating Systems
 #
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
 
 first_test=0
-last_test=28
+last_test=31
 script=./_test/run_test.sh
 
 # Call init to set up testing environment
