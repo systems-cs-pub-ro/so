@@ -190,7 +190,7 @@ test_ldd()
 {
     init_test
     ldd $EXEC_NAME | grep libhash.so | \
-        awk -F '=>' ' { print $1 } ' | \
+        awk -F '[\t ]+' ' { print $2 } ' | \
         tr "\t" " " | tr -d " " > ldd.out
     echo "libhash.so" > ldd.ref
     basic_test compare ldd.out ldd.ref
@@ -225,8 +225,8 @@ test_fun_array=(												\
 	test_size_256_stdin		"Test halve"					4	\
 	test_size_256			"Test double"					4	\
 	test_size_256_stdin		"Test halve double"				4	\
-	test_stress1			"Test stress 1"					5	\
-	test_stress2 			"Test stress 2"					5	\
+	test_stress1			"Test stress 1"					4	\
+	test_stress2 			"Test stress 2"					4	\
 	test_stress3 			"Test stress 3"					5	\
 	test_invalid1 			"Test invalid argument 1"		2 	\
 	test_invalid2 			"Test invalid argument 2" 		2 	\
