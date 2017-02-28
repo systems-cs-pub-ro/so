@@ -111,7 +111,7 @@ execute_cmd()
 	OUTPUT=$3
 	[ -z "$OUTPUT" ] && OUTPUT=$LOG_FILE
 	mkdir -p ${OUT_DIR} && cd ${OUT_DIR} &> $LOG_FILE
-	timeout $TEST_TIMEOUT $EXEC < "${INPUT}" &> $OUTPUT
+	timeout $TEST_TIMEOUT stdbuf -i 0 $EXEC < "${INPUT}" &> $OUTPUT
 	# Ocasionally, in a virtualized environment, the diff that compares the
 	# target implementation with the reference output starts before the
 	# target implementation has finished writing files to disk. Handle this

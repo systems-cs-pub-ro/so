@@ -1,3 +1,4 @@
 whoami
+
 uname
 exit
