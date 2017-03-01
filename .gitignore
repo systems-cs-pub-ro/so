@@ -15,9 +15,9 @@
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
+#*.dll # TODO temporary
+#*.so  # TODO temporary
+#*.so.*
 *.dylib
 
 # Executables
