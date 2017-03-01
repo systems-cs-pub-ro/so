@@ -186,6 +186,14 @@ test_invalid2()
 	cleanup_test
 }
 
+test_invalid3()
+{
+	init_test
+	$EXEC_NAME 1 $input_f > $out_f
+	basic_test compare $out_f $ref_f
+	cleanup_test
+}
+
 test_ldd()
 {
     init_test
@@ -228,8 +236,9 @@ test_fun_array=(												\
 	test_stress1			"Test stress 1"					4	\
 	test_stress2 			"Test stress 2"					4	\
 	test_stress3 			"Test stress 3"					5	\
-	test_invalid1 			"Test invalid argument 1"		2 	\
-	test_invalid2 			"Test invalid argument 2" 		2 	\
+	test_invalid1 			"Test invalid command"			2 	\
+	test_invalid2 			"Test invalid argument 1" 		1 	\
+	test_invalid3 			"Test invalid argument 2" 		1 	\
     test_ldd                "Test dynamic link"             10   \
 	)
 

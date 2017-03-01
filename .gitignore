@@ -9,7 +9,7 @@
 *.pch
 
 # Libraries
-*.lib
+#*.lib # TODO temporary
 *.a
 *.la
 *.lo

@@ -8,7 +8,7 @@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
 
 first_test=0
-last_test=31
+last_test=32
 script=./_test/run_test.sh
 
 # Call init to set up testing environment
