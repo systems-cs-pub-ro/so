@@ -1,0 +1,17 @@
+OBJ_LIST = hash.obj
+CFLAGS = /nologo /W4 /EHsc /Za /DWIN
+
+DLLNAMES = hash.dll
+
+all : $(DLLNAMES)
+
+hash.dll : $(OBJ_LIST)
+	link /dll /out:$@ $**
+hash.obj :
+	cl $(CFLAGS) /c hash.c
+
+obj_clean : 
+	del *.obj
+
+dll_clean : 
+	del $(DLLNAMES)

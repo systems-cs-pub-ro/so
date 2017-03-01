@@ -1,0 +1,12 @@
+CC=gcc
+CFLAGS=-Wall -fPIC
+
+all: libhash.so
+
+libhash.so: hash.o
+	$(CC) -shared $< -o $@
+hash.o: hash.c
+	$(CC) $(CFLAGS) -c $<
+
+clean:
+	rm -f hash.o libhash.so
