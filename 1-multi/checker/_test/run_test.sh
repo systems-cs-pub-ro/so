@@ -196,11 +196,18 @@ test_invalid3()
 
 test_ldd()
 {
+    local libname=""
+    if [ $(uname -s) = "Linux" ]; then
+    	libname="libhash.so"
+    else
+    	libname="hash.dll"
+    fi
+
     init_test
-    ldd $EXEC_NAME | grep libhash.so | \
+    echo $libname > ldd.ref
+    ldd $EXEC_NAME | grep $libname | \
         awk -F '[\t ]+' ' { print $2 } ' | \
         tr "\t" " " | tr -d " " > ldd.out
-    echo "libhash.so" > ldd.ref
     basic_test compare ldd.out ldd.ref
     rm -f ldd.out ldd.ref
     cleanup_test
