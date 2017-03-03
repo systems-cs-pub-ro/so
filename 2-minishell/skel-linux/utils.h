@@ -1,5 +1,5 @@
 /**
- * Operating Sytems 2013 - Assignment 2
+ * Operating Systems 2013-2017 - Assignment 2
  *
  */
 
@@ -8,19 +8,27 @@
 
 #include "parser.h"
 
-#define CHUNK_SIZE 100
-#define ERR_ALLOCATION "unable to allocate memory"
 
-#define SHELL_EXIT -100
+/* useful macro for handling error codes */
+#define DIE(assertion, call_description) \
+	do { \
+		if (assertion) { \
+			fprintf(stderr, "(%s, %s, %d): ", \
+				__FILE__, __FUNCTION__, __LINE__); \
+			perror(call_description); \
+			exit(EXIT_FAILURE); \
+		} \
+	} while (0)
 
 /**
- * Readline from mini-shell.
+ * Concatenate parts of the word to obtain the command
  */
-char *read_line();
+char *get_word(word_t *s);
 
 /**
- * Parse and execute a command.
+ * Concatenate command arguments in a NULL terminated list in order to pass
+ * them directly to execv.
  */
-int parse_command(command_t *, int, command_t *);
+char **get_argv(simple_command_t *command, int *size);
 
-#endif
+#endif /* _UTILS_H */

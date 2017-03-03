@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -Wall
 OBJ_PARSER=parser.tab.o parser.yy.o
-OBJ=main.o utils-lin.o
+OBJ=main.o cmd.o utils-lin.o
 TARGET=mini-shell
 
 build: $(TARGET)

@@ -1,14 +1,12 @@
 /**
- * Operating Systems 2013 - Assignment 2
+ * Operating Systems 2013-2017 - Assignment 2
  *
  */
 
 #include <windows.h>
 
-#include <assert.h>
-
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "utils.h"
@@ -17,15 +15,12 @@
 #undef _UNICODE
 #undef UNICODE
 
-#define READ		0
-#define WRITE		1
-
 #define MAX_SIZE_ENVIRONMENT_VARIABLE 100
 
 /**
  * Debug method, used by DIE macro.
  */
-static VOID PrintLastError(const PCHAR message)
+VOID PrintLastError(const PCHAR message)
 {
 	CHAR errBuff[1024];
 
@@ -42,29 +37,9 @@ static VOID PrintLastError(const PCHAR message)
 }
 
 /**
- * Internal change-directory command.
- */
-static bool shell_cd(word_t *dir)
-{
-	/* TODO execute cd */
-
-	return 0;
-}
-
-/**
- * Internal exit/quit command.
- */
-static int shell_exit(void)
-{
-	/* TODO execute exit/quit */
-
-	return 0; /* TODO replace with actual exit code */
-}
-
-/**
  * Concatenate parts of the word to obtain the command
  */
-static LPTSTR get_word(word_t *s)
+LPTSTR get_word(word_t *s)
 {
 	DWORD string_length = 0;
 	DWORD substring_length = 0;
@@ -108,7 +83,7 @@ static LPTSTR get_word(word_t *s)
 /**
  * Parse arguments in order to succesfully process them using CreateProcess
  */
-static LPTSTR get_argv(simple_command_t *command)
+LPTSTR get_argv(simple_command_t *command)
 {
 	LPTSTR argv = NULL;
 	LPTSTR substring = NULL;
@@ -118,7 +93,7 @@ static LPTSTR get_argv(simple_command_t *command)
 	DWORD substring_length = 0;
 
 	argv = get_word(command->verb);
-	assert(argv != NULL);
+	DIE(argv == NULL, "Error retrieving word.");
 
 	string_length = strlen(argv);
 
@@ -128,7 +103,7 @@ static LPTSTR get_argv(simple_command_t *command)
 		substring_length = strlen(substring);
 
 		argv = realloc(argv, string_length + substring_length + 4);
-		assert(argv != NULL);
+		DIE(argv == NULL, "Error reallocating argv.");
 
 		strcat(argv, " ");
 
@@ -146,142 +121,4 @@ static LPTSTR get_argv(simple_command_t *command)
 	return argv;
 }
 
-/**
- * Parse and execute a simple command, by either creating a new processing or
- * internally process it.
- */
-bool parse_simple(simple_command_t *s, int level, command_t *father, HANDLE *h)
-{
-	/* TODO sanity checks */
-
-	/* TODO if builtin command, execute the command */
-
-	/* TODO if variable assignment, execute the assignment and return
-	 * the exit status
-	 */
-
-	/* TODO if external command:
-	 *  1. set handles
-	 *  2. redirect standard input / output / error
-	 *  3. run command
-	 *  4. get exit code
-	 */
-
-	return 0; /* TODO replace with actual exit status */
-}
-
-/**
- * Process two commands in parallel, by creating two children.
- */
-static bool do_in_parallel(command_t *cmd1, command_t *cmd2, int level, command_t *father)
-{
-	/* TODO execute cmd1 and cmd2 simultaneously */
-
-	return true; /* TODO replace with actual exit status */
-}
-
-/**
- * Run commands by creating an anonymous pipe (cmd1 | cmd2)
- */
-static bool do_on_pipe(command_t *cmd1, command_t *cmd2, int level, command_t *father)
-{
-	/* TODO redirect the output of cmd1 to the input of cmd2 */
-
-	return true; /* TODO replace with actual exit status */
-}
-
-/**
- * Parse and execute a command.
- */
-int parse_command(command_t *c, int level, command_t *father, void *h)
-{
-	/* TODO sanity checks */
-
-	if (c->op == OP_NONE) {
-		/* TODO execute a simple command */
-
-		return 0; /* TODO replace with actual exit code of command */
-	}
-
-	switch (c->op) {
-	case OP_SEQUENTIAL:
-		/* TODO execute the commands one after the other */
-		break;
-
-	case OP_PARALLEL:
-		/* TODO execute the commands simultaneously */
-		break;
-
-	case OP_CONDITIONAL_NZERO:
-		/* TODO execute the second command only if the first one
-		 * returns non zero
-		 */
-		break;
-
-	case OP_CONDITIONAL_ZERO:
-		/* TODO execute the second command only if the first one
-		 * returns zero
-		 */
-		break;
-
-	case OP_PIPE:
-		/* TODO redirect the output of the first command to the
-		 * input of the second
-		 */
-		break;
-
-	default:
-		return SHELL_EXIT;
-	}
-
-	return 0; /* TODO replace with actual exit code of command */
-}
-
-/**
- * Readline from mini-shell.
- */
-char *read_line()
-{
-	char *instr;
-	char *chunk;
-	char *ret;
-
-	int instr_length;
-	int chunk_length;
-
-	int endline = 0;
-
-	instr = NULL;
-	instr_length = 0;
-
-	chunk = calloc(CHUNK_SIZE, sizeof(char));
-	if (chunk == NULL) {
-		fprintf(stderr, ERR_ALLOCATION);
-		exit(EXIT_FAILURE);
-	}
-
-	while (!endline) {
-		ret = fgets(chunk, CHUNK_SIZE, stdin);
-		if (ret == NULL)
-			break;
-
-		chunk_length = strlen(chunk);
-		if (chunk[chunk_length - 1] == '\n') {
-			chunk[chunk_length - 1] = 0;
-			endline = 1;
-		}
-
-		instr = realloc(instr, instr_length + CHUNK_SIZE + 1);
-		if (instr == NULL)
-			break;
-
-		memset(instr + instr_length, 0, CHUNK_SIZE);
-		strcat(instr, chunk);
-		instr_length += chunk_length;
-	}
-
-	free(chunk);
-
-	return instr;
-}
 

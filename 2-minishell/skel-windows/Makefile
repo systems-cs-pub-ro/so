@@ -1,7 +1,7 @@
 CC=cl
 CFLAGS=/D_CRT_SECURE_NO_DEPRECATE /W3 /nologo 
 OBJ_PARSER=parser.tab.obj parser.yy.obj
-OBJ=main.obj utils-win.obj
+OBJ=main.obj cmd.obj utils-win.obj
 TARGET=mini-shell.exe
 
 build: $(TARGET)

@@ -1,5 +1,5 @@
 /**
- * Operating Sytems 2013 - Assignment 2
+ * Operating Systems 2013-2017 - Assignment 2
  *
  */
 
@@ -8,10 +8,6 @@
 
 #include "parser.h"
 
-#define CHUNK_SIZE 100
-#define ERR_ALLOCATION "unable to allocate memory"
-
-#define SHELL_EXIT -100
 
 /* useful macro for handling error codes */
 #define DIE(assertion, call_description) \
@@ -24,15 +20,14 @@
 		} \
 	} while (0)
 
+/**
+ * Concatenate parts of the word to obtain the command
+ */
+LPTSTR get_word(word_t *s);
 
 /**
- * Readline from mini-shell.
+ * Parse arguments in order to succesfully process them using CreateProcess
  */
-char *read_line();
+LPTSTR get_argv(simple_command_t *command);
 
-/**
- * Parse and execute a command.
- */
-int parse_command(command_t *, int, command_t *, void *);
-
-#endif
+#endif /* _UTILS_H */
