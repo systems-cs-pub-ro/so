@@ -1,5 +1,0 @@
-Testele se execută cu comanda:
-
-  make -f Makefile.checker
-
-* Testele se rulează pe Windows în cygwin.
