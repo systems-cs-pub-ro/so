@@ -8,6 +8,6 @@ echo 'for(i = 0 ; i< 10 * 1024 * 1024 && fprintf(g,"*");i++);' >> main.c
 echo 'return 0; }' >> main.c
 gcc -o main.exe main.c
 ./main.exe big_file
-cat < big_file | cat | cat | cat | cat | cat | cat > firstFIle & cat < big_file | cat | cat | cat | cat | cat | cat > secondFIle
 rm -fr main.exe
+cat < big_file | cat | cat | cat | cat | cat | cat > firstFIle & cat < big_file | cat | cat | cat | cat | cat | cat > secondFIle
 exit

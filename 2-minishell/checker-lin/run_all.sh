@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #
-# Tema1 Test Suite
+# Tema2 Test Suite
 #
-# 2012, Operating Systems
+# 2012-2017, Operating Systems
 #
 
 first_test=0
@@ -17,7 +17,7 @@ bash "$script" init
 #bash "$script" check
 
 for i in $(seq $first_test $last_test); do
-   bash "$script" $i
+    bash "$script" $i
 done | tee results.txt
 
 cat results.txt | grep -a '\[.*\]$' | awk -F '[] /[]+' '

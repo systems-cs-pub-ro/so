@@ -1,3 +1,0 @@
-{
-  fprintf(stderr, "testerr\n");
-  fprintf(stdout, "testout\n");

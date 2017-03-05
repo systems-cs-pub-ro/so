@@ -11,7 +11,7 @@ run:
 
 pack:
 	zip -r run_test_lin.zip _test/ Makefile.checker \
-		run_all.sh README
+		run_all.sh README*
 
 clean:
 	-rm -f *~

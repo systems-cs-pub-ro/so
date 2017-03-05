@@ -3,13 +3,14 @@
 #
 # Tema2 Test Suite
 #
-# 2012, Operating Systems
+# 2012-2017, Operating Systems
 #
 
 # ----------------- General declarations and util functions ------------------ #
 
 exec_name="mini-shell"
 ref_name="bash"
+ref_name_alt="dash"
 
 MAIN_TEST_DIR="_test/outputs"
 INPUT_DIR="_test/inputs"
@@ -56,10 +57,15 @@ init_test()
 	REF_FILE="${TEST_NAME}.ref"
 	OUT_FILE="${TEST_NAME}.out"
 
+	local input_basename="${INPUT_DIR}/${TEST_NAME}"
+	[ -f "${input_basename}.${OS_PLATFORM}.txt" ] && \
+		input_basename="${input_basename}.${OS_PLATFORM}" || \
+		input_basename="${input_basename}"
+
 	# copy input files in the testing directory
-	cp ${INPUT_DIR}/${TEST_NAME}.txt ${MAIN_TEST_DIR}/${IN_FILE} &> $LOG_FILE
+	cp ${input_basename}.txt ${MAIN_TEST_DIR}/${IN_FILE} &> $LOG_FILE
 	# copy additional files, if they exist (see test 04)
-	cp ${INPUT_DIR}/${TEST_NAME}?*.txt ${MAIN_TEST_DIR} &> $LOG_FILE
+	#cp ${input_basename}?*.txt ${MAIN_TEST_DIR} &> $LOG_FILE
 	# copy any reference files, if they exist (see test 18)
 	cp ${REFS_DIR}/${TEST_NAME}.ref ${MAIN_TEST_DIR} &> $LOG_FILE
 
@@ -146,12 +152,12 @@ test_output()
 }
 
 # tests common commands
-test_common()
+_test_common()
 {
 	init_test
 
 	# commands to execute the test
-	execute_cmd $ref_name "../${IN_FILE}"
+	execute_cmd $1 "../${IN_FILE}"
 	# move OUT_DIR in order to preserve the pwd output
 	mv ${OUT_DIR} ${REF_DIR}
 	execute_cmd $exec_name "../${IN_FILE}"
@@ -160,6 +166,22 @@ test_common()
 	basic_test diff -r -ui ${REF_DIR} ${OUT_DIR}
 
 	cleanup_test
+}
+
+# default common test
+test_common()
+{
+	_test_common $ref_name
+}
+
+# tests common commands using alternate ref
+test_common_alt()
+{
+	if [ "$OS_PLATFORM" == "win" ]; then
+		_test_common $ref_name_alt
+	else
+		_test_common $ref_name
+	fi
 }
 
 # test 18 - tests environment variables
@@ -192,10 +214,10 @@ test_fun_array=(								\
 	test_common		"Testing variables and redirect"	5	\
 	test_common		"Testing overwritten variables"		2	\
 	test_common		"Testing all operators"			2	\
-	test_common		"Testing parallel operator"		10	\
-	test_common		"Testing big file"			5	\
-	test_common		"Testing sleep command"			7	\
-	test_common		"Testing fscanf function"		7	\
+	test_common_alt		"Testing parallel operator"		10	\
+	test_common_alt		"Testing big file"			5	\
+	test_common_alt		"Testing sleep command"			7	\
+	test_common_alt		"Testing fscanf function"		7	\
 	test_exec_failed	"Testing unknown command"		4	\
 )
 

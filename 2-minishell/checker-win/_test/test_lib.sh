@@ -3,10 +3,16 @@
 #
 # Tema1 Test Suite
 #
-# 2012, Operating Systems
+# 2012-2017, Operating Systems
 #
 
 # ----------------- General declarations and util functions ------------------ #
+
+if [ $(uname -s) = "Linux" ]; then
+	OS_PLATFORM="lin"
+else
+	OS_PLATFORM="win"
+fi
 
 # Enable/disable exiting when program fails.
 EXIT_IF_FAIL=0
@@ -14,8 +20,17 @@ EXIT_IF_FAIL=0
 DEBUG_=0
 # checkpatch.pl URL
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
-CHECKPATCH_IGNORE_FLAGS="
-	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,DOS_LINE_ENDINGS"
+COMMON_IGNORE_FLAGS="
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,CONST_STRUCT"
+LIN_IGNORE_FLAGS="$COMMON_IGNORE_FLAGS"
+WIN_IGNORE_FLAGS="$COMMON_IGNORE_FLAGS,DOS_LINE_ENDINGS"
+
+if [ $OS_PLATFORM == "lin" ]; then
+	CHECKPATCH_IGNORE_FLAGS=$LIN_IGNORE_FLAGS
+else
+	CHECKPATCH_IGNORE_FLAGS=$WIN_IGNORE_FLAGS
+fi
+
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
@@ -78,15 +93,14 @@ function compare()
 basic_test()
 {
 	DEBUG echo "TEST: $@"
-	$@
-	res=$?
 	printf "%02d) %s" "$test_index" "$description"
 
 	for ((i = 0; i < 56 - ${#description}; i++)); do
 		printf "."
 	done
 
-	if test $res -eq 0; then
+	$@ > /dev/null 2>&1
+	if test $? -eq 0; then
 		test_do_pass "$points"
 	else
 		test_do_fail "$points"
