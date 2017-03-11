@@ -34,6 +34,12 @@ SHELL_PROMPT="> "
 # change this of you want to keep the logs after execution
 DO_CLEANUP=yes
 
+BUFFERING_WRAPPER=""
+which stdbuf &> /dev/null
+if [ $? -eq 0 ]; then
+	# stdbuf may not be installed on cygwin
+	BUFFERING_WRAPPER="stdbuf -i 0"
+fi
 
 
 # ---------------------------------------------------------------------------- #
@@ -116,7 +122,7 @@ execute_cmd()
 	OUTPUT=$3
 	[ -z "$OUTPUT" ] && OUTPUT=$LOG_FILE
 	mkdir -p ${OUT_DIR} && cd ${OUT_DIR} &> $LOG_FILE
-	timeout $TEST_TIMEOUT stdbuf -i 0 $EXEC < "${INPUT}" &> $OUTPUT
+	timeout $TEST_TIMEOUT $BUFFERING_WRAPPER $EXEC < "${INPUT}" &> $OUTPUT
 	# Ocasionally, in a virtualized environment, the diff that compares the
 	# target implementation with the reference output starts before the
 	# target implementation has finished writing files to disk. Handle this
