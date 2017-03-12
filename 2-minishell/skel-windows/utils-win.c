@@ -15,7 +15,7 @@
 #undef _UNICODE
 #undef UNICODE
 
-#define MAX_SIZE_ENVIRONMENT_VARIABLE 100
+#define MAX_SIZE_ENVIRONMENT_VARIABLE 512
 
 /**
  * Debug method, used by DIE macro.
