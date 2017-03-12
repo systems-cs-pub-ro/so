@@ -21,21 +21,21 @@ char *get_word(word_t *s)
 	char *substring = NULL;
 
 	while (s != NULL) {
-		substring = strdup(s->string);
-
-		if (substring == NULL)
-			return NULL;
-
 		if (s->expand == true) {
-			char *aux = substring;
-
-			substring = getenv(substring);
+			substring = getenv(s->string);
 
 			/* prevents strlen from failing */
 			if (substring == NULL)
 				substring = "";
 
-			free(aux);
+		} else {
+			substring = strdup(s->string);
+
+			if (substring == NULL) {
+				if (string)
+					free(string);
+				return NULL;
+			}
 		}
 
 		substring_length = strlen(substring);

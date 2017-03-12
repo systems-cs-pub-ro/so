@@ -50,8 +50,6 @@ LPTSTR get_word(word_t *s)
 	DWORD dwret;
 
 	while (s != NULL) {
-		strcpy(substring, s->string);
-
 		if (s->expand == true) {
 			dwret = GetEnvironmentVariable(
 				substring,
@@ -61,6 +59,9 @@ LPTSTR get_word(word_t *s)
 			if (!dwret)
 				/* Environment Variable does not exist. */
 				strcpy(substring, "");
+
+		} else {
+			strcpy(substring, s->string);
 		}
 
 		substring_length = strlen(substring);
