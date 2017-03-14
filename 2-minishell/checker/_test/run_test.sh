@@ -41,6 +41,9 @@ if [ $? -eq 0 ]; then
 	BUFFERING_WRAPPER="stdbuf -i 0"
 fi
 
+USE_VALGRIND=no
+VALGRIND_LOG="valgrind.log"
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -53,6 +56,20 @@ init_test()
 	if ! [ -e "$exec_name" ]; then
 		echo "$exec_name not found! Cannot run the test"
 		exit 1
+	fi
+
+	if [ "$USE_VALGRIND" = "yes" ]; then
+		which valgrind &> /dev/null
+		if [ $? -eq 0 ]; then
+			exec_name="valgrind --leak-check=full \
+			                    --show-leak-kinds=all \
+					    --child-silent-after-fork=yes \
+					    --track-fds=yes \
+					    --log-file=$VALGRIND_LOG \
+					    $exec_name"
+		else
+			echo "valgrind is not installed."
+		fi
 	fi
 
 	# generates random file as test file
@@ -149,10 +166,10 @@ test_output()
 	execute_cmd $ref_name "../${REF_FILE}" "${OUT_FILE}"
 	# move OUT_DIR in order to preserve the pwd output
 	mv ${OUT_DIR} ${REF_DIR}
-	execute_cmd $exec_name "../${IN_FILE}" "${OUT_FILE}"
+	execute_cmd "$exec_name" "../${IN_FILE}" "${OUT_FILE}"
 
 	# test output
-	basic_test diff -r -ui ${REF_DIR} ${OUT_DIR}
+	basic_test diff -r -ui -x $VALGRIND_LOG ${REF_DIR} ${OUT_DIR}
 
 	cleanup_test
 }
@@ -163,13 +180,13 @@ _test_common()
 	init_test
 
 	# commands to execute the test
-	execute_cmd $1 "../${IN_FILE}"
+	execute_cmd "$1" "../${IN_FILE}"
 	# move OUT_DIR in order to preserve the pwd output
 	mv ${OUT_DIR} ${REF_DIR}
-	execute_cmd $exec_name "../${IN_FILE}"
+	execute_cmd "$exec_name" "../${IN_FILE}"
 
 	# test output
-	basic_test diff -r -ui ${REF_DIR} ${OUT_DIR}
+	basic_test diff -r -ui -x $VALGRIND_LOG ${REF_DIR} ${OUT_DIR}
 
 	cleanup_test
 }
@@ -190,13 +207,13 @@ test_common_alt()
 	fi
 }
 
-# test 18 - tests environment variables
+# test 18
 test_exec_failed()
 {
 	init_test
 
 	# commands to execute the test
-	execute_cmd $exec_name "../${IN_FILE}" "${REF_FILE}"
+	execute_cmd "$exec_name" "../${IN_FILE}" "${REF_FILE}"
 
 	# test output
 	basic_test diff -r -uib ${REF_FILE} ${OUT_DIR}/${REF_FILE}
