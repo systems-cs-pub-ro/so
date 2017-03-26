@@ -6,8 +6,10 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
+#include <windows.h>
 #include "parser.h"
 
+VOID PrintLastError(const PCHAR message);
 
 /* useful macro for handling error codes */
 #define DIE(assertion, call_description) \

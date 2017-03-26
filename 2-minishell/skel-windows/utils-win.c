@@ -52,7 +52,7 @@ LPTSTR get_word(word_t *s)
 	while (s != NULL) {
 		if (s->expand == true) {
 			dwret = GetEnvironmentVariable(
-				substring,
+				s->string,
 				substring,
 				MAX_SIZE_ENVIRONMENT_VARIABLE
 			);
