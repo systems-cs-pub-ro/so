@@ -1,7 +1,7 @@
 /*
  * virtual machine simulator - useful functions for Linux test suite
  *
- * 2016, Operating Systems
+ * 2017, Operating Systems
  */
 
 #include "common.h"

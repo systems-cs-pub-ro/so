@@ -1,7 +1,7 @@
 /*
  * virtual machine simulator header
  *
- * 2016, Operating Systems
+ * 2017, Operating Systems
  */
 
 #ifndef VMSIM_H_

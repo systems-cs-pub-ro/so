@@ -3,7 +3,7 @@
  *
  * implementations in vmsim_test_{lin,win}.h
  *
- * 2016, Operating Systems
+ * 2017, Operating Systems
  */
 
 #ifndef VMSIM_AUX_H_

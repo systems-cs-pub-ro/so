@@ -1,7 +1,7 @@
 /*
  * virtual memory simulator - test suite
  *
- * 2016, Operating Systems
+ * 2017, Operating Systems
  */
 
 #include "run_test.h"
