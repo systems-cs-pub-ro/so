@@ -32,7 +32,7 @@ void fill_file(w_handle_t handle, w_size_t size, char byte)
 	memset(buf, byte, BUFSIZ);
 	left = size;
 	while (left > 0) {
-		to_write = (BUFSIZ > left ? left : BUFSIZ);
+		to_write = (left < BUFSIZ ? left : BUFSIZ);
 		w_write_file(handle, buf, to_write);
 		left -= to_write;
 	}
@@ -830,8 +830,10 @@ void test_initial_readonly_page_is_swapped_out(void)
 	basic_test(match_found == TRUE);
 }
 
-/* check that after pages are swapped,
- * access to those pages results in faults */
+/*
+ * check that after pages are swapped,
+ * access to those pages results in faults
+ */
 void test_swap_in_faults(void)
 {
 	vm_map_t map;

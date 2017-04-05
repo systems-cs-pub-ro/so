@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <time.h>
 
-#define max_points 90
+#define max_points 95
 
 /* global variables used by the test */
 static char *description;
