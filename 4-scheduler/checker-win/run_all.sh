@@ -6,7 +6,7 @@ script=run_test.exe
 timeout=1
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
 CHECKPATCH_IGNORE_FLAGS="
-	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,DOS_LINE_ENDINGS"
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,DOS_LINE_ENDINGS,CONST_STRUCT"
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
@@ -52,14 +52,14 @@ check_source()
 	# now we have sources in $SRC_DIR or .
 	OUT=$(find "${SRC_DIR:-.}" -type f -iregex \
 		'.*\.\(c\|h\|cpp\|hpp\|cc\|hh\|cxx\|hxx\)' | \
-		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +2 | \
+		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +3 | \
 		sort -u -t":" -k4,4  | head -n 20)
 	echo "$OUT"
-	printf "00) Sources check..........................................."
+	printf "00) Sources check..........................................." | tee check_source_result.txt
 	if [ -z "$OUT" ]; then
-		printf "passed  [00/90]\n"
+		printf "passed  [05/95]\n" | tee check_source_result.txt
 	else
-		printf "failed  [00/90]\n"
+		printf "failed  [00/95]\n" | tee check_source_result.txt
 	fi
 }
 
@@ -71,12 +71,15 @@ check_source
 
 for i in $(seq $first_test $last_test); do
 	timeout $timeout ./_test/"$script" $i
-	if [ $? -eq 124 ]; then
-		printf "%02d) timeout.................................................failed  [00/90]\n" $i
+	exit_code=$?
+	if [ $exit_code -eq 124 ]; then
+		printf "%02d) timeout.................................................failed  [00/95]\n" $i
+	elif [ $exit_code -ne 0 ]; then
+		printf "%02d) crash...................................................failed  [00/95]\n" $i
 	fi
 done | tee results.txt
 
-cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
+cat results.txt check_source_result.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
 BEGIN {
 	sum = 0
 }
@@ -86,10 +89,10 @@ BEGIN {
 }
 
 END {
-	printf "\n%66s  [%02d/90]\n", "Total:", sum;
+	printf "\n%66s  [%02d/95]\n", "Total:", sum;
 }'
 
 # Cleanup testing environment
 timeout $timeout ./_test/"$script" cleanup
-rm -f results.txt
+rm -f results.txt check_source_result.txt
 

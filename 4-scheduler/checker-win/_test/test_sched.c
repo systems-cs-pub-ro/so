@@ -146,7 +146,7 @@ test:
  *
  * tests scheduler fork parameters
  */
-static void test_sched_handler_06(unsigned prio) {}
+static void test_sched_handler_06(unsigned int prio) {}
 
 void test_sched_06(void)
 {
@@ -182,9 +182,9 @@ test:
  *
  * tests if the scheduler runs the handler
  */
-static unsigned test_sched_fork_executed;
+static unsigned int test_sched_fork_executed;
 
-static void test_sched_handler_07(unsigned prio)
+static void test_sched_handler_07(unsigned int prio)
 {
 	test_sched_fork_executed = 1;
 }
@@ -215,9 +215,9 @@ test:
  *
  * tests if the scheduler runs the handler
  */
-static unsigned test_sched_fork_priority;
+static unsigned int test_sched_fork_priority;
 
-static void test_sched_handler_08(unsigned prio)
+static void test_sched_handler_08(unsigned int prio)
 {
 	test_sched_fork_priority = prio;
 }
@@ -251,7 +251,7 @@ test:
  */
 static tid_t test_fork_tid;
 
-static void test_sched_handler_09(unsigned prio)
+static void test_sched_handler_09(unsigned int prio)
 {
 	test_fork_tid = get_tid();
 }
@@ -285,15 +285,15 @@ test:
  *
  * tests if the scheduler runs each fork
  */
-static unsigned test_sched_fork_handler_runs;
-static unsigned test_sched_fork_runs;
+static unsigned int test_sched_fork_handler_runs;
+static unsigned int test_sched_fork_runs;
 
-static void test_sched_handler_10_worker(unsigned prio)
+static void test_sched_handler_10_worker(unsigned int prio)
 {
 	test_sched_fork_handler_runs++;
 }
 
-static void test_sched_handler_10_master(unsigned prio)
+static void test_sched_handler_10_master(unsigned int prio)
 {
 	unsigned int run;
 
@@ -324,23 +324,23 @@ test:
  *
  * tests if the scheduler runs each fork with a different id
  */
-static unsigned test_fork_rand_tests;
-static unsigned test_fork_execution_status;
+static unsigned int test_fork_rand_tests;
+static unsigned int test_fork_execution_status;
 static tid_t test_fork_exec_tids[SO_MAX_UNITS];
 static tid_t test_fork_tids[SO_MAX_UNITS];
 
-static void test_sched_handler_11_worker(unsigned dummy)
+static void test_sched_handler_11_worker(unsigned int dummy)
 {
-	static unsigned exec_idx;
+	static unsigned int exec_idx;
 
 	/* signal that he's the one that executes in round exec_idx */
 	test_fork_exec_tids[exec_idx++] = get_tid();
 	test_fork_execution_status = SO_TEST_SUCCESS;
 }
 
-static void test_sched_handler_11_master(unsigned dummy)
+static void test_sched_handler_11_master(unsigned int dummy)
 {
-	unsigned i;
+	unsigned int i;
 
 	/*
 	 * this thread should not be preempted as it executes maximum
@@ -355,7 +355,7 @@ static void test_sched_handler_11_master(unsigned dummy)
 
 void test_sched_11(void)
 {
-	unsigned i;
+	unsigned int i;
 
 	test_fork_rand_tests = get_rand(1, SO_MAX_UNITS - 1);
 	test_fork_execution_status = SO_TEST_FAIL;

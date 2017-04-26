@@ -1,7 +1,7 @@
 /*
  * Threads scheduler execution tests
  *
- * 2012, Operating Systems
+ * 2017, Operating Systems
  */
 
 #include "scheduler_test.h"
@@ -15,13 +15,13 @@
  *
  * tests if the scheduler properly runs exec without preemption
  */
-static unsigned test_exec_status;
-static unsigned test_exec_nr;
+static unsigned int test_exec_status;
+static unsigned int test_exec_nr;
 static tid_t test_exec_tid;
 
-static void test_sched_handler_12(unsigned dummy)
+static void test_sched_handler_12(unsigned int dummy)
 {
-	unsigned i;
+	unsigned int i;
 
 	test_exec_tid = get_tid();
 
@@ -35,7 +35,7 @@ static void test_sched_handler_12(unsigned dummy)
 
 void test_sched_12(void)
 {
-	unsigned q;
+	unsigned int q;
 
 	tid_t my_tid;
 
@@ -73,7 +73,7 @@ static tid_t test_tid_13_2;
 		test_exec_last_tid = (new_id); \
 	} while (0)
 
-static void test_sched_handler_13_2(unsigned dummy)
+static void test_sched_handler_13_2(unsigned int dummy)
 {
 	SO_TEST_AND_SET(test_tid_13_1, test_tid_13_2);
 	so_exec();
@@ -88,7 +88,7 @@ static void test_sched_handler_13_2(unsigned dummy)
 	test_exec_status = SO_TEST_SUCCESS;
 }
 
-static void test_sched_handler_13_1(unsigned dummy)
+static void test_sched_handler_13_1(unsigned int dummy)
 {
 	test_exec_last_tid = test_tid_13_1 = get_tid();
 	test_tid_13_2 = so_fork(test_sched_handler_13_2, 0);
@@ -115,7 +115,8 @@ void test_sched_13(void)
 	test_exec_status = SO_TEST_FAIL;
 
 	/* quantum is 2, so each task should be preempted
-	 * after running two instructions */
+	 * after running two instructions
+	 */
 	so_init(2, 0);
 
 	so_fork(test_sched_handler_13_1, 0);
@@ -136,7 +137,7 @@ static tid_t test_tid_14_2;
 static tid_t test_tid_14_3;
 static tid_t test_tid_14_4;
 
-static void test_sched_handler_14_4(unsigned dummy)
+static void test_sched_handler_14_4(unsigned int dummy)
 {
 	SO_TEST_AND_SET(test_tid_14_3, test_tid_14_4);
 	so_exec();
@@ -145,7 +146,7 @@ static void test_sched_handler_14_4(unsigned dummy)
 	test_exec_status = SO_TEST_FAIL;
 }
 
-static void test_sched_handler_14_3(unsigned dummy)
+static void test_sched_handler_14_3(unsigned int dummy)
 {
 	SO_TEST_AND_SET(test_tid_14_2, test_tid_14_3);
 	so_exec();
@@ -164,7 +165,7 @@ static void test_sched_handler_14_3(unsigned dummy)
 	test_exec_status = SO_TEST_SUCCESS;
 }
 
-static void test_sched_handler_14_2(unsigned dummy)
+static void test_sched_handler_14_2(unsigned int dummy)
 {
 	SO_TEST_AND_SET(test_tid_14_1, test_tid_14_2);
 	so_exec();
@@ -176,7 +177,7 @@ static void test_sched_handler_14_2(unsigned dummy)
 	test_exec_status = SO_TEST_FAIL;
 }
 
-static void test_sched_handler_14_1(unsigned dummy)
+static void test_sched_handler_14_1(unsigned int dummy)
 {
 	test_exec_last_tid = test_tid_14_1 = get_tid();
 	test_tid_14_2 = so_fork(test_sched_handler_14_2, 0);
@@ -227,7 +228,7 @@ void test_sched_14(void)
  *
  * tests if the scheduler properly preempts a task according to priorities
  */
-static unsigned test_exec_last_priority;
+static unsigned int test_exec_last_priority;
 
 /* fails if the last priority set is not prio */
 #define SO_FAIL_IF_NOT_PRIO(prio, msg) \
@@ -247,7 +248,7 @@ static unsigned test_exec_last_priority;
  * - P4 spawns P3
  * - P3 spawns P1
  */
-static void test_sched_handler_15(unsigned priority)
+static void test_sched_handler_15(unsigned int priority)
 {
 	switch (priority) {
 	case 1:
@@ -311,10 +312,10 @@ void test_sched_15(void)
  * tests if the scheduler properly preempts a task according to priorities
  */
 struct so_task_info_t {
-	unsigned creation_time;
-	unsigned priority;
-	unsigned executed;
-	unsigned runtime;
+	unsigned int creation_time;
+	unsigned int priority;
+	unsigned int executed;
+	unsigned int runtime;
 	tid_t tid;
 };
 
@@ -325,16 +326,16 @@ struct so_task_info_t {
  * again, these variables should be guarded by the scheduler itself,
  * because only one function can be executed at a certain moment
  */
-static unsigned random_q;
-static unsigned exec_time;
-static unsigned tasks_no = 1;
+static unsigned int random_q;
+static unsigned int exec_time;
+static unsigned int tasks_no = 1;
 static struct so_task_info_t tasks_info[SO_MAX_EXECUTION_TIME];
 static struct so_task_info_t *tasks_history[SO_MAX_EXECUTION_TIME];
 
-static void test_sched_handler_16(unsigned priority)
+static void test_sched_handler_16(unsigned int priority)
 {
-	unsigned executed_fork = 0;
-	unsigned rand_iterations;
+	unsigned int executed_fork = 0;
+	unsigned int rand_iterations;
 	struct so_task_info_t *my_info;
 
 	/* fill info about my task */
@@ -372,7 +373,7 @@ static void test_sched_handler_16(unsigned priority)
 }
 
 /* checks if there is a higher priority waiting to run */
-static inline int is_higher(unsigned *vec, unsigned prio)
+static inline int is_higher(unsigned int *vec, unsigned int prio)
 {
 	for (prio++; prio < SO_MAX_PRIO; prio++)
 		if (vec[prio] != 0)
@@ -382,9 +383,9 @@ static inline int is_higher(unsigned *vec, unsigned prio)
 
 static void test_sched_16_check(void)
 {
-	unsigned priority_stats[SO_MAX_PRIO];
-	unsigned idx;
-	unsigned total_exec_time = 0;
+	unsigned int priority_stats[SO_MAX_PRIO];
+	unsigned int idx;
+	unsigned int total_exec_time = 0;
 	struct so_task_info_t *last_task = 0;
 	struct so_task_info_t *current_task;
 

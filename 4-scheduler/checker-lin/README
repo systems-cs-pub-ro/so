@@ -1,7 +1,7 @@
 #
 #  4 - Thread Scheduler (Linux)
 #
-#  2015, Operating Systems
+#  2017, Operating Systems
 #
 
 # Archive:
@@ -34,7 +34,7 @@ In order to run the test suite you can either use the run_all.sh script or
 the run_test executable. The loader must be able to locate the library
 (libscheduler.so) (use LD_LIBRARY_PATH).
 
-The run_all.sh script runs all tests and computes assignment grade (90 points
+The run_all.sh script runs all tests and computes assignment grade (95 points
 maximum):
 
 	LD_LIBRARY_PATH=. ./run_all.sh

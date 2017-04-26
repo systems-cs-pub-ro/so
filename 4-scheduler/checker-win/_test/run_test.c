@@ -15,7 +15,7 @@
 /* custom tests */
 #include "scheduler_test.h"
 
-#define MAX_POINTS 90
+#define MAX_POINTS 95
 
 /* global variables used by the test */
 static char *description;

@@ -1,7 +1,7 @@
 /*
  * Threads scheduler header
  *
- * 2015, Operating Systems
+ * 2017, Operating Systems
  */
 
 #ifndef SO_SCHEDULER_H_
@@ -49,7 +49,7 @@ extern "C" {
 /*
  * handler prototype
  */
-typedef void (so_handler)(unsigned);
+typedef void (so_handler)(unsigned int);
 
 /*
  * creates and initializes scheduler
@@ -57,7 +57,7 @@ typedef void (so_handler)(unsigned);
  * + number of IO devices supported
  * returns: 0 on success or negative on error
  */
-DECL_PREFIX int so_init(unsigned, unsigned);
+DECL_PREFIX int so_init(unsigned int time_quantum, unsigned int io);
 
 /*
  * creates a new so_task_t and runs it according to the scheduler
@@ -65,21 +65,21 @@ DECL_PREFIX int so_init(unsigned, unsigned);
  * + priority
  * returns: tid of the new task if successful or INVALID_TID
  */
-DECL_PREFIX tid_t so_fork(so_handler *, unsigned);
+DECL_PREFIX tid_t so_fork(so_handler *func, unsigned int priority);
 
 /*
  * waits for an IO device
  * + device index
  * returns: -1 if the device does not exist or 0 on success
  */
-DECL_PREFIX int so_wait(unsigned);
+DECL_PREFIX int so_wait(unsigned int io);
 
 /*
  * signals an IO device
  * + device index
  * return the number of tasks woke or -1 on error
  */
-DECL_PREFIX int so_signal(unsigned);
+DECL_PREFIX int so_signal(unsigned int io);
 
 /*
  * does whatever operation

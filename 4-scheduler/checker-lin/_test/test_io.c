@@ -1,7 +1,7 @@
 /*
  * Threads scheduler io tests
  *
- * 2012, Operating Systems
+ * 2017, Operating Systems
  */
 
 #include "scheduler_test.h"
@@ -16,18 +16,18 @@
 
 #define SO_PREEMPT_UNITS	3
 
-static unsigned exec_time;
-static unsigned exec_devs;
-static unsigned last_priority;
-static unsigned exec_priority;
-static unsigned test_exec_status = SO_TEST_FAIL;
+static unsigned int exec_time;
+static unsigned int exec_devs;
+static unsigned int last_priority;
+static unsigned int exec_priority;
+static unsigned int test_exec_status = SO_TEST_FAIL;
 
 /*
  * 17) Test IO devices
  *
  * tests if the scheduler properly uses the IO devices
  */
-static void test_sched_handler_17(unsigned prio)
+static void test_sched_handler_17(unsigned int prio)
 {
 	if (prio != exec_priority)
 		so_fail("invalid exec priority");
@@ -72,9 +72,9 @@ test:
  *
  * tests if the scheduler properly handles IO devices
  */
-static void test_sched_handler_18_signal(unsigned dummy)
+static void test_sched_handler_18_signal(unsigned int dummy)
 {
-	unsigned step;
+	unsigned int step;
 
 	/* check if wait was called */
 	if (exec_time != 2) {
@@ -95,7 +95,7 @@ static void test_sched_handler_18_signal(unsigned dummy)
 	so_signal(SO_DEV0);
 }
 
-static void test_sched_handler_18_wait(unsigned dummy)
+static void test_sched_handler_18_wait(unsigned int dummy)
 {
 	exec_time++;
 	so_fork(test_sched_handler_18_signal, 0);
@@ -145,7 +145,7 @@ void test_sched_18(void)
  * Threads are mixed to wait/signal lower/higher priorities
  * P2 refers to the task with priority 2
  */
-static void test_sched_handler_19(unsigned priority)
+static void test_sched_handler_19(unsigned int priority)
 {
 	switch (priority) {
 	case 1:
@@ -238,14 +238,14 @@ void test_sched_19(void)
  * tests if the scheduler properly handles IO devices and preemption
  */
 
-static unsigned num_executions;
+static unsigned int num_executions;
 
 /**
  * high priority thread handler
  */
-static void test_sched_handler_20_high_worker(unsigned priority)
+static void test_sched_handler_20_high_worker(unsigned int priority)
 {
-	static unsigned high_dev;
+	static unsigned int high_dev;
 
 	so_exec();
 
@@ -253,7 +253,8 @@ static void test_sched_handler_20_high_worker(unsigned priority)
 	++high_dev;
 
 	/* high priority threads will run first
-	 * and will wait on devices */
+	 * and will wait on devices
+	 */
 	if (so_wait(high_dev))
 		so_fail("cannot wait on dev");
 
@@ -269,10 +270,10 @@ static void test_sched_handler_20_high_worker(unsigned priority)
 /**
  * medium priority thread handler
  */
-static void test_sched_handler_20_med_worker(unsigned priority)
+static void test_sched_handler_20_med_worker(unsigned int priority)
 {
-	static unsigned med_dev1;
-	static unsigned med_dev2 = SO_MAX_NUM_EVENTS;
+	static unsigned int med_dev1;
+	static unsigned int med_dev2 = SO_MAX_NUM_EVENTS;
 
 	so_exec();
 
@@ -280,7 +281,8 @@ static void test_sched_handler_20_med_worker(unsigned priority)
 	++med_dev1;
 
 	/* medium priority threads will run second
-	 * and will wake up high priority threads */
+	 * and will wake up high priority threads
+	 */
 	if (so_signal(med_dev1) != 1)
 		so_fail("should wake only one thread");
 
@@ -299,9 +301,9 @@ static void test_sched_handler_20_med_worker(unsigned priority)
 /**
  * low priority thread handler
  */
-static void test_sched_handler_20_low_worker(unsigned priority)
+static void test_sched_handler_20_low_worker(unsigned int priority)
 {
-	static unsigned low_dev = SO_MAX_NUM_EVENTS;
+	static unsigned int low_dev = SO_MAX_NUM_EVENTS;
 
 	so_exec();
 
@@ -309,7 +311,8 @@ static void test_sched_handler_20_low_worker(unsigned priority)
 	--low_dev;
 
 	/* low priority threads will run third
-	 * and will wake up medium priority threads */
+	 * and will wake up medium priority threads
+	 */
 	if (so_signal(low_dev) != 1)
 		so_fail("should wake only one thread");
 
@@ -321,13 +324,13 @@ static void test_sched_handler_20_low_worker(unsigned priority)
 /**
  * master thread handler
  */
-static void test_sched_handler_20_master(unsigned priority)
+static void test_sched_handler_20_master(unsigned int priority)
 {
 	int err;
 	int i;
-	unsigned high_prio = SO_MAX_PRIO - 1;
-	unsigned med_prio = SO_MAX_PRIO - 2;
-	unsigned low_prio = SO_MAX_PRIO - 3;
+	unsigned int high_prio = SO_MAX_PRIO - 1;
+	unsigned int med_prio = SO_MAX_PRIO - 2;
+	unsigned int low_prio = SO_MAX_PRIO - 3;
 
 	/* create SO_MAX_NUM_EVENTS/2 threads with high priority */
 	for (i = 0; i < SO_MAX_NUM_EVENTS; i += 2) {
