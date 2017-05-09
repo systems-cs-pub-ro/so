@@ -3,7 +3,7 @@
 #
 # Asynchronous Web Server - test suite
 #
-# 2011, Operating Systems
+# 2011-2017, Operating Systems
 #
 
 # ----------------- General declarations and util functions ------------------ #

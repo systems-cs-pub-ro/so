@@ -6,7 +6,7 @@
  *  - do not copy receive buffer into send buffer when send buffer data is
  *      still valid
  *
- * 2011, Operating Systems
+ * 2011-2017, Operating Systems
  */
 
 #include <stdio.h>

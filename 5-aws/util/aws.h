@@ -1,7 +1,7 @@
 /*
  * Asynchronous Web Server - header file (macros and structures)
  *
- * 2011, Operating Systems
+ * 2011-2017, Operating Systems
  */
 
 #ifndef AWS_H_

@@ -1,7 +1,7 @@
 /*
  * useful structures/macros
  *
- * 2011, Operating Systems
+ * 2011-2017, Operating Systems
  */
 
 #ifndef UTIL_H_
