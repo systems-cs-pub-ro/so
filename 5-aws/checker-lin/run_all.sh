@@ -3,10 +3,11 @@
 first_test=1
 last_test=35
 script=run_test.sh
+timeout=20
 log_file=test.log
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
 CHECKPATCH_IGNORE_FLAGS="
-	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS"
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,CONST_STRUCT,MACRO_WITH_FLOW_CONTROL"
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
@@ -57,30 +58,36 @@ check_source()
 	# now we have sources in $SRC_DIR or .
 	OUT=$(find "${SRC_DIR:-.}" -type f -iregex \
 		'.*\.\(c\|h\|cpp\|hpp\|cc\|hh\|cxx\|hxx\)' | $SKIP | \
-		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +2 | \
+		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +3 | \
 		sort -u -t":" -k4,4  | head -n 20)
 	echo "$OUT"
-	printf "00) Sources check..........................................."
+	printf "00) Sources check..........................................." | tee check_source_result.txt
 	if [ -z "$OUT" ]; then
-		printf "passed  [00/90]\n"
+		printf "passed  [05/95]\n" | tee check_source_result.txt
 	else
-		printf "failed  [00/90]\n"
+		printf "failed  [00/95]\n" | tee check_source_result.txt
 	fi
 }
 
 # Call init to set up testing environment
-bash ./_test/"$script" init
+timeout $timeout bash ./_test/"$script" init
 
 # Check the sources using checkpatch
 check_source
 
 for i in $(seq $first_test $last_test); do
 	echo "=== Enter test $i ===" &>> $log_file
-	bash ./_test/"$script" $i 2>> $log_file
+	timeout $timeout bash ./_test/"$script" $i 2>> $log_file
 	echo "=== Exit test $i ===" &>> $log_file
+	exit_code=$?
+	if [ $exit_code -eq 124 ]; then
+		printf "%02d) timeout.................................................failed  [00/95]\n" $i
+	elif [ $exit_code -ne 0 ]; then
+		printf "%02d) crash...................................................failed  [00/95]\n" $i
+	fi
 done | tee results.txt
 
-cat results.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
+cat results.txt check_source_result.txt | grep '\[.*\]$' | awk -F '[] /[]+' '
 BEGIN {
 	sum = 0
 }
@@ -90,10 +97,10 @@ BEGIN {
 }
 
 END {
-	printf "\n%66s  [%02d/90]\n", "Total:", sum;
+	printf "\n%66s  [%02d/95]\n", "Total:", sum;
 }'
 
 # Cleanup testing environment
-bash ./_test/"$script" cleanup
-rm -f results.txt
+timeout $timeout bash ./_test/"$script" cleanup
+rm -f results.txt check_source_result.txt
 
