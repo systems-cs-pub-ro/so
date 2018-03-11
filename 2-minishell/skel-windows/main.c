@@ -1,5 +1,5 @@
 /**
- * Operating Systems 2013-2017 - Assignment 2
+ * Operating Systems 2013-2018 - Assignment 2
  *
  */
 
@@ -12,9 +12,7 @@
 #include "utils.h"
 
 #define PROMPT             "> "
-
-#define CHUNK_SIZE         100
-#define ERR_ALLOCATION     "unable to allocate memory"
+#define CHUNK_SIZE         1024
 
 
 void parse_error(const char *str, const int where)
@@ -27,27 +25,19 @@ void parse_error(const char *str, const int where)
  */
 static char *read_line(void)
 {
-	char *instr;
-	char *chunk;
-	char *ret;
+	char *line = NULL;
+	int line_length = 0;
 
-	int instr_length;
+	char chunk[CHUNK_SIZE];
 	int chunk_length;
+
+	char *rc;
 
 	int endline = 0;
 
-	chunk = calloc(CHUNK_SIZE, sizeof(char));
-	if (chunk == NULL) {
-		fprintf(stderr, ERR_ALLOCATION);
-		exit(EXIT_FAILURE);
-	}
-
-	instr = NULL;
-	instr_length = 0;
-
 	while (!endline) {
-		ret = fgets(chunk, CHUNK_SIZE, stdin);
-		if (ret == NULL)
+		rc = fgets(chunk, CHUNK_SIZE, stdin);
+		if (rc == NULL)
 			break;
 
 		chunk_length = strlen(chunk);
@@ -60,21 +50,16 @@ static char *read_line(void)
 			endline = 1;
 		}
 
-		ret = instr;
-		instr = realloc(instr, instr_length + CHUNK_SIZE + 1);
-		if (instr == NULL) {
-			free(ret);
-			return instr;
-		}
+		line = realloc(line, line_length + CHUNK_SIZE);
+		DIE(line == NULL, "Error allocating command line");
 
-		memset(instr + instr_length, 0, CHUNK_SIZE);
-		strcat(instr, chunk);
-		instr_length += chunk_length;
+		line[line_length] = '\0';
+		strcat(line, chunk);
+
+		line_length += CHUNK_SIZE;
 	}
 
-	free(chunk);
-
-	return instr;
+	return line;
 }
 
 static void start_shell(void)

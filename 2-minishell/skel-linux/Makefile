@@ -3,6 +3,7 @@ CFLAGS=-g -Wall
 OBJ_PARSER=parser.tab.o parser.yy.o
 OBJ=main.o cmd.o utils-lin.o
 TARGET=mini-shell
+.PHONY=build clean
 
 build: $(TARGET)
 

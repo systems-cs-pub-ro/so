@@ -1,5 +1,5 @@
 /**
- * Operating Systems 2013-2017 - Assignment 2
+ * Operating Systems 2013-2018 - Assignment 2
  *
  */
 
@@ -14,11 +14,11 @@
  */
 char *get_word(word_t *s)
 {
-	int string_length = 0;
-	int substring_length = 0;
-
 	char *string = NULL;
-	char *substring = NULL;
+	int string_length = 0;
+
+	const char *substring = NULL;
+	int substring_length = 0;
 
 	while (s != NULL) {
 		if (s->expand == true) {
@@ -28,32 +28,18 @@ char *get_word(word_t *s)
 			if (substring == NULL)
 				substring = "";
 
-		} else {
-			substring = strdup(s->string);
-
-			if (substring == NULL) {
-				if (string)
-					free(string);
-				return NULL;
-			}
-		}
+		} else
+			substring = s->string;
 
 		substring_length = strlen(substring);
 
 		string = realloc(string, string_length + substring_length + 1);
-		if (string == NULL) {
-			if (s->expand == false)
-				free(substring);
-			return NULL;
-		}
+		DIE(string == NULL, "Error allocating word string.");
 
-		memset(string + string_length, 0, substring_length + 1);
-
+		string[string_length] = '\0';
 		strcat(string, substring);
-		string_length += substring_length;
 
-		if (s->expand == false)
-			free(substring);
+		string_length += substring_length;
 
 		s = s->next_part;
 	}
@@ -68,34 +54,35 @@ char *get_word(word_t *s)
 char **get_argv(simple_command_t *command, int *size)
 {
 	char **argv;
+	int argc, _argc;
+
 	word_t *param;
 
-	int argc = 0;
+	argc = 1;
 
-	argv = calloc(argc + 1, sizeof(char *));
-	DIE(argv == NULL, "Error allocating argv.");
-
-	argv[argc] = get_word(command->verb);
-	DIE(argv[argc] == NULL, "Error retrieving word.");
-
-	argc++;
-
+	/* Get parameters number */
 	param = command->params;
 	while (param != NULL) {
-		argv = realloc(argv, (argc + 1) * sizeof(char *));
-		DIE(argv == NULL, "Error reallocating argv.");
-
-		argv[argc] = get_word(param);
-		DIE(argv[argc] == NULL, "Error retrieving word.");
-
 		param = param->next_word;
 		argc++;
 	}
 
-	argv = realloc(argv, (argc + 1) * sizeof(char *));
-	DIE(argv == NULL, "Error reallocating argv.");
+	argv = calloc(argc + 1, sizeof(char *));
+	DIE(argv == NULL, "Error allocating argv.");
 
-	argv[argc] = NULL;
+	argv[0] = get_word(command->verb);
+	DIE(argv[0] == NULL, "Error retrieving word.");
+
+	param = command->params;
+	_argc = 1;
+	while (param != NULL) {
+		argv[_argc] = get_word(param);
+		DIE(argv[_argc] == NULL, "Error retrieving word.");
+
+		param = param->next_word;
+		_argc++;
+	}
+
 	*size = argc;
 
 	return argv;

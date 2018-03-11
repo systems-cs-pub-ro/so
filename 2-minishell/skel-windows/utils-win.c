@@ -1,5 +1,5 @@
 /**
- * Operating Systems 2013-2017 - Assignment 2
+ * Operating Systems 2013-2018 - Assignment 2
  *
  */
 
@@ -41,11 +41,13 @@ VOID PrintLastError(const PCHAR message)
  */
 LPTSTR get_word(word_t *s)
 {
+	LPTSTR string = NULL;
 	DWORD string_length = 0;
+
+	LPCTSTR substring;
 	DWORD substring_length = 0;
 
-	LPTSTR string = NULL;
-	CHAR substring[MAX_SIZE_ENVIRONMENT_VARIABLE];
+	CHAR envval[MAX_SIZE_ENVIRONMENT_VARIABLE];
 
 	DWORD dwret;
 
@@ -53,26 +55,26 @@ LPTSTR get_word(word_t *s)
 		if (s->expand == true) {
 			dwret = GetEnvironmentVariable(
 				s->string,
-				substring,
+				envval,
 				MAX_SIZE_ENVIRONMENT_VARIABLE
 			);
-			if (!dwret)
+			if (dwret)
+				substring = envval;
+			else
 				/* Environment Variable does not exist. */
-				strcpy(substring, "");
+				substring = "";
 
-		} else {
-			strcpy(substring, s->string);
-		}
+		} else
+			substring = s->string;
 
 		substring_length = strlen(substring);
 
 		string = realloc(string, string_length + substring_length + 1);
-		if (string == NULL)
-			return NULL;
+		DIE(string == NULL, "Error allocating word string.");
 
-		memset(string + string_length, 0, substring_length + 1);
-
+		string[string_length] = '\0';
 		strcat(string, substring);
+
 		string_length += substring_length;
 
 		s = s->next_part;
@@ -87,37 +89,45 @@ LPTSTR get_word(word_t *s)
 LPTSTR get_argv(simple_command_t *command)
 {
 	LPTSTR argv = NULL;
-	LPTSTR substring = NULL;
-	word_t *param;
+	DWORD argv_length = 0;
 
-	DWORD string_length = 0;
+	LPTSTR substring = NULL;
 	DWORD substring_length = 0;
+
+	word_t *param;
 
 	argv = get_word(command->verb);
 	DIE(argv == NULL, "Error retrieving word.");
 
-	string_length = strlen(argv);
+	argv_length = strlen(argv);
 
 	param = command->params;
 	while (param != NULL) {
 		substring = get_word(param);
+		DIE(substring == NULL, "Error retrieving word.");
+
 		substring_length = strlen(substring);
 
-		argv = realloc(argv, string_length + substring_length + 4);
+		/* 3 == space + 2 * single quotes; 1 == '\0' */
+		argv = realloc(argv, argv_length + substring_length + 3 + 1);
 		DIE(argv == NULL, "Error reallocating argv.");
 
-		strcat(argv, " ");
+		argv[argv_length++] = ' ';
 
-		/* Surround parameters with ' ' */
-		strcat(argv, "'");
-		strcat(argv, substring);
-		strcat(argv, "'");
+		/* Surround parameters with single quotes */
+		argv[argv_length++] = '\'';
 
-		string_length += substring_length + 3;
-		param = param->next_word;
+		memcpy(argv + argv_length, substring, substring_length);
+		argv_length += substring_length;
+
+		argv[argv_length++] = '\'';
 
 		free(substring);
+
+		param = param->next_word;
 	}
+
+	argv[argv_length] = '\0';
 
 	return argv;
 }

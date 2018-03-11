@@ -1,8 +1,5 @@
 /**
  * Operating Sytems 2013-2017 - Assignment 2
- *
- * TODO Name, Group
- *
  */
 
 #ifndef _CMD_H
