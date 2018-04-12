@@ -67,17 +67,17 @@ void so_start_exec(so_exec_t *exec, char *argv[])
 	pargc[1] = pargc[0] - 1;
 
 	asm volatile(
-		"mov %0, %%eax \n"
-		"mov %1, %%ebx \n"
-		"mov %%ebx, %%esp \n"
-		"xor %%ebx, %%ebx \n"
-		"xor %%ecx, %%ecx \n"
-		"xor %%edx, %%edx \n"
-		"xor %%ebp, %%ebp \n"
-		"xor %%esi, %%esi \n"
-		"xor %%edi, %%edi \n"
-		"jmp *%%eax \n"
-		::"m"(exec->entry), "m"(argv):);
+		"mov %0, %%eax\n"
+		"mov %1, %%ebx\n"
+		"mov %%ebx, %%esp\n"
+		"xor %%ebx, %%ebx\n"
+		"xor %%ecx, %%ecx\n"
+		"xor %%edx, %%edx\n"
+		"xor %%ebp, %%ebp\n"
+		"xor %%esi, %%esi\n"
+		"xor %%edi, %%edi\n"
+		"jmp *%%eax\n"
+		::"m"(exec->entry), "m"(argv) :);
 }
 
 so_exec_t *so_parse_exec(char *path)
@@ -182,7 +182,7 @@ so_exec_t *so_parse_exec(char *path)
 	exec->base_addr = 0xffffffff;
 	exec->entry = ehdr->e_entry;
 	exec->segments_no = num_load_phdr;
-	exec->segments = (so_seg_t *)malloc(exec->segments_no * sizeof(so_seg_t));
+	exec->segments = (so_seg_t *)malloc(num_load_phdr * sizeof(so_seg_t));
 
 	/* convert ELF phdrs to so_segments */
 	j = 0;
