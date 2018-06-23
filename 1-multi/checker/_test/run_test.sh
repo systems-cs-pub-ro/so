@@ -214,9 +214,9 @@ test_ldd()
 }
 
 test_fun_array=(												\
-	test_coding_style	"Sources check"				5	\
-	test_size_1				"Test add file"					2	\
-	test_size_1_stdin		"Test add stdin"				2	\
+	test_coding_style	"Sources check"				        5	\
+	test_size_1				"Test add file"					1	\
+	test_size_1_stdin		"Test add stdin"				1	\
 	test_files_1			"Test print file"				2	\
 	test_error				"Test params"					2	\
 	test_error				"Test bad size"					2	\
@@ -228,12 +228,12 @@ test_fun_array=(												\
 	test_size_256			"Test add double"				3	\
 	test_size_1				"Test remove one"				2	\
 	test_size_256_stdin		"Test remove same hash"			2	\
-	test_size_256			"Test remove different hash"	3	\
+	test_size_256			"Test remove different hash"	2	\
 	test_size_256_stdin		"Test remove non existing"		2	\
 	test_size_256			"Test clear"					2	\
 	test_size_256_stdin		"Test clear and add"			2	\
-	test_size_256			"Test remove and clear"			3	\
-	test_size_256_stdin		"Test find"						2	\
+	test_size_256			"Test remove and clear"			2	\
+	test_size_256_stdin		"Test find"						1	\
 	test_files_1			"Test find files"				2	\
 	test_size_256			"Test print bucket"				2	\
 	test_files_2			"Test print bucket files"		2	\
@@ -242,11 +242,12 @@ test_fun_array=(												\
 	test_size_256_stdin		"Test halve double"				4	\
 	test_stress1			"Test stress 1"					4	\
 	test_stress2 			"Test stress 2"					4	\
-	test_stress3 			"Test stress 3"					5	\
-	test_invalid1 			"Test invalid command"			2 	\
+	test_stress3 			"Test stress 3"					4	\
+	test_invalid1 			"Test invalid command"			1 	\
 	test_invalid2 			"Test invalid argument 1" 		1 	\
 	test_invalid3 			"Test invalid argument 2" 		1 	\
-    test_ldd                "Test dynamic link"             10   \
+    test_ldd                "Test dynamic link (ldd)"       7   \
+	test_hash_c		"Test for hash.c"		10
 	)
 
 # ---------------------------------------------------------------------------- #
