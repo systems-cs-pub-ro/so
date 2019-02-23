@@ -1,5 +1,2 @@
-
-Pentru verificarea temei copiati executabilul tema1 in
-acelasi director cu scriptul de testare (run_all.sh) si apelati:
-
-make -f Makefile.checker
+Checkers that are used for both OS platforms should be named 'multi' (as
+opposed to having to directories, 'lin' and 'win').
