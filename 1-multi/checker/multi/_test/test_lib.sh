@@ -257,10 +257,6 @@ run_tests()
 	points=${test_fun_array[$(($arr_index + 2))]}
 	mem_points=${test_fun_array[$(($arr_index + 3))]}
 
-	if [ $(uname -s) != "Linux" ]; then
-		points=$(($points + $mem_points))
-	fi
-
 	if test "$test_index" -gt "$last_test" -o "$arr_index" -lt 0; then
 		echo "Error: Test index is out range (1 < test_index <= $last_test)." 1>&2
 		exit 1

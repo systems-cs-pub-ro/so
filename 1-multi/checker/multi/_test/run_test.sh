@@ -26,7 +26,15 @@ if [ $IS_LINUX -eq 0 ]; then
             --vex-iropt-register-updates=allregs-at-mem-access \
             --show-leak-kinds=all \
             --error-exitcode=1 \
+            $MEMCHECK_EXTRA \
             --log-file=_log "
+else
+    MEMCHECK="drmemory -batch \
+            -exit_code_if_errors 1 \
+            -show_reachable \
+            -quiet \
+            $MEMCHECK_EXTRA \
+            -- "
 fi
 
 
@@ -84,9 +92,7 @@ test_insert()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -96,10 +102,7 @@ test_insert_stdin()
     $MEMCHECK $EXEC_NAME < $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -109,9 +112,7 @@ test_multiple_files()
     $MEMCHECK $EXEC_NAME "$input_f".{1..4} > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -121,9 +122,7 @@ test_top()
     $MEMCHECK $EXEC_NAME < $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -133,9 +132,7 @@ test_pop()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -145,9 +142,7 @@ test_empty_lines()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -157,9 +152,7 @@ test_stress1()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -169,9 +162,7 @@ test_stress2()
     $MEMCHECK $EXEC_NAME < $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -181,9 +172,7 @@ test_stress3()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -193,9 +182,7 @@ test_invalid()
     $MEMCHECK $EXEC_NAME $input_f > $out_f
     mem_res=$?
     basic_test compare $out_f $ref_f
-    if [ $IS_LINUX -eq 0 ]; then
-        memory_test $mem_res
-    fi
+    memory_test $mem_res
     cleanup_test
 }
 
@@ -255,19 +242,29 @@ run_until_success()
 
 test_so_alloc()
 {
-    run_until_success "malloc"
-    if test $? -ne 0; then
-        return
+    if [ $IS_LINUX -eq 0 ]; then
+        lines=$(find . -maxdepth 1 -name "libso.so" | wc -l)
+    else
+        lines=$(find . -maxdepth 1 -name "run.exe" | wc -l)
     fi
 
-    run_until_success "calloc"
-    if test $? -ne 0; then
-        return
+    if [ $lines -eq 0 ]; then
+        basic_test false
+    else
+        run_until_success "malloc"
+        if test $? -ne 0; then
+            return
+        fi
+
+        run_until_success "calloc"
+        if test $? -ne 0; then
+            return
+        fi
+
+        run_until_success "realloc"
+
+        basic_test compare $out_f $ref_f
     fi
-
-    run_until_success "realloc"
-
-    basic_test compare $out_f $ref_f
 }
 
 
