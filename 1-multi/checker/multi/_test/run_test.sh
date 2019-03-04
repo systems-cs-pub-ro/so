@@ -31,7 +31,6 @@ if [ $IS_LINUX -eq 0 ]; then
 else
     MEMCHECK="drmemory -batch \
             -exit_code_if_errors 1 \
-            -show_reachable \
             -quiet \
             $MEMCHECK_EXTRA \
             -- "
@@ -146,27 +145,7 @@ test_empty_lines()
     cleanup_test
 }
 
-test_stress1()
-{
-    init_test
-    $MEMCHECK $EXEC_NAME $input_f > $out_f
-    mem_res=$?
-    basic_test compare $out_f $ref_f
-    memory_test $mem_res
-    cleanup_test
-}
-
-test_stress2()
-{
-    init_test
-    $MEMCHECK $EXEC_NAME < $input_f > $out_f
-    mem_res=$?
-    basic_test compare $out_f $ref_f
-    memory_test $mem_res
-    cleanup_test
-}
-
-test_stress3()
+test_stress()
 {
     init_test
     $MEMCHECK $EXEC_NAME $input_f > $out_f
@@ -282,10 +261,10 @@ test_fun_array=(                                                         \
     test_invalid            "Test params for insert"            2   1    \
     test_invalid            "Test params for top"               2   1    \
     test_invalid            "Test params for pop"               2   1    \
-    test_stress1            "Test stress 1"                     10   1    \
-    test_stress2             "Test stress 2"                    10   1    \
-    test_stress1             "Test stress 3"                    10   1    \
-    test_ldd_compare        "Test dynamic link compare (ldd)"   10   0    \
+    test_stress             "Test stress 1"                     10  1    \
+    test_stress             "Test stress 2"                     10  1    \
+    test_stress             "Test stress 3"                     10  1    \
+    test_ldd_compare        "Test dynamic link compare (ldd)"   10  0    \
     test_so_alloc           "Test malloc/calloc/realloc"        11  0    \
        )
 
