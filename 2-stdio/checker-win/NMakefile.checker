@@ -1,9 +1,9 @@
 all: build-pre run build-post
 
 build-pre:
+	cd _test && nmake /nologo all && cd ..
 
 build-post:
-	cd _test && nmake /nologo all && cd ..
 
 run:
 	@bash ./run_all.sh

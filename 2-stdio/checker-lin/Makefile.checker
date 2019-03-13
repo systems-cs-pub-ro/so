@@ -3,9 +3,9 @@
 all: build-pre run build-post
 
 build-pre:
+	@make --no-print-directory -C _test
 
 build-post:
-	@make --no-print-directory -C _test
 
 run:
 	@./run_all.sh
