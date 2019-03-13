@@ -8,7 +8,7 @@
 
 # ----------------- General declarations and util functions ------------------ #
 
-MAIN_TEST_DIR="_test/work"
+MAIN_TEST_DIR="./_test/work"
 LOG_FILE="/dev/null"
 max_points=95
 
@@ -24,6 +24,25 @@ if ! [ -e "$TEST_LIB" ]; then
 	exit 1
 fi
 source "$TEST_LIB"
+MEMCHECK=""
+[ $(uname -s) == "Linux" ]
+IS_LINUX=$?
+
+if [ $IS_LINUX -eq 0 ]; then
+	MEMCHECK="valgrind --leak-check=full \
+		--show-reachable=yes \
+		--vex-iropt-register-updates=allregs-at-mem-access \
+		--show-leak-kinds=all \
+		--error-exitcode=1 \
+		$MEMCHECK_EXTRA \
+		--log-file=_log "
+else
+	MEMCHECK="drmemory -batch \
+		-exit_code_if_errors 1 \
+		-quiet \
+		$MEMCHECK_EXTRA \
+		-- "
+fi
 
 # ---------------------------------------------------------------------------- #
 
@@ -68,7 +87,7 @@ test_success()
 
 	bin="$1"
 
-	LD_LIBRARY_PATH=. "$bin" "$TEST_WORK_DIR"
+	LD_LIBRARY_PATH=. $MEMCHECK "$bin" "$TEST_WORK_DIR"
 	RUN_RC=$?
 
 	basic_test test $RUN_RC -eq 0
