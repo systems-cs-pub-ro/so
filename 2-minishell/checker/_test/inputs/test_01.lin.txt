@@ -1,4 +1,0 @@
-uname
-
-whoami
-exit

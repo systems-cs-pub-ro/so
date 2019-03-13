@@ -1,5 +1,0 @@
-executabil_care_nu_exista
-true && executabil_care_nu_exista
-executabil_care_nu_exista && echo "test"
-executabil_care_nu_exista || echo "test" 
-quit

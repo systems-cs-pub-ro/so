@@ -1,5 +1,0 @@
-id --help
-uname --help
-uname -a
-uname -s -m
-exit

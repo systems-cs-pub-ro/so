@@ -1,5 +1,0 @@
-mkdir subdir
-pwd > 0$UNU.txt; cd ./subdir; pwd > ../02.txt
-cd ..
-echo $USER > user1.txt ; echo "$USER	mumu" > user2.txt ; echo '$USER	mumu' > user3.txt
-exit
