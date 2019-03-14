@@ -4,7 +4,7 @@ LDFLAGS = -L..
 LDLIBS = -lso_stdio -ldl
 
 src_dir := src
-build_dir := build
+build_dir := _build
 bin_dir := bin
 
 # input test source files here
@@ -25,6 +25,8 @@ test_src = \
 	src/test_fwrite_large_chunked.c \
 	src/test_fwrite_huge_chunked.c \
 	src/test_fflush.c \
+	src/test_fread_ftell.c \
+	src/test_fwrite_ftell.c \
 	src/test_fseek_ftell.c \
 	src/test_fseek_fread.c \
 	src/test_fseek_fwrite.c \

@@ -185,6 +185,16 @@ test_fflush()
 	test_success "_test/bin/test_fflush"
 }
 
+test_fread_ftell()
+{
+    test_success "_test/bin/test_fread_ftell"
+}
+
+test_fwrite_ftell()
+{
+    test_success "_test/bin/test_fwrite_ftell"
+}
+
 test_fseek_ftell()
 {
 	test_success "_test/bin/test_fseek_ftell"
@@ -274,13 +284,15 @@ test_fun_array=(									\
 	test_append			"Test append"				3	\
 	test_append_read		"Test append read"			3	\
 	test_fflush			"Test fflush"				3	\
+	test_fread_ftell		"Test fread ftell"			2	\
+	test_fwrite_ftell		"Test fwrite ftell"			2	\
 	test_fseek_ftell		"Test fseek ftell"			2	\
-	test_fseek_fread		"Test fseek fread"			3	\
-	test_fseek_fwrite		"Test fseek fwrite"			3	\
+	test_fseek_fread		"Test fseek fread"			2	\
+	test_fseek_fwrite		"Test fseek fwrite"			2	\
 	test_fread_fwrite		"Test fread fwrite"			3	\
 	test_fwrite_fread		"Test fwrite fread"			3	\
-	test_feof_fgetc			"Test feof fgetc"			3	\
-	test_feof_fread			"Test feof fread"			3	\
+	test_feof_fgetc			"Test feof fgetc"			2	\
+	test_feof_fread			"Test feof fread"			2	\
 	test_ferror_read_small		"Test ferror read small"		2	\
 	test_ferror_read_large		"Test ferror read large"		3	\
 	test_ferror_write_small		"Test ferror write small"		3	\
