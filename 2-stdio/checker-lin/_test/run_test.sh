@@ -25,6 +25,7 @@ if ! [ -e "$TEST_LIB" ]; then
 fi
 source "$TEST_LIB"
 MEMCHECK=""
+MEMCHECK_ERR_CODE=100
 [ $(uname -s) == "Linux" ]
 IS_LINUX=$?
 
@@ -33,12 +34,12 @@ if [ $IS_LINUX -eq 0 ]; then
 		--show-reachable=yes \
 		--vex-iropt-register-updates=allregs-at-mem-access \
 		--show-leak-kinds=all \
-		--error-exitcode=1 \
+		--error-exitcode=$MEMCHECK_ERR_CODE \
 		$MEMCHECK_EXTRA \
 		--log-file=_log "
 else
 	MEMCHECK="drmemory -batch \
-		-exit_code_if_errors 1 \
+		-exit_code_if_errors $MEMCHECK_ERR_CODE \
 		-quiet \
 		$MEMCHECK_EXTRA \
 		-- "
@@ -89,6 +90,10 @@ test_success()
 
 	LD_LIBRARY_PATH=. $MEMCHECK "$bin" "$TEST_WORK_DIR"
 	RUN_RC=$?
+
+	if [ $RUN_RC -eq $MEMCHECK_ERR_CODE ]; then
+	    echo "Memcheck failed"
+	fi
 
 	basic_test test $RUN_RC -eq 0
 
