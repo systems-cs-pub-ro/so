@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	ret = so_fwrite(buf, 1, buf_len, f);
 
 	ret = so_ferror(f);
-	FAIL_IF(ret == 0, "Incorrect return value for so_ferror: got %d, expected != 0\n");
+	FAIL_IF(ret == 0, "Incorrect return value for so_ferror: got %d, expected != 0\n", ret);
 
 	so_fclose(f);
 
