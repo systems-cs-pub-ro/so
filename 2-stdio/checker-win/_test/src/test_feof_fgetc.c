@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	}
 
 	c = so_fgetc(f);
-	FAIL_IF(c != SO_EOF, "Incorrect return value for so_fgetc: got %d, expected %d\n");
+	FAIL_IF(c != SO_EOF, "Incorrect return value for so_fgetc: got %d, expected %d\n", c, SO_EOF);
 
 	ret = so_feof(f);
 	FAIL_IF(ret == 0, "Incorrect return value for so_feof: got %d, expected != 0\n", ret);
