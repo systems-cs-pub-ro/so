@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	FAIL_IF(ret != 0, "Incorrect return value for so_fclose: got %d, expected %d\n", ret, 0);
 
 	// fclose should flush the file and call the write syscall
-	FAIL_IF(num_WriteFile != 1, "Incorrect number of write syscalls: got %d, expected %d\n", num_WriteFile, 0);
+	FAIL_IF(num_WriteFile != 1, "Incorrect number of write syscalls: got %d, expected %d\n", num_WriteFile, 1);
 
 	FAIL_IF(!compare_file(fpath, (unsigned char *)buf, 2), "Incorrect data in file\n");
 
