@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 	SO_FILE *f;
 	unsigned char *tmp;
 	int ret;
-	int expected_sys_read;
 	char *test_work_dir;
 	char fpath[256];
 	char cmd[128];
@@ -64,7 +63,6 @@ int main(int argc, char *argv[])
 	ret = create_file_with_contents(fpath, buf, buf_len);
 	FAIL_IF(ret != 0, "Couldn't create file: %s\n", fpath);
 
-	expected_sys_read = ((buf_len + DEFAULT_BUFSIZE - 1) / DEFAULT_BUFSIZE) + 1;
 
 
 	/* --- BEGIN TEST --- */
@@ -72,8 +70,6 @@ int main(int argc, char *argv[])
 
 	f = so_popen(cmd, "r");
 	FAIL_IF(!f, "popen failed\n");
-
-	sleep(2);
 
 	target_fd = so_fileno(f);
 
@@ -85,8 +81,6 @@ int main(int argc, char *argv[])
 
 		total += ret;
 	}
-
-	FAIL_IF(num_sys_read != expected_sys_read, "Incorrect number of reads: got %d, expected %d\n", num_sys_read, expected_sys_read);
 
 	FAIL_IF(memcmp(tmp, buf, buf_len), "Incorrect data\n");
 
