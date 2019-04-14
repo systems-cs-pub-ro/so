@@ -1,4 +1,4 @@
-all: build-pre run build-post
+all: build-pre build-post run
 
 build-pre:
 
