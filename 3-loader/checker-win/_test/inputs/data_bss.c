@@ -1,7 +1,7 @@
 #include <Windows.h>
 
 int arr_init[512] = { 0xdeadbeef };
-int arr_uninit[512];
+int arr_uninit[16384];
 
 void start()
 {
@@ -14,7 +14,7 @@ void start()
 		ExitProcess(1);
 	} else {
 		/* check uninitialized data */
-		for (i = 0; i < 512; i++)
+		for (i = 0; i < 16384; i++)
 			if (arr_uninit[i] != 0) {
 				WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), "FAIL: bss\n", 10, NULL, NULL);
 				ExitProcess(1);

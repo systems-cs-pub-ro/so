@@ -186,7 +186,7 @@ test_bss()
 
 test_data_bss()
 {
-	test_ref "_test/inputs/data_bss.exe" 4
+	test_ref "_test/inputs/data_bss.exe" 5
 }
 
 test_no_perm()
