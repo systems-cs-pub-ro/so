@@ -135,11 +135,26 @@ init_test()
 
 PASS=0
 FAIL=1
+TESTS_SKIP_MEMCHECK=(15 19) # skip round robin and stress tests
 
 test_sched()
 {
     init_test
-    timeout $timeout $MEMCHECK ./_test/"$script" $test_index &> /dev/null
+    skip_memcheck=false
+
+    for i in "${TESTS_SKIP_MEMCHECK[@]}"; do
+        if [ $i -eq $test_index ]; then
+            skip_memcheck=true
+            break
+        fi
+    done
+
+    if [ $skip_memcheck ]; then
+        timeout $timeout ./_test/"$script" $test_index &> /dev/null
+    else
+        timeout $timeout $MEMCHECK ./_test/"$script" $test_index &> /dev/null
+    fi
+
     RUN_RC=$?
 
     if [ $RUN_RC -eq 124 ]; then
@@ -152,13 +167,15 @@ test_sched()
         points=$points
         test_print $PASS
 
-        description="$description memcheck"
-        points=$mem_points
+        if [ $skip_memcheck == false ]; then
+            description="$description memcheck"
+            points=$mem_points
 
-        if [ $RUN_RC -eq $MEMCHECK_ERR_CODE ]; then
-            test_print $FAIL
-        else
-            test_print $PASS
+            if [ $RUN_RC -eq $MEMCHECK_ERR_CODE ]; then
+                test_print $FAIL
+            else
+                test_print $PASS
+            fi
         fi
     else
         test_print $FAIL
@@ -181,11 +198,11 @@ test_fun_array=(                                                      \
         test_sched      "Test exec preemption"                  3   1 \
         test_sched      "Test exec multiple"                    5   1 \
         test_sched      "Test exec priorities"                  8   1 \
-        test_sched      "Test round robin"                      12  1 \
+        test_sched      "Test round robin"                      13  0 \
         test_sched      "Test IO devices"                       1   1 \
         test_sched      "Test IO schedule"                      8   1 \
         test_sched      "Test priorities and IO"                11  1 \
-        test_sched      "Test priorities and IO (stress test)"  12  1 \
+        test_sched      "Test priorities and IO (stress test)"  13  0 \
 )
 
 for test_index in $(seq $first_test $last_test); do
