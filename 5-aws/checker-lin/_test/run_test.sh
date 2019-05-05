@@ -35,14 +35,47 @@ DEBUG()
 	fi
 }
 
+MEMCHECK_ERR_CODE=123
+MEMCHECK="valgrind --leak-check=full \
+	--show-reachable=yes \
+	--vex-iropt-register-updates=allregs-at-mem-access \
+	--show-leak-kinds=all \
+	--error-exitcode=$MEMCHECK_ERR_CODE \
+	$MEMCHECK_EXTRA \
+	--log-file=_log "
+
+memory_test()
+{
+	DEBUG echo "MEM TEST"
+
+	if [ -z "$mem_points" -o "$mem_points" = "0" ]; then
+		return
+	fi
+
+	res=$1
+	memcheck_description="$description - memcheck"
+	printf "%02d) %s" "$test_index" "$memcheck_description"
+
+	for ((i = 0; i < 67 - ${#memcheck_description}; i++)); do
+		printf "."
+	done
+
+	if test $res -ne "$MEMCHECK_ERR_CODE"; then
+		test_do_pass "$mem_points"
+	else
+		test_do_fail "$mem_poits"
+	fi
+}
+
+
 print_header()
 {
 	header="${1}"
 	header_len=${#header}
 
 	printf "\n"
-	if [ $header_len -lt 71 ]; then
-		padding=$(((71 - $header_len) / 2))
+	if [ $header_len -lt 82 ]; then
+		padding=$(((82 - $header_len) / 2))
 		for ((i = 0; i < $padding; i++)); do
 			printf " "
 		done
@@ -69,7 +102,7 @@ basic_test()
 {
 	printf "%02d) %s" $test_index "$description"
 
-	for ((i = 0; i < 56 - ${#description}; ++i)); do
+	for ((i = 0; i < 67 - ${#description}; ++i)); do
 		printf "."
 	done
 
@@ -95,7 +128,13 @@ init_test()
 		exit 1
 	fi
 
-	LD_PRELOAD="$libpath" $exec_name &>> $LOG_FILE &
+	if [ $mem_points != 0 ]; then
+		MEMCHECK_TEST=$MEMCHECK
+	else
+		MEMCHECK_TEST=
+	fi
+
+	LD_PRELOAD="$libpath" $MEMCHECK_TEST $exec_name &>> $LOG_FILE &
 	if test $? -eq 0; then
 		exec_pid=$!
 	fi
@@ -113,6 +152,7 @@ cleanup_test()
 	fi
 
 	wait $exec_pid > /dev/null 2>&1
+	memory_test $?
 }
 
 # Initializes the whole testing environment
@@ -794,41 +834,41 @@ test_get_multiple_simultaneous_stat_dyn_files()
 
 # Specifies the tests, commands and points
 test_fun_array=( \
-	test_executable_exists "Test executable exists" 1
-	test_executable_runs "Test executable runs" 1
-	test_is_listening "Test listening" 1
-	test_is_listening_on_port "Test listening on port" 1
-	test_accepts_connections "Test accepts connections" 1
-	test_accepts_multiple_connections "Test accepts multiple connections" 1
-	test_uses_epoll "Test epoll usage" 1
-	test_disconnect "Test disconnect" 1
-	test_multiple_disconnect "Test multiple disconnect" 1
-	test_connect_disconnect_connect "Test connect disconnect connect" 1
-	test_multiple_connect_disconnect_connect "Test multiple connect disconnect connect" 1
-	test_unordered_connect_disconnect_connect "Test unordered connect disconnect connect" 1
-	test_replies_http_request "Test replies http request" 3
-	test_replies_http_request_1 "Test second replies http request" 1
-	test_uses_sendfile "Test sendfile usage" 2
-	test_get_small_file_wget "Test small static file wget" 2
-	test_get_small_file_wget_cmp "Test small static file wget cmp" 5
-	test_get_large_file_wget "Test large static file wget" 2
-	test_get_large_file_wget_cmp "Test large static file wget cmp" 5
-	test_get_bad_file_404 "Test bad static file 404" 2
-	test_bad_path_404 "Test bad path 404" 2
-	test_get_one_file_then_another "Test get one static file then another" 3
-	test_get_two_simultaneous_files "Test get two simultaneous static files" 4
-	test_get_multiple_simultaneous_files "Test get multiple simultaneous static files" 5
-	test_uses_io_submit "Test io submit uses" 2
-	test_get_small_dyn_file_wget "Test small dynamic file wget" 2
-	test_get_small_dyn_file_wget_cmp "Test small dynamic file wget cmp" 5
-	test_get_large_dyn_file_wget "Test large dynamic file wget" 2
-	test_get_large_dyn_file_wget_cmp "Test large dynamic file wget cmp" 5
-	test_get_bad_dyn_file_404 "Test bad dynamic file 404" 2
-	test_get_one_dyn_file_then_another "Test get one dynamic file then another" 4
-	test_get_two_simultaneous_dyn_files "Test get two simultaneous dynamic files" 5
-	test_get_multiple_simultaneous_dyn_files "Test get multiple simultaneous dynamic files" 6
-	test_get_two_simultaneous_stat_dyn_files "Test get two simultaneous static and dynamic files" 4
-	test_get_multiple_simultaneous_stat_dyn_files "Test get multiple simultaneous static and dynamic files" 5
+	test_executable_exists "Test executable exists" 1 0
+	test_executable_runs "Test executable runs" 1 0
+	test_is_listening "Test listening" 1 0
+	test_is_listening_on_port "Test listening on port" 1 0
+	test_accepts_connections "Test accepts connections" 1 0
+	test_accepts_multiple_connections "Test accepts multiple connections" 1 0
+	test_uses_epoll "Test epoll usage" 1 0
+	test_disconnect "Test disconnect" 1 0
+	test_multiple_disconnect "Test multiple disconnect" 1 0
+	test_connect_disconnect_connect "Test connect disconnect connect" 1 0
+	test_multiple_connect_disconnect_connect "Test multiple connect disconnect connect" 1 0
+	test_unordered_connect_disconnect_connect "Test unordered connect disconnect connect" 1 0
+	test_replies_http_request "Test replies http request" 2 1
+	test_replies_http_request_1 "Test second replies http request" 1 0
+	test_uses_sendfile "Test sendfile usage" 2 0
+	test_get_small_file_wget "Test small static file wget" 2 0
+	test_get_small_file_wget_cmp "Test small static file wget cmp" 4 1
+	test_get_large_file_wget "Test large static file wget" 2 0
+	test_get_large_file_wget_cmp "Test large static file wget cmp" 4 1
+	test_get_bad_file_404 "Test bad static file 404" 2 0
+	test_bad_path_404 "Test bad path 404" 2 0
+	test_get_one_file_then_another "Test get one static file then another" 2 1
+	test_get_two_simultaneous_files "Test get two simultaneous static files" 3 1
+	test_get_multiple_simultaneous_files "Test get multiple simultaneous static files" 4 1
+	test_uses_io_submit "Test io submit uses" 2 0
+	test_get_small_dyn_file_wget "Test small dynamic file wget" 2 0
+	test_get_small_dyn_file_wget_cmp "Test small dynamic file wget cmp" 4 1
+	test_get_large_dyn_file_wget "Test large dynamic file wget" 2 0
+	test_get_large_dyn_file_wget_cmp "Test large dynamic file wget cmp" 4 1
+	test_get_bad_dyn_file_404 "Test bad dynamic file 404" 2 0
+	test_get_one_dyn_file_then_another "Test get one dynamic file then another" 3 1
+	test_get_two_simultaneous_dyn_files "Test get two simultaneous dynamic files" 4 1
+	test_get_multiple_simultaneous_dyn_files "Test get multiple simultaneous dynamic files" 5 1
+	test_get_two_simultaneous_stat_dyn_files "Test get two simultaneous static and dynamic files" 3 1
+	test_get_multiple_simultaneous_stat_dyn_files "Test get multiple simultaneous static and dynamic files" 4 1
 )
 
 # ---------------------------------------------------------------------------- #
@@ -852,10 +892,11 @@ if test $test_index == "cleanup"; then
 	exit 0
 fi
 
-arr_index=$((($test_index - 1) * 3))
-last_test=$((${#test_fun_array[@]} / 3))
+arr_index=$((($test_index - 1) * 4))
+last_test=$((${#test_fun_array[@]} / 4))
 description=${test_fun_array[$(($arr_index + 1))]}
 points=${test_fun_array[$(($arr_index + 2))]}
+mem_points=${test_fun_array[$(($arr_index + 3))]}
 
 if test $test_index -lt 1 -o $test_index -gt $last_test; then
 	echo "Error: Test index is out range (1 <= test_index <= $last_test)." 1>&2

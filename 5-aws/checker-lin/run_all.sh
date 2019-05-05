@@ -3,11 +3,11 @@
 first_test=1
 last_test=35
 script=run_test.sh
-timeout=20
+timeout=30
 log_file=test.log
 CHECKPATCH_URL="https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl"
 CHECKPATCH_IGNORE_FLAGS="
-	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,CONST_STRUCT,MACRO_WITH_FLOW_CONTROL"
+	SPLIT_STRING,SSCANF_TO_KSTRTO,NEW_TYPEDEFS,VOLATILE,INLINE,USE_FUNC,AVOID_EXTERNS,CONST_STRUCT,MACRO_WITH_FLOW_CONTROL,SPDX_LICENSE_TAG"
 CHECKPATCH_ARGS="
 	--no-tree
 	--no-summary
@@ -61,7 +61,7 @@ check_source()
 		xargs $check_patch $CHECKPATCH_ARGS -f 2>&1 | tail -n +3 | \
 		sort -u -t":" -k4,4  | head -n 20)
 	echo "$OUT"
-	printf "00) Sources check..........................................." | tee check_source_result.txt
+	printf "00) Sources check......................................................" | tee check_source_result.txt
 	if [ -z "$OUT" ]; then
 		printf "passed  [05/95]\n" | tee check_source_result.txt
 	else
@@ -78,12 +78,12 @@ check_source
 for i in $(seq $first_test $last_test); do
 	echo "=== Enter test $i ===" &>> $log_file
 	timeout $timeout bash ./_test/"$script" $i 2>> $log_file
-	echo "=== Exit test $i ===" &>> $log_file
 	exit_code=$?
+	echo "=== Exit test $i ===" &>> $log_file
 	if [ $exit_code -eq 124 ]; then
-		printf "%02d) timeout.................................................failed  [00/95]\n" $i
+		printf "%02d) timeout............................................................failed  [00/95]\n" $i
 	elif [ $exit_code -ne 0 ]; then
-		printf "%02d) crash...................................................failed  [00/95]\n" $i
+		printf "%02d) crash..............................................................failed  [00/95]\n" $i
 	fi
 done | tee results.txt
 
@@ -97,7 +97,7 @@ BEGIN {
 }
 
 END {
-	printf "\n%66s  [%02d/95]\n", "Total:", sum;
+	printf "\n%77s  [%02d/95]\n", "Total:", sum;
 }'
 
 # Cleanup testing environment
