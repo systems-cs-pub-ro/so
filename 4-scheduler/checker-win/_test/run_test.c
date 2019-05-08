@@ -111,10 +111,9 @@ int main(int argc, char **argv)
 	}
 
 	/* randomize time quantums */
-    srand((unsigned long)time(NULL));
+	srand((unsigned long)time(NULL));
 
  	test_fun_array[test_index].function();
-
 
 	if (fopen_s(&file, FILE_NAME, "wt") == 0) {
 		fprintf(file, "%d", 1);
