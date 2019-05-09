@@ -328,7 +328,7 @@ struct so_task_info_t {
  */
 static unsigned int random_q;
 static unsigned int exec_time;
-static unsigned int tasks_no = 0;
+static unsigned int tasks_no;
 static struct so_task_info_t tasks_info[SO_MAX_EXECUTION_TIME];
 static struct so_task_info_t *tasks_history[SO_MAX_EXECUTION_TIME];
 

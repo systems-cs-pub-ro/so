@@ -199,12 +199,12 @@ test_fun_array=(                                                      \
         test_sched      "Test exec no preemption"               2   1 \
         test_sched      "Test exec preemption"                  3   1 \
         test_sched      "Test exec multiple"                    5   1 \
-        test_sched      "Test exec priorities"                  8   1 \
-        test_sched      "Test round robin"                      13  0 \
+        test_sched      "Test exec priorities"                  7   1 \
+        test_sched      "Test round robin"                      12  0 \
         test_sched      "Test IO devices"                       1   1 \
-        test_sched      "Test IO schedule"                      8   1 \
-        test_sched      "Test priorities and IO"                11  1 \
-        test_sched      "Test priorities and IO (stress test)"  13  0 \
+        test_sched      "Test IO schedule"                      7   1 \
+        test_sched      "Test priorities and IO"                10  1 \
+        test_sched      "Test priorities and IO (stress test)"  12  0 \
 )
 
 for test_index in $(seq $first_test $last_test); do
@@ -220,7 +220,7 @@ for test_index in $(seq $first_test $last_test); do
     ${test_fun_array[$(($arr_index))]}
 done | tee results.txt
 
-cat results.txt | grep -a '\[.*\]$' | awk -F '[] /[]+' '
+cat check_source_result.txt results.txt | grep -a '\[.*\]$' | awk -F '[] /[]+' '
 BEGIN {
     sum=0
 }
@@ -236,4 +236,4 @@ END {
 
 # Cleanup testing environment
 timeout $timeout ./_test/"$script" cleanup
-rm -f results.txt check_source_result.txt
+rm -f results.txt check_source_result.txt $REF_FILE
