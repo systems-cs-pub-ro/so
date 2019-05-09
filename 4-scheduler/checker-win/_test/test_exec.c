@@ -328,7 +328,7 @@ struct so_task_info_t {
  */
 static unsigned int random_q;
 static unsigned int exec_time;
-static unsigned int tasks_no = 1;
+static unsigned int tasks_no = 0;
 static struct so_task_info_t tasks_info[SO_MAX_EXECUTION_TIME];
 static struct so_task_info_t *tasks_history[SO_MAX_EXECUTION_TIME];
 
@@ -337,6 +337,9 @@ static void test_sched_handler_16(unsigned int priority)
 	unsigned int executed_fork = 0;
 	unsigned int rand_iterations;
 	struct so_task_info_t *my_info;
+	
+	if (tasks_no >= SO_MAX_EXECUTION_TIME)
+		return;
 
 	/* fill info about my task */
 	my_info = &tasks_info[tasks_no++];
