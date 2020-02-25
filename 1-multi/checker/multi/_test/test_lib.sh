@@ -166,47 +166,9 @@ check_source()
 	echo "$OUT"
 }
 
-check_comp_c()
-{
-    echo "Running check_comp_c"
-
-    # try to find sources in the current directory
-    src_files="$(find "${SRC_DIR:-.}" -type f -iregex \
-        '.*\.\(c\|h\|cpp\|hpp\|cc\|hh\|cxx\|hxx\)')"
-    if [ -z "$src_files" ]; then
-        read -t 60 -e -p 'Please provide path to your sources: ' SRC_DIR
-        if [ "$?" -ne "0" -o -z "$SRC_DIR" ]; then
-            echo -e "No path provided! Skipping source check...\n"
-            return
-        fi
-        if ! [ -e "$SRC_DIR" ]; then
-            echo -e "File or directory '$SRC_DIR' does not exist. " \
-                "Skipping source check...\n"
-            return
-        fi
-        src_files="$(find "$SRC_DIR" -type f -iregex \
-            '.*\.\(c\|h\|cpp\|hpp\|cc\|hh\|cxx\|hxx\)')"
-        if [ -z "$src_files" ]; then
-            echo -e "No sources found in '$SRC_DIR'. " \
-                "Skipping source check...\n"
-            return
-        fi
-    fi
-
-	OUT=$(find "${SRC_DIR:-.}" -iname compare.c)
-	echo $OUT
-}
-
 test_coding_style()
 {
 	check_source
-	[ -n "$src_files" -a -z "$OUT" ]
-	basic_test [ $? -eq 0 ]
-}
-
-test_compare_c()
-{
-	check_comp_c
 	[ -n "$src_files" -a -z "$OUT" ]
 	basic_test [ $? -eq 0 ]
 }

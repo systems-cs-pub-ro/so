@@ -1,0 +1,1 @@
+#define VAR 1

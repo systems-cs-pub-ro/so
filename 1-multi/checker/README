@@ -1,2 +1,0 @@
-Checkers that are used for both OS platforms should be named 'multi' (as
-opposed to having to directories, 'lin' and 'win').

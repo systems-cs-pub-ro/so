@@ -3,12 +3,10 @@
 #
 # Tema1 Test Suite
 #
-# 2012-2018, Operating Systems
+# 2020, Operating Systems
 #
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
-
 first_test=0
-last_test=16
+last_test=38
 script=./_test/run_test.sh
 
 # Call init to set up testing environment

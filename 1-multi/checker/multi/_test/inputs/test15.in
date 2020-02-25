@@ -1,5 +1,7 @@
+#define TEST 1
+
 int main() {
-#if 1
+#if TEST
 	printf("Yes!\n");
 #endif
 	return 0;

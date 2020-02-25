@@ -1,0 +1,6 @@
+#include "no-file.h"
+
+int main()
+{
+	return 0;
+}

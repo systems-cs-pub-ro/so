@@ -1,7 +1,10 @@
-pop
-insert dunno 10
-insert michael 20
-pop something
-top
-pop
-top
+#define ABC 10
+#define ABCD 2
+#define BCD ABC + 15
+
+int main() {
+    printf("%d\n", ABC);
+    int x = BCD + 20;
+
+    return 0;
+}
