@@ -5,7 +5,7 @@
 int main() {
 #if FALSE
 	printf("False!\n");
-#elseif NOT
+#elif NOT
 	printf("True!\n");
 #endif
 	return 0;

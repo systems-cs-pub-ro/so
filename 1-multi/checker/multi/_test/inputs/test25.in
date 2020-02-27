@@ -7,9 +7,9 @@
 int main() {
 #if 0
     printf("No\n");
-#elseif 0
+#elif 0
     printf("Maybe\n");
-#elseif VAR0
+#elif VAR0
     printf("ABC\n");
 #else
     printf("Yes\n");
