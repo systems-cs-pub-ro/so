@@ -160,6 +160,8 @@ run_until_success()
 		fi
 
 	done
+	basic_test false
+	return -1
 }
 
 test_so_alloc()
