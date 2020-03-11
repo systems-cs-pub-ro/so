@@ -333,12 +333,12 @@ test_fun_array=(									\
 	test_coding_style		"Sources check"				5	\
 	test_fopen_args			"Test fopen arguments"			2	\
 	test_fgetc			"Test fgetc"				2	\
-	test_fgetc_large		"Test fgetc large file"			3	\
+	test_fgetc_large		"Test fgetc large file"			2	\
 	test_fread_small		"Test fread small file"			2	\
 	test_fread_large		"Test fread large file"			2	\
 	test_fread_large_chunked	"Test chunked fread large file"		2	\
 	test_fread_huge			"Test fread huge file"			2	\
-	test_fread_huge_chunked		"Test chunked fread huge file"		3	\
+	test_fread_huge_chunked		"Test chunked fread huge file"		2	\
 	test_fread_huge_random	  "Test fread huge file (random)" 2   \
 	test_fread_huge_chunked_size_member_4   "Test chunked fread huge file member size 4"	2   \
 	test_fread_huge_chunked_size_member_8   "Test chunked fread huge file member size 8"	2   \
@@ -348,7 +348,7 @@ test_fun_array=(									\
 	test_fwrite_large		"Test fwrite large file"		2	\
 	test_fwrite_large_chunked	"Test chunked fwrite large file"	2	\
 	test_fwrite_huge		"Test fwrite huge file"			2	\
-	test_fwrite_huge_chunked	"Test chunked fwrite huge file"		3	\
+	test_fwrite_huge_chunked	"Test chunked fwrite huge file"		2	\
 	test_fwrite_huge_random	  "Test fwrite huge file (random)" 2   \
 	test_fwrite_huge_chunked_size_member_4   "Test chunked fwrite huge file member size 4"	2   \
 	test_fwrite_huge_chunked_size_member_8   "Test chunked fwrite huge file member size 8"	2   \
@@ -370,8 +370,8 @@ test_fun_array=(									\
 	test_ferror_read_large		"Test ferror read large"		2	\
 	test_ferror_write_small		"Test ferror write small"		2	\
 	test_ferror_write_large		"Test ferror write large"		2	\
-	test_popen_read			"Test popen read"			5	\
-	test_popen_write		"Test popen write"			5	\
+	test_popen_read			"Test popen read"			4	\
+	test_popen_write		"Test popen write"			4	\
 	test_perror_wait	"Test perror wait"  2	\
 	test_perror_fork	"Test perror fork"  2	\
 )
