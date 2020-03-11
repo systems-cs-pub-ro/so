@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 	ret = so_fwrite(buf, 1, 2048, f);
 	FAIL_IF(ret != 2048, "Incorrect return value for so_fwrite: got %d, expected %d\n", ret, 2048);
-	FAIL_IF(num_sys_write != 0, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 0);
+	FAIL_IF(num_sys_write != 0, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 0);
 
 	ret = so_fflush(f);
 	FAIL_IF(ret != 0, "Incorrect return value for so_fflush, got %d, expected %d\n", ret, 0);

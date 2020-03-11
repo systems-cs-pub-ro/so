@@ -77,13 +77,13 @@ int main(int argc, char *argv[])
 
 	// there should be 3 write syscalls. the file size is 16000 and the buffer size is 4096
 	// first 4096 * 3 bytes should be flushed to the file, and the last 3712 should be still in the buffer
-	FAIL_IF(num_sys_write != 3, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 3);
+	FAIL_IF(num_sys_write != 3, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 3);
 
 	ret = so_fclose(f);
 	FAIL_IF(ret != 0, "Incorrect return value for so_fclose: got %d, expected %d\n", ret, 0);
 
 	// the last 3712 bytes should be written to the file
-	FAIL_IF(num_sys_write != 4, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 4);
+	FAIL_IF(num_sys_write != 4, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 4);
 
 	FAIL_IF(!compare_file(fpath, buf, buf_len), "Incorrect data in file\n");
 

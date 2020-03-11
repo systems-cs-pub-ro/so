@@ -41,7 +41,13 @@ test_src = \
 	src/test_ferror_write_small.c \
 	src/test_ferror_write_large.c \
 	src/test_popen_read.c \
-	src/test_popen_write.c
+	src/test_popen_write.c \
+	src/test_ferror_fclose.c \
+	src/test_ferror_fseek.c \
+	src/test_fread_huge_random.c \
+	src/test_fwrite_huge_random.c \
+	src/test_perror_fork.c \
+	src/test_perror_wait.c
 
 $(shell mkdir -p $(bin_dir) $(build_dir))
 

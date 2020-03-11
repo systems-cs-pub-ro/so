@@ -68,12 +68,12 @@ int main(int argc, char *argv[])
 
 	ret = so_fwrite(&buf[2000], 1, 1000, f);
 	FAIL_IF(ret != 1000, "Incorrect return value for so_fread: got %d, expected %d\n", ret, 1000);
-	FAIL_IF(num_sys_write != 0, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 0);
+	FAIL_IF(num_sys_write != 0, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 0);
 
 	ret = so_fclose(f);
 	FAIL_IF(ret != 0, "Incorrect return value for so_fclose: got %d, expected %d\n", ret, 0);
 
-	FAIL_IF(num_sys_write != 1, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 1);
+	FAIL_IF(num_sys_write != 1, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 1);
 
 	memcpy(tmp, buf, buf_len);
 	memcpy(&tmp[buf_len], &buf[2000], 1000);

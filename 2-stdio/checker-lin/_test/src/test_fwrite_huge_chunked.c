@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
 	int total;
 	int chunk_size = 2000;
 	int to_write;
+	int size_member;
+	int total_members;
 
 	install_hooks("libso_stdio.so", hooks, 1);
 
@@ -50,6 +52,11 @@ int main(int argc, char *argv[])
 		test_work_dir = argv[1];
 	else
 		test_work_dir = "_test";
+
+	if (argc == 3)
+		size_member = atoi(argv[2]);
+	else
+		size_member = 1;
 
 	sprintf(fpath, "%s/huge_file", test_work_dir);
 
@@ -69,18 +76,19 @@ int main(int argc, char *argv[])
 		else
 			to_write = chunk_size;
 
-		ret = so_fwrite(&buf[total], 1, to_write, f);
-		FAIL_IF(ret != to_write, "Incorrect return value for so_write: got %d, expected %d\n", ret, to_write);
+		total_members = to_write / size_member;
+		ret = so_fwrite(&buf[total], size_member, total_members, f);
+		FAIL_IF(ret != total_members, "Incorrect return value for so_write: got %d, expected %d\n", ret, total_members);
 
-		total += ret;
+		total += total_members * size_member;
 	}
 
-	FAIL_IF(num_sys_write != 48, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 48);
+	FAIL_IF(num_sys_write != 48, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 48);
 
 	ret = so_fclose(f);
 	FAIL_IF(ret != 0, "Incorrect return value for so_fclose: got %d, expected %d\n", ret, 0);
 
-	FAIL_IF(num_sys_write != 49, "Incorrect number of read syscalls: got %d, expected %d\n", num_sys_write, 49);
+	FAIL_IF(num_sys_write != 49, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 49);
 
 	FAIL_IF(!compare_file(fpath, buf, buf_len), "Incorrect data in file\n");
 

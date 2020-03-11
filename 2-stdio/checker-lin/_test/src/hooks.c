@@ -306,8 +306,6 @@ int install_hooks(char *target_lib_name, struct func_hook *hooks, int hook_num)
 			if (ret == 0)
 				continue;
 		}
-
-		goto out_dlclose;
 	}
 
 	return 0;

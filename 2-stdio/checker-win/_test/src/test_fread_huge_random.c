@@ -9,7 +9,6 @@
 
 #include "hooks.h"
 
-int num_ReadFile;
 HANDLE target_handle;
 
 BOOL WINAPI hook_ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
@@ -29,7 +28,7 @@ BOOL WINAPI hook_ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToR
 		(BOOL (WINAPI *)(HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED))hooks[0].orig_addr;
 
 	if (hFile == target_handle)
-		num_ReadFile++;
+		nNumberOfBytesToRead = 1 + rand() % nNumberOfBytesToRead;
 
 	return orig_ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
 }
@@ -42,11 +41,8 @@ int main(int argc, char *argv[])
 	int ret;
 	char *test_work_dir;
 	char fpath[256];
-	int total;
-	int chunk_size = 2000;
-	int to_read;
-	int size_member;
-	int total_members;
+
+	srand(42);
 
 	tmp = malloc(buf_len);
 	FAIL_IF(!tmp, "malloc failed\n");
@@ -57,11 +53,6 @@ int main(int argc, char *argv[])
 		test_work_dir = argv[1];
 	else
 		test_work_dir = "_test";
-
-	if (argc == 3)
-		size_member = atoi(argv[2]);
-	else
-		size_member = 1;
 
 	sprintf(fpath, "%s/huge_file", test_work_dir);
 
@@ -75,25 +66,9 @@ int main(int argc, char *argv[])
 
 	target_handle = so_fileno(f);
 
-	num_ReadFile = 0;
+	ret = so_fread(tmp, 1, buf_len, f);
 
-	// read the rest of the file in chunks
-	total = 0;
-	while (total < buf_len) {
-		if (total + chunk_size >= buf_len)
-			to_read = buf_len - total;
-		else
-			to_read = chunk_size;
-
-		total_members = to_read / size_member;
-		ret = so_fread(&tmp[total], size_member, total_members, f);
-
-		FAIL_IF(ret != total_members, "Incorrect return value for so_fread: got %d, expected %d\n", ret, total_members);
-
-		total += total_members * size_member;
-	}
-
-	FAIL_IF(num_ReadFile != 49, "Incorrect number of reads: got %d, expected %d\n", num_ReadFile, 49);
+	FAIL_IF(ret != buf_len, "Incorrect return value for so_fread: got %d, expected %d\n", ret, buf_len);
 
 	FAIL_IF(memcmp(tmp, buf, buf_len), "Incorrect data\n");
 

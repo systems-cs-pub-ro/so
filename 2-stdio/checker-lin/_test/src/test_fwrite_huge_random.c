@@ -7,7 +7,6 @@
 
 #include "hooks.h"
 
-int num_sys_write;
 int target_fd;
 
 ssize_t hook_write(int fd, void *buf, size_t len);
@@ -28,7 +27,7 @@ ssize_t hook_write(int fd, void *buf, size_t len)
 	orig_write = (ssize_t (*)(int, void *, size_t))hooks[0].orig_addr;
 
 	if (fd == target_fd)
-		num_sys_write++;
+		len = 1 + rand() % len;
 
 	return orig_write(fd, buf, len);
 }
@@ -57,16 +56,10 @@ int main(int argc, char *argv[])
 
 	target_fd = so_fileno(f);
 
-	num_sys_write = 0;
-
 	ret = so_fwrite(buf, 1, buf_len, f);
-
-	FAIL_IF(num_sys_write != 48, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 48);
 
 	ret = so_fclose(f);
 	FAIL_IF(ret != 0, "Incorrect return value for so_fclose: got %d, expected %d\n", ret, 0);
-
-	FAIL_IF(num_sys_write != 49, "Incorrect number of write syscalls: got %d, expected %d\n", num_sys_write, 49);
 
 	FAIL_IF(!compare_file(fpath, buf, buf_len), "Incorrect data in file\n");
 

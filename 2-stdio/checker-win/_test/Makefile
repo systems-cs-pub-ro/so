@@ -39,7 +39,14 @@ test_bin = \
 	$(bin_dir)/test_ferror_write_small.exe \
 	$(bin_dir)/test_ferror_write_large.exe \
 	$(bin_dir)/test_popen_read.exe \
-	$(bin_dir)/test_popen_write.exe
+	$(bin_dir)/test_popen_write.exe \
+	$(bin_dir)/test_fread_huge_random.exe \
+	$(bin_dir)/test_fwrite_huge_random.exe \
+	$(bin_dir)/test_ferror_fclose.exe \
+	$(bin_dir)/test_ferror_fseek.exe \
+	$(bin_dir)/test_perror_fork.exe \
+	$(bin_dir)/test_perror_wait.exe
+
 
 util_src = src/test_util.c src/hooks.c
 util_obj = $(build_dir)/test_util.obj $(build_dir)/hooks.obj
@@ -262,6 +269,44 @@ $(bin_dir)/my_wc.exe: $(build_dir)/my_wc.obj
 
 $(build_dir)/my_wc.obj: src/my_wc.c
 	$(CC) $(CFLAGS) /c $** /Fo$@
+
+$(bin_dir)/test_ferror_fclose.exe: $(build_dir)/test_ferror_fclose.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_ferror_fclose.obj: src/test_ferror_fclose.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_ferror_fclose.c /Fo$@
+
+$(bin_dir)/test_ferror_fseek.exe: $(build_dir)/test_ferror_fseek.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_ferror_fseek.obj: src/test_ferror_fseek.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_ferror_fseek.c /Fo$@
+
+$(bin_dir)/test_fread_huge_random.exe: $(build_dir)/test_fread_huge_random.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_fread_huge_random.obj: src/test_fread_huge_random.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_fread_huge_random.c /Fo$@
+
+$(bin_dir)/test_fwrite_huge_random.exe: $(build_dir)/test_fwrite_huge_random.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_fwrite_huge_random.obj: src/test_fwrite_huge_random.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_fwrite_huge_random.c /Fo$@
+
+$(bin_dir)/test_perror_fork.exe: $(build_dir)/test_perror_fork.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_perror_fork.obj: src/test_perror_fork.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_perror_fork.c /Fo$@
+
+$(bin_dir)/test_perror_wait.exe: $(build_dir)/test_perror_wait.obj $(util_obj)
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LDLIBS)
+
+$(build_dir)/test_perror_wait.obj: src/test_perror_wait.c src/hooks.c src/test_util.h
+	$(CC) $(CFLAGS) /c src/test_perror_wait.c /Fo$@
+
+
 
 clean:
 	-del /Q /S $(bin_dir) 1>NUL 2>&1
