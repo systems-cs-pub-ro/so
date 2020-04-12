@@ -64,12 +64,14 @@ struct run_test_t test_fun_array[] = {
 	{ test_sched_14 },
 	{ test_sched_15 },
 	{ test_sched_16 },
-
-	/* tests schedule IO operations - see test_io.c */
 	{ test_sched_17 },
 	{ test_sched_18 },
+
+	/* tests schedule IO operations - see test_io.c */
 	{ test_sched_19 },
 	{ test_sched_20 },
+	{ test_sched_21 },
+	{ test_sched_22 },
 };
 
 /* custom main testing thread */

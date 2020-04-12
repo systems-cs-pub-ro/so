@@ -1,7 +1,5 @@
 #!/bin/bash
 
-first_test=0
-last_test=19
 script=run_test
 max_points=95
 timeout=30
@@ -76,7 +74,6 @@ check_source()
         fi
 }
 
-
 print_header()
 {
      header="${1}"
@@ -138,7 +135,7 @@ init_test()
 
 PASS=0
 FAIL=1
-TESTS_SKIP_MEMCHECK=(15 19) # skip round robin and stress tests
+TESTS_SKIP_MEMCHECK=(15 16 17 21) # skip round robin and stress tests
 
 test_sched()
 {
@@ -169,6 +166,7 @@ test_sched()
     if [[ -f $REF_FILE && $(< $REF_FILE) == "1" ]]; then
         points=$points
         test_print $PASS
+
         if [ $skip_memcheck == false ]; then
             description="$description memcheck"
             points=$mem_points
@@ -191,7 +189,7 @@ test_fun_array=(                                                      \
         test_sched      "Test reinit"                           1   1 \
         test_sched      "Test end before init"                  1   1 \
         test_sched      "Test fork param"                       1   1 \
-        test_sched      "Test fork handleR"                     1   1 \
+        test_sched      "Test fork handler"                     1   1 \
         test_sched      "Test fork priority"                    1   1 \
         test_sched      "Test fork thread id"                   1   1 \
         test_sched      "Test multiple fork"                    2   1 \
@@ -200,17 +198,20 @@ test_fun_array=(                                                      \
         test_sched      "Test exec preemption"                  3   1 \
         test_sched      "Test exec multiple"                    5   1 \
         test_sched      "Test exec priorities"                  7   1 \
-        test_sched      "Test round robin"                      12  0 \
+        test_sched      "Test round robin (exec < quantum)"     2   0 \
+        test_sched      "Test round robin (exec > quantum)"     2   0 \
+        test_sched      "Test round robin (stress test)"        10  0 \
         test_sched      "Test IO devices"                       1   1 \
         test_sched      "Test IO schedule"                      7   1 \
         test_sched      "Test priorities and IO"                10  1 \
         test_sched      "Test priorities and IO (stress test)"  12  0 \
 )
 
-for test_index in $(seq $first_test $last_test); do
+last_test=$((${#test_fun_array[@]} / 4))
+
+for test_index in $(seq $last_test); do
 
     arr_index=$(($test_index * 4))
-    last_test=$((${#test_fun_array[@]} / 4))
     description=${test_fun_array[$(($arr_index + 1))]}
 
         points=${test_fun_array[$(($arr_index + 2))]}

@@ -23,11 +23,11 @@ static unsigned int exec_priority;
 static unsigned int test_exec_status = SO_TEST_FAIL;
 
 /*
- * 17) Test IO devices
+ * 19) Test IO devices
  *
  * tests if the scheduler properly uses the IO devices
  */
-static void test_sched_handler_17(unsigned int prio)
+static void test_sched_handler_19(unsigned int prio)
 {
 	if (prio != exec_priority)
 		so_fail("invalid exec priority");
@@ -44,7 +44,7 @@ static void test_sched_handler_17(unsigned int prio)
 	test_exec_status = SO_TEST_SUCCESS;
 }
 
-void test_sched_17(void)
+void test_sched_19(void)
 {
 	test_exec_status = SO_TEST_FAIL;
 	exec_devs = get_rand(1, SO_MAX_UNITS);
@@ -55,7 +55,7 @@ void test_sched_17(void)
 		goto test;
 	}
 
-	if (so_fork(test_sched_handler_17, exec_priority) == INVALID_TID) {
+	if (so_fork(test_sched_handler_19, exec_priority) == INVALID_TID) {
 		so_error("cannot create new task");
 		goto test;
 	}
@@ -68,11 +68,11 @@ test:
 }
 
 /*
- * 18) Test IO schedule
+ * 20) Test IO schedule
  *
  * tests if the scheduler properly handles IO devices
  */
-static void test_sched_handler_18_signal(unsigned int dummy)
+static void test_sched_handler_20_signal(unsigned int dummy)
 {
 	unsigned int step;
 
@@ -95,10 +95,10 @@ static void test_sched_handler_18_signal(unsigned int dummy)
 	so_signal(SO_DEV0);
 }
 
-static void test_sched_handler_18_wait(unsigned int dummy)
+static void test_sched_handler_20_wait(unsigned int dummy)
 {
 	exec_time++;
-	so_fork(test_sched_handler_18_signal, 0);
+	so_fork(test_sched_handler_20_signal, 0);
 	exec_time++;
 	so_wait(SO_DEV0);
 
@@ -113,12 +113,12 @@ static void test_sched_handler_18_wait(unsigned int dummy)
 }
 
 /* tests the IO functionality */
-void test_sched_18(void)
+void test_sched_20(void)
 {
 	/* ensure that the thread gets to execute wait */
 	so_init(SO_PREEMPT_UNITS, 1);
 
-	so_fork(test_sched_handler_18_wait, 0);
+	so_fork(test_sched_handler_20_wait, 0);
 
 	sched_yield();
 	so_end();
@@ -127,7 +127,7 @@ void test_sched_18(void)
 }
 
 /*
- * 19) Test priorities and IO
+ * 21) Test priorities and IO
  *
  * tests if the scheduler properly handles IO devices and preemption
  */
@@ -145,7 +145,7 @@ void test_sched_18(void)
  * Threads are mixed to wait/signal lower/higher priorities
  * P2 refers to the task with priority 2
  */
-static void test_sched_handler_19(unsigned int priority)
+static void test_sched_handler_21(unsigned int priority)
 {
 	switch (priority) {
 	case 1:
@@ -174,9 +174,9 @@ static void test_sched_handler_19(unsigned int priority)
 		if (so_wait(SO_DEV3) == 0)
 			so_fail("dev3 does not exist");
 		/* spawn all the tasks */
-		so_fork(test_sched_handler_19, 4);
-		so_fork(test_sched_handler_19, 3);
-		so_fork(test_sched_handler_19, 1);
+		so_fork(test_sched_handler_21, 4);
+		so_fork(test_sched_handler_21, 3);
+		so_fork(test_sched_handler_21, 1);
 		so_exec();
 		so_exec();
 
@@ -216,13 +216,13 @@ static void test_sched_handler_19(unsigned int priority)
 }
 
 /* tests the IO and priorities */
-void test_sched_19(void)
+void test_sched_21(void)
 {
 	test_exec_status = SO_TEST_SUCCESS;
 
 	so_init(1, 3);
 
-	so_fork(test_sched_handler_19, 2);
+	so_fork(test_sched_handler_21, 2);
 
 	sched_yield();
 	so_end();
@@ -233,7 +233,7 @@ void test_sched_19(void)
 #undef FAIL_IF_NOT_PRIO
 
 /*
- * 20) Test priorities and IO (stress test)
+ * 22) Test priorities and IO (stress test)
  *
  * tests if the scheduler properly handles IO devices and preemption
  */
@@ -243,7 +243,7 @@ static unsigned int num_executions;
 /**
  * high priority thread handler
  */
-static void test_sched_handler_20_high_worker(unsigned int priority)
+static void test_sched_handler_22_high_worker(unsigned int priority)
 {
 	static unsigned int high_dev;
 
@@ -270,7 +270,7 @@ static void test_sched_handler_20_high_worker(unsigned int priority)
 /**
  * medium priority thread handler
  */
-static void test_sched_handler_20_med_worker(unsigned int priority)
+static void test_sched_handler_22_med_worker(unsigned int priority)
 {
 	static unsigned int med_dev1;
 	static unsigned int med_dev2 = SO_MAX_NUM_EVENTS;
@@ -301,7 +301,7 @@ static void test_sched_handler_20_med_worker(unsigned int priority)
 /**
  * low priority thread handler
  */
-static void test_sched_handler_20_low_worker(unsigned int priority)
+static void test_sched_handler_22_low_worker(unsigned int priority)
 {
 	static unsigned int low_dev = SO_MAX_NUM_EVENTS;
 
@@ -324,7 +324,7 @@ static void test_sched_handler_20_low_worker(unsigned int priority)
 /**
  * master thread handler
  */
-static void test_sched_handler_20_master(unsigned int priority)
+static void test_sched_handler_22_master(unsigned int priority)
 {
 	int err;
 	int i;
@@ -334,14 +334,14 @@ static void test_sched_handler_20_master(unsigned int priority)
 
 	/* create SO_MAX_NUM_EVENTS/2 threads with high priority */
 	for (i = 0; i < SO_MAX_NUM_EVENTS; i += 2) {
-		err = so_fork(test_sched_handler_20_high_worker, high_prio);
+		err = so_fork(test_sched_handler_22_high_worker, high_prio);
 		if (err == INVALID_TID)
 			so_fail("cannot create new task");
 	}
 
 	/* create SO_MAX_NUM_EVENTS/2 threads with medium priority */
 	for (i = 0; i < SO_MAX_NUM_EVENTS; i += 2) {
-		err = so_fork(test_sched_handler_20_med_worker, med_prio);
+		err = so_fork(test_sched_handler_22_med_worker, med_prio);
 		if (err == INVALID_TID)
 			so_fail("cannot create new task");
 	}
@@ -353,22 +353,21 @@ static void test_sched_handler_20_master(unsigned int priority)
 
 	/* create SO_MAX_NUM_EVENTS/2 threads with low priority */
 	for (i = 0; i < SO_MAX_NUM_EVENTS; i += 2) {
-		err = so_fork(test_sched_handler_20_low_worker, low_prio);
+		err = so_fork(test_sched_handler_22_low_worker, low_prio);
 		if (err == INVALID_TID)
 			so_fail("cannot create new task");
 	}
 }
 
 /* tests the IO and priorities */
-void test_sched_20(void)
+void test_sched_22(void)
 {
 	so_init(1, SO_MAX_NUM_EVENTS);
 
-	so_fork(test_sched_handler_20_master, SO_MAX_PRIO);
+	so_fork(test_sched_handler_22_master, SO_MAX_PRIO);
 
 	sched_yield();
 	so_end();
 
 	basic_test(num_executions == SO_MAX_NUM_EVENTS / 2);
 }
-

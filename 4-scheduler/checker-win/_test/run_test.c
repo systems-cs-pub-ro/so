@@ -63,11 +63,12 @@ struct run_test_t test_fun_array[] = {
 	{ test_sched_14 },
 	{ test_sched_15 },
 	{ test_sched_16 },
-
 	{ test_sched_17 },
 	{ test_sched_18 },
 	{ test_sched_19 },
 	{ test_sched_20 },
+	{ test_sched_21 },
+	{ test_sched_22 },
 };
 
 /* custom main testing thread */
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
 	/* randomize time quantums */
 	srand((unsigned long)time(NULL));
 
- 	test_fun_array[test_index].function();
+	test_fun_array[test_index].function();
 
 	if (fopen_s(&file, FILE_NAME, "wt") == 0) {
 		fprintf(file, "%d", 1);

@@ -307,10 +307,9 @@ void test_sched_15(void)
 #undef SO_FAIL_IF_NOT_PRIO
 
 /*
- * 16) Test round robin
- *
- * tests if the scheduler properly preempts a task according to priorities
+ * Structures and variables needed for the next tests
  */
+
 struct so_task_info_t {
 	unsigned int creation_time;
 	unsigned int priority;
@@ -325,55 +324,14 @@ struct so_task_info_t {
 /*
  * again, these variables should be guarded by the scheduler itself,
  * because only one function can be executed at a certain moment
+ * test_16, test_17 and test_18 are using the variables, they should
+ * be reinitialized in the test function
  */
-static unsigned int random_q;
+static unsigned int quantum;
 static unsigned int exec_time;
 static unsigned int tasks_no;
 static struct so_task_info_t tasks_info[SO_MAX_EXECUTION_TIME];
 static struct so_task_info_t *tasks_history[SO_MAX_EXECUTION_TIME];
-
-static void test_sched_handler_16(unsigned int priority)
-{
-	unsigned int executed_fork = 0;
-	unsigned int rand_iterations;
-	struct so_task_info_t *my_info;
-	
-	if (tasks_no >= SO_MAX_EXECUTION_TIME)
-		return;
-
-	/* fill info about my task */
-	my_info = &tasks_info[tasks_no++];
-	my_info->creation_time = exec_time;
-	my_info->priority = priority;
-	my_info->tid = get_tid();
-	my_info->executed = 0;
-
-	/* get a rand number of iterations to do */
-	rand_iterations = get_rand(1, SO_MAX_UNITS);
-
-	while (rand_iterations-- && exec_time < SO_MAX_EXECUTION_TIME) {
-
-		/* fill in history */
-		my_info->executed++;
-		tasks_history[exec_time++] = my_info;
-
-		/*
-		 * here we force all tasks to execute at least one fork
-		 * if it was executed previously, then we offer random
-		 * chances to execute either fork or exec
-		 */
-		if ((!executed_fork && rand_iterations == 0) || rand() % 2) {
-			/* create new task with random priority */
-			so_fork(test_sched_handler_16,
-				get_rand(0, SO_MAX_PRIO));
-			executed_fork = 1;
-		} else {
-			so_exec();
-		}
-	}
-	if (exec_time == SO_MAX_EXECUTION_TIME)
-		test_exec_status = SO_TEST_SUCCESS;
-}
 
 /* checks if there is a higher priority waiting to run */
 static inline int is_higher(unsigned int *vec, unsigned int prio)
@@ -384,7 +342,11 @@ static inline int is_higher(unsigned int *vec, unsigned int prio)
 	return 0;
 }
 
-static void test_sched_16_check(void)
+/*
+ * Tests if the tasks properly executed
+ * ATTENTION: tasks_history and tasks_info should be populated
+ */
+static void test_sched_generic_check(void)
 {
 	unsigned int priority_stats[SO_MAX_PRIO];
 	unsigned int idx;
@@ -420,7 +382,7 @@ static void test_sched_16_check(void)
 			if (last_task && last_task->executed != 0 &&
 				current_task->creation_time != idx &&
 				last_task->priority == current_task->priority &&
-				last_task->runtime != random_q)
+				last_task->runtime != quantum)
 				so_fail("previous task did not complete it's "
 					"quantum");
 			last_task = current_task;
@@ -445,31 +407,184 @@ static void test_sched_16_check(void)
 		if (current_task->executed == 0) {
 			priority_stats[current_task->priority]--;
 		} else if (priority_stats[current_task->priority] > 1 &&
-				current_task->runtime > random_q) {
+				current_task->runtime > quantum) {
 			so_fail("task was not preempted");
 		}
 	}
 	test_exec_status = SO_TEST_SUCCESS;
 }
 
+static void test_sched_handler(unsigned int priority)
+{
+    int i;
+	struct so_task_info_t *my_info;
+
+	/* fill info about my task */
+	my_info = &tasks_info[tasks_no++];
+	my_info->creation_time = exec_time;
+	my_info->priority = priority;
+	my_info->tid = get_tid();
+	my_info->executed = 0;
+
+    my_info->executed++;
+    tasks_history[exec_time++] = my_info;
+
+    if (exec_time == 0) {
+        /* If the first task spawn other 3 tasks */
+        for (i = 0; i < 3; i++) {
+            so_fork(test_sched_handler, priority);
+        }
+    }
+
+    for (i = 0; i < SO_MAX_UNITS / 2; i++) {
+        /* Run only half of the allowed quantum */
+		my_info->executed++;
+		tasks_history[exec_time++] = my_info;
+		so_exec();
+	}
+}
+
+/*
+ * 16) Test round robin (exec_time < quantum)
+ *
+ * tests if the scheduler properly schedules the same priority task
+ */
 void test_sched_16(void)
 {
+    /* 
+     * test_sched_{16,17,18} are using some common variables make
+     * sure we initialize them -- even thought they are static
+     */
+    quantum = 0;
+    exec_time = 0;
+    tasks_no = 0;
+    memset(tasks_info, 0, sizeof(tasks_info));
+    memset(tasks_history, 0, sizeof(tasks_history));
 
 	test_exec_status = SO_TEST_FAIL;
 
-	/* random execution runtime */
-	random_q = get_rand(1, SO_MAX_UNITS / 2);
+    /* Each task is allowed to run SO_MAX_UNITS
+     * before it gets preempted
+     */
+	so_init(SO_MAX_UNITS, 0);
 
-	so_init(random_q, 0);
-
-	/* spawn task */
-	so_fork(test_sched_handler_16, get_rand(0, SO_MAX_PRIO));
+	/* spawn the first task */
+	so_fork(test_sched_handler, get_rand(0, SO_MAX_PRIO));
 
 	sched_yield();
 	so_end();
 
-	test_sched_16_check();
+	test_sched_generic_check();
 
 	basic_test(test_exec_status);
 }
 
+/*
+ * 17) Test round robin (exec_time > quantum)
+ *
+ * tests if the scheduler properly schedules the same priority task
+ */
+void test_sched_17(void)
+{
+    /*
+     * test_sched_{16,17,18} are using some common variables make
+     * sure we initialize them -- even thought they are static
+     */
+    quantum = 0;
+    exec_time = 0;
+    tasks_no = 0;
+    memset(tasks_info, 0, sizeof(tasks_info));
+    memset(tasks_history, 0, sizeof(tasks_history));
+
+	test_exec_status = SO_TEST_FAIL;
+
+	so_init(SO_MAX_UNITS / 4, 0);
+
+	/* spawn task */
+	so_fork(test_sched_handler, get_rand(0, SO_MAX_PRIO));
+
+	sched_yield();
+	so_end();
+
+	test_sched_generic_check();
+
+	basic_test(test_exec_status);
+}
+
+/*
+ * 18) Test round robin
+ *
+ * tests if the scheduler properly preempts a task according to priorities
+ */
+static void test_sched_handler_18(unsigned int priority)
+{
+	unsigned int executed_fork = 0;
+	unsigned int rand_iterations;
+	struct so_task_info_t *my_info;
+
+	if (tasks_no >= SO_MAX_EXECUTION_TIME)
+		return;
+
+	/* fill info about my task */
+	my_info = &tasks_info[tasks_no++];
+	my_info->creation_time = exec_time;
+	my_info->priority = priority;
+	my_info->tid = get_tid();
+	my_info->executed = 0;
+
+	/* get a rand number of iterations to do */
+	rand_iterations = get_rand(1, SO_MAX_UNITS);
+
+	while (rand_iterations-- && exec_time < SO_MAX_EXECUTION_TIME) {
+
+		/* fill in history */
+		my_info->executed++;
+		tasks_history[exec_time++] = my_info;
+
+		/*
+		 * here we force all tasks to execute at least one fork
+		 * if it was executed previously, then we offer random
+		 * chances to execute either fork or exec
+		 */
+		if ((!executed_fork && rand_iterations == 0) || rand() % 2) {
+			/* create new task with random priority */
+			so_fork(test_sched_handler_18,
+				get_rand(0, SO_MAX_PRIO));
+			executed_fork = 1;
+		} else {
+			so_exec();
+		}
+	}
+	if (exec_time == SO_MAX_EXECUTION_TIME)
+		test_exec_status = SO_TEST_SUCCESS;
+}
+
+void test_sched_18(void)
+{
+    /*
+     * test_sched_{16,17,18} are using some common variables make
+     * sure we initialize them -- even thought they are static
+     */
+    quantum = 0;
+    exec_time = 0;
+    tasks_no = 0;
+    memset(tasks_info, 0, sizeof(tasks_info));
+    memset(tasks_history, 0, sizeof(tasks_history));
+
+	test_exec_status = SO_TEST_FAIL;
+
+	/* random execution runtime */
+	quantum = get_rand(1, SO_MAX_UNITS / 2);
+
+	so_init(quantum, 0);
+
+	/* spawn task */
+	so_fork(test_sched_handler_18, get_rand(0, SO_MAX_PRIO));
+
+	sched_yield();
+	so_end();
+
+	test_sched_generic_check();
+
+	basic_test(test_exec_status);
+}

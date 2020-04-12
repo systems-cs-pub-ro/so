@@ -38,6 +38,8 @@ extern void test_sched_17(void);
 extern void test_sched_18(void);
 extern void test_sched_19(void);
 extern void test_sched_20(void);
+extern void test_sched_21(void);
+extern void test_sched_22(void);
 
 /* debugging macro */
 #ifdef SO_VERBOSE_ERROR
