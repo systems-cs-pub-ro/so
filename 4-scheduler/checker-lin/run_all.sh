@@ -149,7 +149,7 @@ test_sched()
         fi
     done
 
-    if [ $skip_memcheck ]; then
+    if [ "$skip_memcheck" = "true" ]; then
         timeout $timeout ./_test/"$script" $test_index &> /dev/null
     else
         timeout $timeout $MEMCHECK ./_test/"$script" $test_index &> /dev/null
