@@ -46,5 +46,6 @@ executable:
 
 # Debug:
 
-For debugging, define the SO_VERBOSE_ERROR symbol.
+For debugging, define the SO_VERBOSE_ERROR symbol in Makefile.checker. To
+simplify Makefile.checker, you can add the symbol definition within the CFLAGS.
 

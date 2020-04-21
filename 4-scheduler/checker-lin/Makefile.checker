@@ -1,5 +1,7 @@
 CPP = gcc
-CFLAGS = -Wall -g
+# you can add to CFLAGS -DSO_VERBOSE_ERROR
+# to define the debug symbol
+CFLAGS = -Wall -g -DSO_VERBOSE_ERROR
 LIBS = -pthread -lscheduler -L.
 DIR = _test
 TEST_EXEC = $(DIR)/run_test
