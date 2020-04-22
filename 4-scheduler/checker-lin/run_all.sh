@@ -150,9 +150,9 @@ test_sched()
     done
 
     if [ "$skip_memcheck" = "true" ]; then
-        timeout $timeout ./_test/"$script" $test_index &> /dev/null
+        timeout $timeout ./_test/"$script" $test_index > /dev/null
     else
-        timeout $timeout $MEMCHECK ./_test/"$script" $test_index &> /dev/null
+        timeout $timeout $MEMCHECK ./_test/"$script" $test_index > /dev/null
     fi
 
     RUN_RC=$?
