@@ -197,7 +197,7 @@ test_fun_array=(                                                      \
         test_sched      "Test exec no preemption"               2   1 \
         test_sched      "Test exec preemption"                  3   1 \
         test_sched      "Test exec multiple"                    5   1 \
-        test_sched      "Test exec priorities"                  7   1 \
+        test_sched      "Test exec priorities"                  5   1 \
         test_sched      "Test round robin (exec < quantum)"     2   0 \
         test_sched      "Test round robin (exec > quantum)"     2   0 \
         test_sched      "Test round robin (stress test)"        10  0 \
@@ -209,7 +209,7 @@ test_fun_array=(                                                      \
 
 last_test=$((${#test_fun_array[@]} / 4))
 
-for test_index in $(seq $last_test); do
+for test_index in $(seq 0 $last_test); do
 
     arr_index=$(($test_index * 4))
     description=${test_fun_array[$(($arr_index + 1))]}
