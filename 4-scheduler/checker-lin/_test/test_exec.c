@@ -416,7 +416,7 @@ static void test_sched_generic_check(void)
 
 static void test_sched_handler(unsigned int priority)
 {
-    int i;
+	int i;
 	struct so_task_info_t *my_info;
 
 	/* fill info about my task */
@@ -426,18 +426,16 @@ static void test_sched_handler(unsigned int priority)
 	my_info->tid = get_tid();
 	my_info->executed = 0;
 
-    my_info->executed++;
-    tasks_history[exec_time++] = my_info;
+	my_info->executed++;
+	tasks_history[exec_time++] = my_info;
 
-    if (exec_time == 0) {
-        /* If the first task spawn other 3 tasks */
-        for (i = 0; i < 3; i++) {
-            so_fork(test_sched_handler, priority);
-        }
-    }
+	if (exec_time == 0)
+		/* If the first task spawn other 3 tasks */
+		for (i = 0; i < 3; i++)
+			so_fork(test_sched_handler, priority);
 
-    for (i = 0; i < SO_MAX_UNITS / 2; i++) {
-        /* Run only half of the allowed quantum */
+	for (i = 0; i < SO_MAX_UNITS / 2; i++) {
+		/* Run only half of the allowed quantum */
 		my_info->executed++;
 		tasks_history[exec_time++] = my_info;
 		so_exec();
@@ -451,21 +449,21 @@ static void test_sched_handler(unsigned int priority)
  */
 void test_sched_16(void)
 {
-    /* 
-     * test_sched_{16,17,18} are using some common variables make
-     * sure we initialize them -- even thought they are static
-     */
-    quantum = 0;
-    exec_time = 0;
-    tasks_no = 0;
-    memset(tasks_info, 0, sizeof(tasks_info));
-    memset(tasks_history, 0, sizeof(tasks_history));
+	/*
+	 * test_sched_{16,17,18} are using some common variables make
+	 * sure we initialize them -- even thought they are static
+	 */
+	quantum = 0;
+	exec_time = 0;
+	tasks_no = 0;
+	memset(tasks_info, 0, sizeof(tasks_info));
+	memset(tasks_history, 0, sizeof(tasks_history));
 
 	test_exec_status = SO_TEST_FAIL;
 
-    /* Each task is allowed to run SO_MAX_UNITS
-     * before it gets preempted
-     */
+	/* Each task is allowed to run SO_MAX_UNITS
+	 * before it gets preempted
+	 */
 	so_init(SO_MAX_UNITS, 0);
 
 	/* spawn the first task */
@@ -486,15 +484,15 @@ void test_sched_16(void)
  */
 void test_sched_17(void)
 {
-    /*
-     * test_sched_{16,17,18} are using some common variables make
-     * sure we initialize them -- even thought they are static
-     */
-    quantum = 0;
-    exec_time = 0;
-    tasks_no = 0;
-    memset(tasks_info, 0, sizeof(tasks_info));
-    memset(tasks_history, 0, sizeof(tasks_history));
+	/*
+	 * test_sched_{16,17,18} are using some common variables make
+	 * sure we initialize them -- even thought they are static
+	 */
+	quantum = 0;
+	exec_time = 0;
+	tasks_no = 0;
+	memset(tasks_info, 0, sizeof(tasks_info));
+	memset(tasks_history, 0, sizeof(tasks_history));
 
 	test_exec_status = SO_TEST_FAIL;
 
@@ -561,15 +559,15 @@ static void test_sched_handler_18(unsigned int priority)
 
 void test_sched_18(void)
 {
-    /*
-     * test_sched_{16,17,18} are using some common variables make
-     * sure we initialize them -- even thought they are static
-     */
-    quantum = 0;
-    exec_time = 0;
-    tasks_no = 0;
-    memset(tasks_info, 0, sizeof(tasks_info));
-    memset(tasks_history, 0, sizeof(tasks_history));
+	/*
+	 * test_sched_{16,17,18} are using some common variables make
+	 * sure we initialize them -- even thought they are static
+	 */
+	quantum = 0;
+	exec_time = 0;
+	tasks_no = 0;
+	memset(tasks_info, 0, sizeof(tasks_info));
+	memset(tasks_history, 0, sizeof(tasks_history));
 
 	test_exec_status = SO_TEST_FAIL;
 
