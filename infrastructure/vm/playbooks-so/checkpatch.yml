@@ -9,7 +9,7 @@
 
 - name: Download checkpatch_wrapper.sh
   get_url:
-      url: https://raw.githubusercontent.com/systems-cs-pub-ro/so-assignments/master/checkpatch_wrapper.sh
+      url: https://raw.githubusercontent.com/systems-cs-pub-ro/so/master/assignments/checkpatch_wrapper.sh
       dest: /usr/local/bin/checkpatch_wrapper.sh
       force: yes
       owner: root
