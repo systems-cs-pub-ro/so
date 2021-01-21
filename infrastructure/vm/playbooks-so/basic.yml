@@ -1,0 +1,8 @@
+- name: Add user
+  include: ../playbooks-common/user.yml
+
+- name: Install vm drivers
+  include: ../playbooks-common/helper-pkgs.yml
+
+- name: Disable unused services
+  include: services.yml

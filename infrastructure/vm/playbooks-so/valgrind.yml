@@ -1,0 +1,29 @@
+- name: Clone Vlagrind
+  git:
+    repo: 'git://sourceware.org/git/valgrind.git'
+    dest: "{{ valgrind_dir }}"
+  register: v
+
+- name: Run Valgrind autogen.sh
+  command: /home/vagrant/valgrind/autogen.sh
+  args:
+    chdir: "{{ valgrind_dir }}"
+  when: v.changed != false
+
+- name: Run Valgrind configure
+  command: ./configure --prefix=/usr/
+  args:
+    chdir: "{{ valgrind_dir }}"
+  when: v.changed != false
+
+- name: Run Valgrind make
+  command: make
+  args:
+    chdir: "{{ valgrind_dir }}"
+  when: v.changed != false
+
+- name: Run Valgrind make install
+  command: make install
+  args:
+    chdir: "{{ valgrind_dir }}"
+  when: v.changed != false

@@ -1,0 +1,32 @@
+- name: Install the toolchain
+  apt:
+    name: ['build-essential', 'git']
+    state: present
+
+- name: Install the editors
+  apt:
+    name: ['emacs', 'vim-nox']
+    state: present
+
+- name: Install the GUI editors
+  apt:
+    name: ['gedit', 'vim-gtk3']
+    state: present
+  when: interface == "gui"
+
+- name: Install misc tools
+  apt:
+    name: ['ack', 'htop', 'mc']
+    state: present
+
+- name: Install misc GUI tools
+  apt:
+    name: ['evince', 'guake', 'terminator']
+    state: present
+  when: interface == "gui"
+
+- name: Configure 'guake' to run at startup
+  copy:
+    src: resources/guake.desktop
+    dest: /etc/xdg/autostart/
+  when: interface == "gui"

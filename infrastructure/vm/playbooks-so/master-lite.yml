@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    username: "student"
+    interface: "cli"
+    hostname: "so-vm-lite"
+    valgrind_dir: "/home/vagrant/valgrind"
+
+  tasks:
+  - name: Basic setup
+    include: basic.yml
+
+  - name: Reboot the machine
+    reboot:
+
+  - name: Dev-tools setup
+    include: ../playbooks-common/dev-tools.yml
+
+  - name: Dev-tools setup
+    include: dev-tools.yml

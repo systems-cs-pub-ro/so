@@ -1,0 +1,31 @@
+- name: Create the "student" group
+  group:
+    name: "{{ username }}"
+    state: present
+
+- name: Create the "student" user
+  user:
+    name: "{{ username }}"
+    group: "{{ username }}"
+    state: present
+
+    # Give the user the "sudo" capabilities
+    append: yes
+    groups: sudo
+
+    # The default shell is "/bin/sh". Bash is nicer.
+    shell: /bin/bash
+
+    # The default password is "student".
+    # For ansible to be able to use this password, it must be hashed first.
+    #
+    # It has been generated using
+    # $ python -c 'import crypt; print crypt.crypt("student", "$1$NaCl$")'
+    #
+    password: $1$NaCl$/FNv0shf8h7A8lYBxujyx0
+
+- name: Set the timezone to 'Bucharest'
+  file:
+    src: /usr/share/zoneinfo/Europe/Bucharest
+    dest: /etc/localtime
+    state: link

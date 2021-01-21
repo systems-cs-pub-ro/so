@@ -1,0 +1,14 @@
+- name: populate service facts
+  service_facts:
+
+- name: Disabling unused daemons (CLI)
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+  with_items:
+    - cloud-init-local.service
+    - cloud-init.service
+    - iscsid.socket
+    - snapd.seeded.service
+    - snapd.service
+  when: '"{{ item }}" in ansible_facts.services'

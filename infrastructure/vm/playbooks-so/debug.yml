@@ -1,0 +1,6 @@
+- name: populate service facts
+  service_facts:
+
+- debug:
+    var: ansible_facts.services
+  when: "'x11-common' in ansible_facts.services"

@@ -1,0 +1,41 @@
+- name: Download checkpatch.pl
+  get_url:
+      url: https://raw.githubusercontent.com/torvalds/linux/master/scripts/checkpatch.pl
+      dest: /usr/local/bin/checkpatch.pl
+      force: yes
+      owner: root
+      group: root
+      mode: 0755
+
+- name: Download checkpatch_wrapper.sh
+  get_url:
+      url: https://raw.githubusercontent.com/systems-cs-pub-ro/so-assignments/master/checkpatch_wrapper.sh
+      dest: /usr/local/bin/checkpatch_wrapper.sh
+      force: yes
+      owner: root
+      group: root
+      mode: 0755
+
+- stat:
+    path: /usr/local/bin/spelling.txt
+  register: p
+
+- name: create fake 'spelling.txt'
+  file:
+    path: /usr/local/bin/spelling.txt
+    owner: root
+    group: root
+    mode: 0555
+    state: "{{ 'file' if p.stat.exists else 'touch'}}"
+
+- stat:
+    path: /usr/local/bin/const_structs.checkpatch
+  register: p
+
+- name: create fake 'const_structs.checkpatch'
+  file:
+    path: /usr/local/bin/const_structs.checkpatch
+    owner: root
+    group: root
+    mode: 0555
+    state: "{{ 'file' if p.stat.exists else 'touch'}}"

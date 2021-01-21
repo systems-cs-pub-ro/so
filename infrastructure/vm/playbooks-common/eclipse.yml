@@ -1,0 +1,6 @@
+- name: Copy Eclipse archive to Desktop
+  become: yes
+  become_user: "{{ username }}"
+  unarchive:
+    src: resources/eclipse-inst-linux64.tar.gz
+    dest: "/home/{{ username }}/Desktop/"
