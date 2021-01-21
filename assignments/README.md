@@ -9,7 +9,7 @@ This script is a wrapper over GitLab API and git. Its purpose is to export this 
 Installation
 ------------
 
-    wget https://raw.githubusercontent.com/systems-cs-pub-ro/so-assignments/master/so-create-repo.sh
+    wget https://raw.githubusercontent.com/systems-cs-pub-ro/so/master/assignments/so-create-repo.sh
 
 Usage
 -----
