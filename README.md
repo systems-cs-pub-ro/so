@@ -1,9 +1,18 @@
 # SO
 
-## SO Labs
+## `labs/`
 
-Here you'll find the code skeletons for the SO laboratories.
+Here you'll find the code skeletons and slides for the SO laboratories.
 
-## SO Assignments
+## `assignments/`
 
 Contains skeletons and tests for SO assignments.
+
+## `infrastructure/`
+
+Contains ansible scripts that build the SO virtual machine.
+
+## `scripts/`
+
+Contains deployment scripts that are used by the defined workflows.
+
