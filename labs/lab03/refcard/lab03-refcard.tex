@@ -1,0 +1,269 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{refcard.cs.pub.ro}
+%\input{../../refcard/so_reference_head.tex}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{3. Procese } 
+\end{center}
+
+\vspace*{-0.7cm}
+
+\section{Linux}
+\subsection{Operații cu procese}
+
+\func{int system(const char *command);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{command}{comanda de executat}
+	\returns{0 în caz de succes sau -1 în caz de eroare}
+\end{params}
+
+\func{pid_t fork(void);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\returns{0 în copil, pid în părinte, -1 în caz de eroare}
+\end{params}
+
+\func{pid_t getpid(void);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\returns{PID-ul procesului apelant}
+\end{params}
+
+\func{pid_t getppid(void);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\returns{PID-ul părintelui procesului apelant}
+\end{params}
+
+\func{int execl(const char *path, const char *arg, ...);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{path}{calea către program}
+	\param{arg}{lista variabilă de parametri; numele primului parametru coincide cu cel al programului; ultimul parametru este NULL}
+	\returns{doar în caz de eroare}
+\end{params}
+
+\func{int execvp(const char *file, char *const argv[], ...);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{file}{numele executabilului; cautat în calea rețiuntă de PATH}
+	\param{argv}{vector parametri; numele primului parametru coincide cu cel al programului; ultimul parametru este NULL}
+	\returns{_doar_ în caz de eroare (altfel nu se întoarce)}
+\end{params}
+
+
+\func{pid_t waitpid(pid_t pid, int *status, int options);} \\
+\func{pid_t wait(int *status);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{pid}{pid-ul procesului ce se dorește așteptat, 0 sau negativ pentru comportamente speciale}
+	\param{status}{informația de terminare}
+	\param{options}{diverse opțiuni, în general 0}
+	\returns{0 în caz de succes sau -1 în caz de eroare}
+\end{params}
+
+\func{void exit(int status);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{status}{codul de terminare a procesului}
+\end{params}
+
+\vspace*{-0.2cm}
+
+\subsection{Variabile de mediu}
+
+\func{int main(int argc, char **argv, char **environ);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{environ}{vector de șiruri de forma VARIABILĂ = VALOARE} 
+\end{params}
+
+\func{char* getenv(const char *name);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{name}{numele variabilei}
+	\returns{valoarea variabilei sau NULL dacă nu există}  
+\end{params}
+
+\func{int setenv(const char *name, const char *value, int replace)}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{name}{numele variabilei}
+	\param{value}{valoarea variabilei}
+	\param{replace}{1 dacă variabila este deja definită și se dorește înlocuirea vechii valori}
+	\returns{0 în caz de succes sau -1 în caz de eroare}  
+\end{params}
+
+\func{char* unsetenv(const char *name);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{name}{numele variabilei}
+	\returns{0 în caz de succes sau -1 în caz de eroare}  
+\end{params}
+
+\subsection{Pipe-uri}
+
+\func{int pipe(int filedes[2]);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{filedes}{vector de descriptori ai capetelor pipe-ului cu 0 - citire, 1 - scriere}
+	\returns{0 în caz de succes sau -1 în caz de eroare}  
+\end{params}
+
+\func{int mkfifo(const char *pathname, mode_t mode);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{pathname}{calea din sistemul de fișiere}
+	\param{mode}{permisiunile}
+	\returns{0 în caz de succes sau -1 în caz de eroare}  
+\end{params}
+
+\vspace*{0.4cm}
+
+\section{Windows}
+
+\subsection{Operații cu procese}
+
+\func{BOOL \textbf{CreateProcess}( LPCTSTR lpApplicationName, LPTSTR
+lpCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
+LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL
+bInheritHandles, DWORD dwCreationFlags, LPVOID
+lpEnvironment, LPCTSTR lpCurrentDirectory, LPSTARTUPINFO
+lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation ); }
+\begin{itemize}
+\item \textbf{lpApplicationName} - numele modulului de executat
+\item \textbf{lpCommandLine} - linia de comandă de executat
+\item \textbf{lpProcessAttributes} - atributele procesului
+\item \textbf{lpThreadAttributes} - atributele firului principal
+\item \textbf{bInheritHandles} - TRUE dacă se dorește moștenirea descriptorilor în procesele create
+\item \textbf{dwCreationFlags} - stabilește clasa de prioritate a procesului 
+\item \textbf{lpEnvironment} - environment block-ul
+\item \textbf{lpCurrentDirectory} - directorul curent
+\item \textbf{lpStartupInfo} - atribute auxiliare, ex: redirectări
+\item \textbf{lpProcessInformation} - parametru out, populat de funcție cu diverse informații
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\func{DWORD WaitForSingleObject( HANDLE hHandle, DWORD dwMilliseconds );}
+\begin{itemize}
+\item \textbf{hHandle} - handle-ul procesului ce se dorește așteptat
+\item \textbf{dwMilliseconds} - numărul maxim de milisecunde de așteptare, de obicei INFINITE
+\item \textbf{întoarce} - WAIT_FAILED în caz de eroare
+\end{itemize}
+
+\func{void ExitProcess( UINT uExitCode );}
+\begin{itemize}
+\item \textbf{uExitCode} - codul de iesire al procesului
+\end{itemize}
+
+\func{BOOL TerminateProcess( HANDLE hProcess, UINT uExitCode );}
+\begin{itemize}
+\item \textbf{hProcess} - handle-ul procesului ce se dorește terminat
+\item \textbf{uExitCode} - codul de ieșire al procesului
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare 
+\end{itemize}
+
+\func{BOOL DuplicateHandle( HANDLE hSourceProcessHandle, HANDLE
+hSourceHandle, HANDLE hTargetProcessHandle, LPHANDLE
+lpTargetHandle, DWORD dwDesiredAccess, BOOL bInheritHandle,
+DWORD dwOptions );}
+\begin{itemize}
+\item \textbf{hSourceProcessHandle} - handle-ul procesului proprietar al descriptorului ce se dorește duplicat
+\item \textbf{hSourceHandle} - descriptorul ce se dorește duplicat
+\item \textbf{hTargetProcessHandle} - handle-ul procesului doritor al handle-ului duplicat
+\item \textbf{lpTargetHandle} - handle-ul duplicat
+\item \textbf{dwDesiredAccess} - drepturile de acces
+\item \textbf{bInheritHandle} - TRUE dacă se dorește ca noul handle să poată fi moștenit mai departe
+\item \textbf{dwOptions} - optiuni suplimentare
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\vspace*{0.4cm}
+
+\subsection{Variabile de mediu}
+
+\func{LPTCH GetEnvironmentStrings(void);}
+\begin{itemize}
+\item \textbf{întoarce} - un șir cu perechi VARIABILĂ = VALOARE
+\end{itemize}
+
+\func{BOOL FreeEnvironmentStrings( LPTSTR lpszEnvironmentBlock );}
+\begin{itemize}
+\item \textbf{lpszEnvironmentBlock} - pointer obținut prin GetEnvironmentStrings
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\func{DWORD GetEnvironmentVariable( LPCTSTR lpName, LPTSTR lpBuffer, DWORD nSize );}
+\begin{itemize}
+\item \textbf{lpName} - numele variabilei
+\item \textbf{lpBuffer} - zona în care funcția va depune valoarea
+\item \textbf{nSize} - dimensiunea zonei de mai sus
+\item \textbf{întoarce} - numărul de caractere ale valorii(dacă zona este suficient de încăpătoare),
+ numărul de caractere necesar(dacă zona nu este suficient de încăpătoare), zero în caz de eroare
+\end{itemize}
+
+\vspace*{1cm}
+
+\func{BOOL SetEnvironmentVariable( LPCTSTR lpName, LPCTSTR lpValue);}
+\begin{itemize}
+\item \textbf{lpName} - numele variabilei
+\item \textbf{lpBuffer} - noua valoare sau NULL dacă se dorește înlăturarea variabilei
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\subsection{Pipe-uri}
+
+\func{BOOL CreatePipe( PHANDLE hReadPipe, PHANDLE hWritePipe,
+LPSECURITY_ATTRIBUTES lpPipeAttributes, DWORD nSize );}
+\begin{itemize}
+\item \textbf{hReadPipe} - descriptorul capătului de citire
+\item \textbf{hWritePipe} - descriptorul capătului de scriere
+\item \textbf{lpPipeAttributes} - determină posibilitatea moștenirii
+\item \textbf{nSize} - dimensiunea, în bytes, a buffer-ului intern
+\item \textbf{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\func{HANDLE CreateNamedPipe( LPCTSTR lpName, DWORD dwOpenMode,
+DWORD dwPipeMode, DWORD nMaxInstances, DWORD nOutBufferSize,
+DWORD nInBufferSize, DWORD nDefaultTimeOut,
+LPSECURITY_ATTRIBUTES lpSecurityAttributes );}
+\begin{itemize}
+\item \textbf{lpName} - șir ce desemnează numele pipe-ului
+\item \textbf{dwOpenMode} - stabilește o serie de caracteristici, precum sensul simplu sau dublu de circulație a informației
+\item \textbf{dwPipeMode} - flux de octeti sau mesaj
+\item \textbf{nMaxInstances} - numărul maxim de instanțe
+\item \textbf{nOutBufferSize} - dimensiunea buffer-ului de ieșire
+\item \textbf{nInBufferSize} - dimensiunea buffer-ului de intrare
+\item \textbf{nDefaultTimeOut} - durata implicită de așteptare până ce o instanță a pipe-ului devine disponibilă
+\item \textbf{lpSecurityAttributes} - controlează posibilitatea de moștenire a handle-ului
+\item \textbf{întoarce} - handle-ul capătului dinspre server al pipe-ului, INVALID_HANDLE_VALUE în caz de eroare
+\end{itemize}
+
+\func{BOOL ConnectNamedPipe( HANDLE hNamedPipe, LPOVERLAPPED lpOverlapped );}
+\begin{itemize}
+\item \textbf{hNamedPipe} - handle-ul capătului dinspre server al pipe-ului
+\item \textbf{lpOverlapped} - oferă un mecanism de notificare la apariția unei noi cereri, când se lucrează în mod asincron
+\item \textbf{întoarce} - în mod sincron nonzero pentru succes, zero în caz de eroare; în mod asincron, funcția 
+întoarce zero, iar starea operației este descrisă de GetLastError
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

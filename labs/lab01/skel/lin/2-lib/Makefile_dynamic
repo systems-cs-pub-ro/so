@@ -1,0 +1,17 @@
+CC = gcc
+CFLAGS = -Wall -fPIC
+
+LDFLAGS = -L.
+
+all:  main_dynamic
+
+main_dynamic:
+
+libhexdump_dynamic.so:
+
+main.o: main.c
+hexdump.o: hexdump.c
+sample.o: sample.c
+
+clean:
+	rm -f *.o  main_dynamic libhexdump_dynamic.so

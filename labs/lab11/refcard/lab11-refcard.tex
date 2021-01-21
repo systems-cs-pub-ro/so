@@ -1,0 +1,231 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {Operatii I/O avansate - Linux}\\
+\end{center}
+
+\section{Multiplexare IO}
+
+\subsection{select}
+
+\func{int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)}
+\begin{params}
+  \param{}{}
+  \param{nfds}{valoarea celui mai mare file descriptor plus 1}
+  \param{readfds}{file descriptoriii urmăriți pentru citire}
+  \param{writefds}{file descriptorii urmăriți pentru scriere}
+  \param{exceptfd}{file descriptorii urmăriți pentru excepții}
+  \param{timeout}{timpul maxim după care select se întoarce. NULL
+  semnifică blocarea indefinit}
+  \returns{numărul total de file descriptori urmăriți; 0 dacă timeout-ul
+  a expirat sau -1 în caz de eroare}
+\end{params}
+
+
+
+\subsection{poll}
+
+\func{int poll(struct pollfd *fds, nfds_t nfds, int timeout)}
+\begin{params}
+  \param{}{}
+  \param{fds}{conține un descriptor de fișier, evenimentele urmărite pe
+  acest descriptor și parametrul de ieșire care ne spune dacă a apărut
+  un eveniment pe acel descriptor}
+  \param{nfds}{numărul strcturilor fds}
+  \param{timeout}{timpul maxim după care poll se întoarce. -1
+  semnifică blocarea indefinit}
+  \returns{numărul de structuri pentru care au apărut evenimente;  0 dacă timeout-ul
+  a expirat sau -1 în caz de eroare}
+\end{params}
+
+
+\subsection{epoll}
+
+
+
+\func{int epoll_create(int size)}
+\begin{params}
+  \param{}{}
+  \param{size}{hint pentru kernel asupra numărului de descriptori ce vor
+  fi urmăriți}
+  \returns{un file descriptor sau -1 în caz de eroare}
+\end{params}
+
+
+
+\func{int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)}
+\begin{params}
+  \param{}{}
+  \param{epfd}{file descriptor obținut în urma unui apel
+  epoll_create}
+  \param{op}{operația efectuată asupra epfd. Poate fi una dintre:
+  EPOLL_CTL_ADD, EPOLL_CTLR_DEL, EPOLL_CTL_MOD}
+  \param{fd}{file descriptor pentru care se face operația op}
+  \param{event}{structura care descrie evenimentul urmărit}
+  \returns{0 pentru succes; -1 în caz de eroare}
+\end{params}
+
+\vspace{30mm}
+
+\func{int epoll_wait(int epfd, struct epoll_event *event, int max_events, int timeout)}
+\begin{params}
+  \param{}{}
+  \param{epfd}{file descriptor obținut în urma unui apel
+  epoll_create}
+  \param{events}{parametru de ieșire în care se vor pune evenimentele
+  disponibile; trebuie să fie prealocat}
+  \param{max_events}{numărul maxim de eventimente întoarse}
+  \param{timeout}{timpul maxim după care funcția se întoarce; -1 pentru
+  așteptare la infinit}
+  \returns{numărul de file descriptori disponibili pentru I/O sau -1 în caz de eroare}
+\end{params}
+
+
+\subsection{Generalizarea Multiplexării}
+
+\func{int eventfd(unsigned int initval, int flags)}
+\begin{params}
+  \param{}{}
+  \param{initval}{valoarea inițială a contorului intern}
+  \param{flags}{flaguri pentru a schimba comportamentul lui eventfd;
+  poate fi lăsat 0}
+  \returns{file descritpro eventfd sau -1 în caz de eroare}
+\end{params}
+
+
+\func{int signalfd(int fd, const sigset_t *mask, int flags)}
+\begin{params}
+  \param{}{}
+  \param{fd}{-1 pentru a crea un nou descriptor signalfd, sau un
+  descriptor deja existent pentru modificarea măștii}
+  \param{mask}{masca de semnale pe care apelantul dorește să le accepte
+  via descriptorul de fișier}
+  \param{flags}{flaguri pentru a schimba comportamentul lui signalfd;
+  poate fi lăsat 0}
+  \returns{file descriptor sau -1 în caz de eroare}
+\end{params}
+
+
+\subsection{Operații asincrone}
+
+\func{void io_prep_pread(struct iocb *iocb, int fd, void *buf, size_t count, long long offset)}
+\begin{params}
+  \param{}{}
+  \param{iocb}{structura iocb care va fi inițializată}
+  \param{fd}{file descriptorul pe care se va face operația}
+  \param{count}{cât se dorește să fie scris}
+  \param{offset}{offsetul din fișier de unde să aibă loc operația}
+  \returns{nimic}
+\end{params}
+
+
+\func{void io_prep_pwrite(struct iocb *iocb, int fd, void *buf, size_t count, long long offset)}
+\begin{params}
+  \param{}{}
+  \param{iocb}{structura iocb care va fi inițializată}
+  \param{fd}{file descriptorul pe care se va face operația}
+  \param{count}{cât se dorește să fie citit}
+  \param{offset}{offsetul din fișier de unde să aibă loc operația}
+  \returns{nimic}
+\end{params}
+
+
+\func{int io_setup(unsigned int nr_events, io_context_t *ctx)}
+\begin{params}
+  \param{}{}
+  \param{nr_events}{numărul de evenimente care pot fi primite în
+  contextul curent}
+  \param{ctx}{parametru de ieșire în care va fi salvat noul context io}
+  \returns{0 pentru succes sau -1 în caz de eroare}
+\end{params}
+
+\func{int io_destroy(io_context_t *ctx)}
+\begin{params}
+  \param{}{}
+  \param{ctx}{context AIO deja existent}
+  \returns{0 pentru succes sau -1 în caz de eroare}
+\end{params}
+
+\func{int io_submit(io_context_t ctx, long nr, struct iocb *ios[])}
+\begin{params}
+  \param{}{}
+  \param{ctx}{context create anterior}
+  \param{nr}{numărul de elemente din vectorul ios}
+  \param{ios}{vector de pointeri la structurile iocb în care se
+  află operațiile care se doresc a fi submise}
+  \returns{numărul de structuri iocb submise(poate fi și 0); în caz
+  de eroare întoarce un număr negativ care desemnează eroarea}
+\end{params}
+
+
+\func{int io_getevent(io_context_t ctx, long min_nr, long nr, struct io_event *events, struct timespec *timeout)}
+\begin{params}
+  \param{}{}
+  \param{ctx}{context AIO deja existent}
+  \param{min_nr}{numărul minim de evenimente care trebuie întoarse}
+  \param{nr}{numărul maxim de evenimente care trebuie întoarse}
+  \param{events}{vector de evenimente cu evenimentele întoarse}
+  \param{timeout}{specifică cât să aștepte operația; NULL înseamnă că
+  operația se va întoarce pentru min_nr evenimente dacă operația are
+  success}
+  \returns{numărul de evenimente terminate până la timeout (poate fi și
+  0) sau un număr negativ reprezentând codul de eroare}
+\end{params}
+
+\func{int io_cancel(io_context_t ctx, struct iocb *iocb,struct io_event *evt)}
+\begin{params}
+  \param{}{}
+  \param{ctx}{context create anterior}
+  \param{iocb}{structura iocb corespunzând operațieicare se dorește a fi
+  anulate}
+  \param{result}{dacă există deja un rezultat, va fi întors în aceasta
+  variabilă}
+  \returns{0 în caz de succes; în caz  de eroare întoarce un număr negativ care desemnează eroarea}
+\end{params}
+
+
+
+\subsection{Vectored IO}
+
+\func{ssize_t readv(int fd, const struct iovec *iov, int iovcnt)}
+\begin{params}
+  \param{}{}
+  \param{fd}{file descriptor pe care se face opearția}
+  \param{iov}{vector cu structuri reprezentând bufferele din care se va
+  citi}
+  \param{iovcnt}{numărul de elemente ale vectorului iov}
+  \returns{numărul de octeți citiți sau -1 în caz de eroare}
+\end{params}
+
+\func{ssize_t writev(int fd, const struct iovec *iov, int iovcnt)}
+\begin{params}
+  \param{}{}
+  \param{fd}{file descriptor pe care se face opearția}
+  \param{iov}{vector cu structuri reprezentând bufferele din care se va
+  scrie}
+  \param{iovcnt}{numărul de elemente ale vectorului iov}
+  \returns{numărul de octeți scriși sau -1 în caz de eroare}
+\end{params}
+
+
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

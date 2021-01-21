@@ -1,0 +1,18 @@
+To start a new presentation, copy the sample Makefile and tex file from labxx/slides to your lab and modify them accordingly. If the presentarion
+includes code, also create the code/ directory and a makefile similar to that
+in lab01/slides/code/.
+
+Use labxx-slides.tex names for the TeX files. Use BASENAME=labxx-slides
+in Makefile.
+
+Class file is in sty/ directory of the repo, but be aware that it is shared
+between all the presentations, so modifying it heavily might not be the best
+solution.
+
+The so.cs.pub.ro class defines a few simple commands: \file{fname},
+\cmd{command}, \func{function} to typeset file names, commands, and
+function names respectively. You can also use \todo{Finish this slide}
+to visibly mark an item as unfinished.
+
+For more information on the template or general LaTeX, use the list.
+

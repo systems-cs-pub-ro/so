@@ -1,0 +1,90 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{so.cs.pub.ro}
+
+\usepackage{code/highlight}
+
+\title[Laborator 4]{Laborator 4}
+\subtitle{Semnale}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Semnale}
+	\begin{itemize}    % Just like normal LaTeX
+		\item 'Întreruperi software'
+		\item Specifice UNIX, diverse forme de echivalență pe Windows
+		\item Generate sincron
+			\begin{itemize}
+				\item Acces nevalid la memorie - \texttt{SIGSEGV} ('Segmentation fault'), \texttt{SIGBUS} ('Bus error')
+				\item Împărțire la 0 - \texttt{SIGFPE}
+				\item \texttt{abort()} - \texttt{SIGABRT}
+				\item Eroare la scrierea în pipe - \texttt{SIGPIPE} („Broken pipe”)
+			\end{itemize}
+		\item Generate asincron
+			\begin{itemize}
+				\item Tastatură: \texttt{SIGINT}
+(\texttt{CTRL+C}), \texttt{SIGQUIT} (\texttt{CTRL+\textbackslash}),
+\texttt{SIGTSTP} (\texttt{CTRL+Z})
+
+				\item Sistem sau utilizator: \texttt{SIGTERM}, \texttt{SIGKILL}, \texttt{SIGUSR1}, \texttt{SIGUSR2}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Operaţii cu semnale}
+	\begin{itemize}    % Just like normal LaTeX
+		\item Generare și transmitere
+			\begin{itemize}
+				\item \texttt{CTRL+C}, \texttt{CTRL+\textbackslash}
+				\item comanda \texttt{kill}, funcțiile \texttt{kill(2)}, \texttt{raise(3)}, \texttt{sigqueue(3)})
+				\item direct de SO
+			\end{itemize}
+		\item Blocarea unui semnal
+			\begin{itemize}
+				\item \texttt{sigprocmask(2)}
+			\end{itemize}
+		\item Așteptarea unui semnal
+			\begin{itemize}
+				\item \texttt{pause(2)}, \texttt{sigsuspend(2)}
+			\end{itemize}
+		\item Tratarea unui semnal
+			\begin{itemize}
+				\item mascare, ignorare, acțiune implicită
+				\item asociere \emph{signal handler}
+				\item \texttt{SIGKILL} si \texttt{SIGSTOP} termină procesul întotdeauna
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Măști de semnale. Blocarea semnalelor}
+	\begin{itemize}    % Just like normal LaTeX
+		\item mască pe biți reprezentând semnalele
+		\item per proces
+		\item \texttt{kill -l} (32 de semnale obișnuite + 32 real-time)
+		\item sigprocmask
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Tratarea unui semnal}
+	\begin{itemize}    % Just like normal LaTeX
+		\item \texttt{signal}
+		\item \texttt{int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)}
+			\begin{itemize}
+			\item sa_handler
+			\item sa_sigaction
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Întrebări }
+%	\begin{itemize}    % Just like normal LaTeX
+%		\item Ce semnale nu pot fi prinse sau ignorate?
+%		\item De ce nu este recomandat să apelăm malloc într-un handler de semnal?
+%		\item Ce se întâmplă dacă handler-ul implicit de tratare al SIGSEGV este înlocuit cu o funcție goală?
+%		\item În mod normal, un apel read blocat în așteptare de date, dacă este întrerupt de un semnal va seta
+%errno la EINTR. Descrieți
+%		o situație în care totuși la primirea unui semnal apelul read se deblochează cu errno setat pe SUCCESS.
+%	\end{itemize}
+%\end{frame}
+
+\end{document}

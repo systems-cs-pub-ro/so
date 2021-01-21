@@ -1,0 +1,244 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{so.cs.pub.ro}
+ 
+\usepackage{code/highlight}
+
+\title[Laborator 2]{Laborator 2}
+\subtitle{Operaţii I/O simple}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Fișierul}
+  \begin{itemize}    % Just like normal LaTeX
+    \item unitate logică de stocare
+	  \vspace*{0.2cm}
+    \item abstractizează proprietățile fizice ale mediului de stocare
+	  \vspace*{0.2cm}
+    \item colecție de date + nume asociat
+	  \vspace*{0.2cm}
+    \item organizare ierarhică
+    \begin{itemize}
+    	\item \texttt{/home/student/lab/lab02/slides/lab02.tex}
+    	\item \texttt{D:\textbackslash so\textbackslash lab02\textbackslash 1-cat\textbackslash cat.c}
+    \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Tipuri de fișiere}
+	\begin{itemize}
+	\item fișiere obișnuite
+	\item directoare
+	\item link-uri simbolice
+	\item character device
+	\item block device
+	\item pipe-uri
+	\item sockeți UNIX
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Operații pe fișier}
+	\begin{itemize}
+	\item creare/deschidere
+	\item citire
+	\item scriere
+	\item deplasare în cadrul fișierului
+	\item trunchiere
+	\item ștergere/închidere
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Creare/Deschidere}
+  \begin{itemize}
+    \item file descriptor vs. file handle
+    \vspace*{0.2cm}
+    \item Linux
+    \begin{itemize}
+      \item \textbf{open}
+      \begin{itemize}
+	\item mod de acces(\texttt{flags}): \texttt{O_RDONLY}, \texttt{O_WRONLY}, \texttt{O_RDWR}
+	\item acțiuni la creare(\texttt{flags}): \texttt{O_CREAT}, \texttt{O_EXCL}, \texttt{O_TRUNC}
+	\item \texttt{mode} - permisiuni (ex: 0644)
+      \end{itemize}
+    \end{itemize}
+    \vspace*{0.2cm}
+    \item Windows
+    \begin{itemize}
+      \item \textbf{CreateFile}
+      \item nu „creează un fișier”, ci un handle către un fișier
+      \item \texttt{dwDesiredAccess} - \texttt{GENERIC_READ}, \texttt{GENERIC_WRITE}
+      \item \texttt{dwShareMode} - \texttt{FILE_SHARE_READ}, \texttt{FILE_SHARE_WRITE}
+      \item \texttt{dwCreationDisposition} - \texttt{CREATE_NEW}, \texttt{OPEN_EXISTING},\\
+      \hspace*{4.1cm} \texttt{TRUNCATE_EXISTING}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Închidere/Ștergere}
+  \begin{columns}
+   \hspace*{1.8cm} \begin{column} [1]{0.45\textwidth}
+    Linux
+    \begin{itemize}
+      \item \texttt{close}
+      \item \texttt{unlink}
+    \end{itemize}
+   \end{column}
+   \begin{column} [1]{0.50\textwidth}
+    Windows
+    \begin{itemize}
+      \item \texttt{CloseHandle}
+      \item \texttt{DeleteFile}
+    \end{itemize}
+   \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Citire/Scriere}
+  \begin{itemize}
+    \item Linux
+    \begin{itemize}
+      \item ssize_t read(int fd, void *buf, size_t count);
+      \item ssize_t write(int fd, const void *buf, size_t count);
+      \begin{itemize}
+	\item întoarce numărul total de octeți citiți/scriși \textbf{efectiv}
+      \end{itemize}
+    \end{itemize}
+    \item Windows
+    \vspace*{0.4cm}
+    \begin{columns}
+      \begin{column}[1]{0.3\textwidth}
+bRet = ReadFile(
+
+\hspace*{0.4cm}   hFile,         
+
+\hspace*{0.4cm}   lpBuffer,      
+
+\hspace*{0.4cm}   dwBytesToRead, 
+
+\hspace*{0.4cm}   \&dwBytesRead, 
+
+\hspace*{0.4cm}   NULL            
+);
+      \end{column}
+      \begin{column}[1]{0.32\textwidth}
+bRet = WriteFile( 
+
+\hspace*{0.2cm}   hFile,           
+
+\hspace*{0.2cm}   lpBuffer,
+
+\hspace*{0.2cm}   dwBytesToWrite,
+
+\hspace*{0.2cm}   \&dwBytesWritten,
+
+\hspace*{0.2cm}   NULL              
+); 
+      \end{column}
+      \begin{column}[1]{0.3\textwidth}
+  \vspace{0.2cm}
+
+  \textit{open file handle}
+
+  \textit{start of data}
+
+  \textit{number of bytes}
+
+  \textit{return number}
+
+  \textit{no overlapped}
+
+      \end{column}
+    \end{columns}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Poziționare în fișier}
+ 
+      \begin{columns}
+	\begin{column} [1]{0.25\textwidth}
+	  \hspace*{0.8cm}Linux
+
+	  \hspace*{0.8cm}\textbf{lseek} 
+
+	  \hspace*{0.8cm}\texttt{whence}
+	  \vspace*{0.4cm}
+	  \begin{itemize}
+	    \item SEEK_SET
+	    \item SEEK_CUR
+	    \item SEEK_END
+	  \end{itemize}       
+	\end{column}
+	\begin{column}  [1]{0.32\textwidth}
+	  \hspace*{0.8cm} Windows
+
+	  \hspace*{0.8cm} \textbf{SetFilePointer}
+
+	  \hspace*{0.8cm} \texttt{dwMoveMethod}
+	  \vspace*{0.4cm}
+	  \begin{itemize}
+	    \item FILE_BEGIN
+	    \item FILE_CURRENT
+	    \item FILE_END
+	  \end{itemize}
+	\end{column}
+	\begin{column} [1]{0.47\textwidth}
+	  \newline
+
+	  \hspace*{0.8cm}poziția relativă de la 
+	  
+	  \hspace*{0.8cm}care se face deplasare
+	  \vspace*{0.2cm}
+	  \begin{itemize}
+	    \item față de începutul fișierului
+	    \item față de poziția curentă
+	    \item față de sfârșitul fișierului
+	  \end{itemize}
+	\end{column}
+      \end{columns}
+    \vspace*{0.5cm}
+ \begin{itemize}  
+   \item Cum putem determina dimensiunea unui fișier?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Redirectări (Linux)}
+      \begin{columns}
+	\begin{column} [1]{0.55\textwidth}
+  \begin{itemize}
+    \item int dup(int oldfd)
+    \vspace*{0.2cm}
+    \item int dup2(int oldfd, int newfd)
+    \begin{itemize}
+      \item \texttt{STDIN_FILENO}
+      \item \texttt{STDOUT_FILENO}
+      \item \texttt{STDERR_FILENO}
+    \end{itemize}
+  \end{itemize}
+	\end{column}
+	\begin{column} [1]{0.35\textwidth}
+	\end{column}
+      \end{columns}
+\end{frame}
+
+\begin{frame}{Utilitare (Linux)}
+  \begin{itemize}
+    \item lsof(1) – listează informații despre fișierele deschise
+    \vspace*{0.1cm}
+    \item stat(1) – listează informații despre un fișier/sistem de fișiere
+    \vspace*{0.1cm}
+    \item strace(1) – system calls trace
+    \vspace*{0.1cm}
+    \item ltrace(1) – library calls trace
+  \end{itemize}
+\end{frame}
+
+%\begin{frame}{Întrebări}
+%\begin{itemize}
+%\item Ce valoarea poate întoarce apelul write(120, "XYZ", 3);
+%\item Care apel este teoretic mai rapid: printf("ABCDEF"); sau write(STDOUT_FILENO, "ABDEF", 5);
+%\item Ce se întâmplă în urma apelului lseek(0, 42, SEEK_SET);
+%\end{itemize}
+%\end{frame}
+
+\end{document}

@@ -1,0 +1,92 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{Operaţii I/O avansate}} \\
+\end{center}
+
+\section{Windows}
+\subsection{Operaţii overlapped}
+\func{struct OVERLAPPED}
+\begin{itemize}
+\item \textbf{Internal}, codul de eroare pentru cererea de I/O
+\item \textbf{InternalHigh}, numărul de octeţi transferaţi
+\item \textbf{(Offset,OffsetHigh)}, offset de început al operaţiei de I/O
+\item \textbf{hEvent}, eveniment ce va fi semnalat la terminarea operaţiei de I/O
+\end{itemize}
+\func{FILE_FLAG_OVERLAPPED}
+\begin{itemize}
+\item \textbf{atribut} asociat unui HANDLE pentru operaţii overlapped
+\item \textbf{CreateFile("myfile.txt", \\
+                         GENERIC_READ, \\
+                         0,\\ 
+                         NULL,\\ 
+                         OPEN_EXISTING,\\ 
+                         FILE_FLAG_OVERLAPPED,\\
+                         NULL)}
+\end{itemize}
+\func{GetOverlappedResult(hFile, lpOverlapped, bytesTransferred, bWait}
+\begin{itemize}
+\item \textbf{hFile}, file handle
+\item \textbf{lpOverlapped}, structura overlapped specificată la lansarea operaţiei I/O
+\item \textbf{bytesTransferred}, numărul de octeţi transferaţi
+\item \textbf{bWait}, dacă este TRUE apelul întoarce doar atunci când operaţia de I/O s-a încheiat. \\Dacă 
+este FALSE şi operaţia încă nu s-a încheiat funcţia întoarce ERROR_IO_INCOMPLETE
+\end{itemize}
+\subsection{Completion Ports}
+\func{HANDLE CreateIoCompletionPort(fileHandle, existingCompletionPort, completionKey, noThreads)}
+\begin{itemize}
+\item \textbf{creare completion port}
+\begin{itemize}
+\item \textbf{fileHandle}, INVALID_HANDLE_VALUE
+\item \textbf{existingCompletionPort}, NULL
+\item \textbf{completionKey}, NULL
+\item \textbf{noThreads}, numărul maxim de threaduri care pot rula concurent. Dacă acest parametru este 0
+numărul maxim va fi egal cu numărul procesoarelor din sistem
+\end{itemize}
+\item \textbf{adăugare file handle la completion port}
+\begin{itemize}
+\item \textbf{fileHandle}, overlapped handle care va fi adăugat la completion port
+\item \textbf{existingCompletionPort}, completion port creat anterior
+\item \textbf{completionKey}, pointer către o zonă de memorie care va identifica operaţia de I/O 
+\item \textbf{noThreads}, în acest caz valoarea este ignorată
+\end{itemize}
+\end{itemize}
+\func{BOOL GetQueuedCompletionStatus(CompletionPort, bytesTransferred, lpCompletionKey, lpOverlapped, dwMiliseconds)}
+\begin{itemize}
+\item \textbf{CompletionPort}, handle către completion port
+\item \textbf{bytesTransferred}, numărul octeţilor transferaţi în timpul unei operaţii de I/O încheiate
+\item \textbf{lpCompletionKey}, întoarce pointer către cheia asociată cu file handle-ul pentru care I/O s-a încheiat
+\item \textbf{lpOverlapped}, întoarce pointer către structura overlapped dată ca parametru operaţiei de I/O
+\item \textbf{dwMiliseconds}, timeout pentru care se aşteaptă ca o operaţie să se încheie. Pentru apel fără timeout se foloseşte INFINITE.
+\end{itemize}
+\subsection{Zero Copy}
+\func{TransmitFile(hSocket, hFile, numberOfBytesToWrite, numberOfBytesPerSend, lpOverlapped, lpTransmitBuffers, dwFlags}
+\begin{itemize}
+\item \textbf{hSocket}, handle către un socket conectat
+\item \textbf{hFile}, handle către fişierul de transmis
+\item \textbf{numberOfBytesToWrite}, numărul de octeţi din fişier de transmis
+\item \textbf{numberOfBytesPerSend}, dimensiunea în octeţi pentru fiecare bloc de date trimis
+\item \textbf{lpOverlapped}, pointer către o structură overlapped care va declanşa un apel asincron
+\item \textbf{lpTransmitBuffers}, NULL
+\item \textbf{dwFlags}, 0
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

@@ -1,0 +1,16 @@
+CC = gcc
+CPPFLAGS = -I../utils/
+CFLAGS = -Wall -Wextra -g
+LDLIBS = -lefence
+
+.PHONY: all clean
+
+all: ef_bug
+
+ef_bug: ef_bug.o
+
+ef_bug.o: bug.c ../utils/utils.h
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+clean:
+	-rm -f *.o *~ bug

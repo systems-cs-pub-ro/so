@@ -1,0 +1,70 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass[unknownkeysallowed]{so.cs.pub.ro}
+
+\title[Laborator 12]{Laborator 12}
+\subtitle{Implementarea sistemelor de fișiere}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% NB: Secțiunile nu sunt marcate vizual, ci doar apar în cuprins
+
+% Titlul unui frame se specifică fie în acolade, imediat după \begin{frame},
+% fie folosind \frametitle
+
+\begin{frame}{Dispozitive}
+	\begin{itemize}
+		\item Reale vs. virtuale
+		\item Caracter vs. bloc
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Device drivers}
+	\begin{itemize}
+		\item Gestionarea dispozitivelor de către kernel
+		\item Operații I/O
+		\begin{itemize}
+			\item \texttt{open, close}
+			\item \texttt{read, write}
+			\item \texttt{ioctl, mmap}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Device nodes}
+	\begin{itemize}
+		\item Fișiere speciale pentru interacțiunea cu device driver-ul		
+		\item Major și minor
+		\item \texttt{mknod}
+		\item \texttt{stat, fstat, lstat}
+		\begin{itemize}
+			\item \texttt{struct stat}
+		\end{itemize}
+	\end{itemize}		
+\end{frame}
+
+\begin{frame}{Sistem de fișiere}
+	\begin{itemize}
+		\item Colecție organizată de fișiere și directoare
+		\item Clasificare
+		\begin{itemize}
+			\item Disc: ext2, ext3, ext4, ntfs, fat, reiserfs
+			\item Rețea: nfs, smbfs, ncp
+			\item Virtuale: procfs, sysfs, sockfs, pipefs
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Operații cu sistemul de fișiere}
+	\begin{itemize}
+		\item \texttt{mount, umount}
+		\item \texttt{symlink, unlink}
+		\item \texttt{mkdir, rmdir, remove}
+		\item \texttt{opendir, readdir, struct dirent}
+		\item \texttt{getcwd, chdir, chroot}
+		\item \texttt{realpath, dirname, basename}
+	\end{itemize}		
+\end{frame}
+
+\end{document}

@@ -1,0 +1,12 @@
+# Entries should be in 2 forms:
+# 	N	COMMENT		- apply header to all .c .h files in labN folder
+#	N-FILE	COMMENT		- apply header only to FILE from labN folder
+
+# OBS   Comments should be on a single line
+
+1		Use of "system" library call and of "strace"
+2		What happends if a parrent process does not wait for it's child process ?
+3		Implement a minimal shell
+4-client.c	FIFO - client source
+4-server.c	FIFO - server source
+

@@ -1,0 +1,10 @@
+1		Variables in process address space viewed with objdump
+2		Use of valgrind
+3		Use of gdb to solve "Segmentation fault" problems
+4		Use of malloc, realloc on structures
+5		Stack smashing
+6		Use of mcheck
+7		Endianess
+8		Process memory zones
+9		Working with the stack
+10		Dumb malloc that only allocates space

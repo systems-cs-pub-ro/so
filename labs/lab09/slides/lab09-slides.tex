@@ -1,0 +1,184 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{so.cs.pub.ro}
+
+\usepackage{code/highlight}
+
+\title[Laborator 9]{Laborator 9}
+\subtitle{Thread-uri - Windows}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Windows Threads API}
+	\begin{itemize}
+            \item Operații cu thread-uri
+            \begin{itemize}
+		\item CreateThread
+		\item ThreadProc
+		\item WaitForSingleObject
+		\item ExitThread
+		\item GetCurrentThread
+            \end{itemize}
+            \item Thread Local Storage
+            \begin{itemize}
+                \item TlsAlloc
+		\item TlsFree
+		\item TlsGetValue
+		\item TlsSetValue
+            \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Mecanisme de sincronizare}
+	\begin{itemize}    % Just like normal LaTeX
+		\item Mutex (POSIX, Win32)
+		\item Semafor (POSIX, Win32)
+		\item Secţiune critică (Win32)
+		\item Variabilă de condiţie (POSIX)
+		\item Barieră (POSIX)
+                \item Eveniment (Win32)
+		\item Operaţii atomice cu variabile partajate (Win32)
+		\item Thread pooling (Win32)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Mutex (Win32)}
+	\begin{itemize}
+		\item Creare mutex
+			\begin{itemize}
+				\item \texttt{HANDLE CreateMutex(LPSECURITY_ATTRIBUTES lpMutexAttributes, BOOL bInitialOwner, LPCTSTR lpName)}
+			\end{itemize}
+		\item Deschidere mutex deja creat
+			\begin{itemize}
+				\item \texttt{HANDLE OpenMutex(DWORD dwDesiredAccess, BOOL bInheritHandle, LPCTSTR lpName)}
+			\end{itemize}
+		\item Aşteptare/acaparare mutex
+			\begin{itemize}
+				\item Funcţiile din familia \texttt{WaitForSingleObject}
+			\end{itemize}
+		\item Eliberare mutex
+			\begin{itemize}
+				\item \texttt{BOOL ReleaseMutex(HANDLE hMutex)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Semafor (Win32)}
+	\begin{itemize}
+		\item Creare semafor
+			\begin{itemize}
+				\item \texttt{HANDLE CreateSemaphore(LPSECURITY_ATTRIBUTES semattr, LONG initial_count, LONG maximum_count, LPCTSTR name)}
+			\end{itemize}
+		\item Deschidere semafor deja existent
+			\begin{itemize}
+				\item \texttt{HANDLE OpenSemaphore(DWORD dwDesiredAccess, BOOL bInheritHandle, LPCTSTR name)}
+			\end{itemize}
+		\item Aşteptare/decrementare semafor
+			\begin{itemize}
+				\item Funcţiile din familia \texttt{WaitForSingleObject}
+			\end{itemize}
+		\item Incrementare, cu \texttt{lReleaseCount}
+			\begin{itemize}
+				\item \texttt{BOOL ReleaseSemaphore(HANDLE hSemaphore, LONG lReleaseCount, LPLONG lpPreviousCount)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Secţiune critică}
+	\begin{itemize}
+		\item \texttt{CRITICAL_SECTION}
+		\item Sincronizare DOAR între firele de execuţie ale \textbf{aceluiaşi proces}
+		\item Iniţializare/Distrugere secțiune critică
+			\begin{itemize}
+				\item \texttt{void InitializeCriticalSection(LPCRITICAL_SECTION pcrit_sect)}
+				\item \texttt{void DeleteCriticalSection(LPCRITICAL_SECTION pcrit_sect)}
+			\end{itemize}
+		\item Intrare în secțiune critică
+			\begin{itemize}
+				\item \texttt{void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)}
+				\item \texttt{BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)}
+                        \end{itemize}
+                \item Ieșire din secțiune critică
+                        \begin{itemize}
+				\item \texttt{void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Eveniment}
+        \begin{itemize}
+                \item Două tipuri: manual-reset, auto-reset
+                \item Creare eveniment
+                        \begin{itemize}
+                                  \item \texttt{HANDLE WINAPI
+CreateEvent(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL
+bInitialState, LPCTSTR lpName);}
+                        \end{itemize}
+                \item Semnalizare eveniment
+                        \begin{itemize}
+                                    \item \texttt{BOOL WINAPI SetEvent(HANDLE
+hEvent);}
+                                    \item \texttt{BOOL WINAPI
+PulseEvent(HANDLE hEvent);}
+                                    \item \texttt{BOOL WINAPI
+ResetEvent(HANDLE hEvent);}
+                        \end{itemize}
+                \item Așteptarea unui eveniment
+                        \begin{itemize}
+                                    \item Funcţiile din familia
+\texttt{WaitForSingleObject}
+                        \end{itemize}
+        \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Operaţii atomice cu variabile partajate}
+	\begin{itemize}
+		\item Incrementare/Decrementare variabilă
+			\begin{itemize}
+				\item \texttt{LONG InterlockedIncrement(LONG volatile *lpAddend)}
+				\item \texttt{LONG InterlockedDecrement(LONG volatile *lpDecend)}
+			\end{itemize}
+		\item Atribuire atomică
+			\begin{itemize}
+				\item \texttt{LONG InterlockedExchange(LONG volatile *Target, LONG Value)}
+				\item \texttt{LONG InterlockedExchangeAdd(LPLONG volatile Addend, LONG Value)}
+				\item \texttt{PVOID InterlockedExchangePointer(PVOID volatile *Target, PVOID Value)}
+			\end{itemize}
+		\item Atribuire atomică condiţionată
+			\begin{itemize}
+				\item \texttt{LONG InterlockedCompareExchange(LONG volatile *dest, LONG exchange, LONG comp)}
+				\item \texttt{PVOID InterlockedCompareExchangePointer(PVOID volatile *dest, PVOID exchange, PVOID comp)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Thread pooling}
+	\begin{itemize}
+		\item Fiecare task primeşte un thread din pool
+		\item Eliminare overhead creare/terminare fire de execuţie
+		\item Task-urile pot fi:
+			\begin{itemize}
+				\item Executate \textbf{imediat}
+				\item Executate \textbf{mai târziu} (operaţii de aşteptare + funcţie callback asociată)
+					\begin{itemize}
+						\item Aşteptarea terminării unei operaţii I/O asincrone
+						\item Aşteptarea expirării unui TimerQueue
+						\item Funcţii de aşteptare înregistrate
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Întrebări}
+%\begin{itemize}
+%\item Este posibil ca un thread să modifice o variabilă de pe stiva altui thread?
+%\item Care este diferența între while(!conditie); și while (!conditie) sleep(1); ?
+%\item Care este diferența dintre deadlock și livelock?
+%\end{itemize}
+%\end{frame}
+
+
+\end{document}

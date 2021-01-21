@@ -1,0 +1,117 @@
+\ProvidesPackage{beamerouterthemeso}[2004/11/27 v1.0 for beamer 3.01]
+
+% A Beamer outer theme to put footlines on slides
+% 
+% The user can override the default contents of the footline
+% through the command \setfootline{whatever}
+% 
+% Rouben Rostamian <rostamian@umbc.edu>
+
+\mode<presentation>
+
+\usepackage{pgfcomp-version-0-65}
+
+\setbeamercolor{so@ftcolor}{fg=green!55!black}
+\setbeamercolor{so@decorations}{fg=green!55!black}
+{\usebeamercolor{so@decorations}}
+
+\newcommand{\so@header}{%
+  \raisebox{0mm}[0pt][0pt]{%
+    \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
+  
+      % horizontal fading line
+%      \begin{pgftranslate}{\pgfpoint{-5mm}{0mm}}
+%        \pgfbox[left,base]{}
+%      \end{pgftranslate}
+
+      \pgfsetlinewidth{1.5pt}
+      \color{green!55!black}
+      \pgfline{\pgfpoint{9mm}{0mm}}{\pgfpoint{113mm}{0mm}}
+
+%      \pgfmoveto{\pgfpoint{102mm}{0.28mm}}
+%      \pgfcurveto{\pgfpoint{104mm}{-5mm}}{\pgfpoint{109mm}{-8mm}}{\pgfpoint{118mm}{-8mm}}
+%      \pgfstroke
+
+%      \pgfsetlinewidth{3.0pt}
+%      \pgfcircle[stroke]{\pgfpoint{111mm}{1.5mm}}{4.5mm}
+%
+%      \pgfline{\pgfpoint{108.5mm}{-0.5mm}}{\pgfpoint{113.5mm}{-0.5mm}}
+%      \pgfline{\pgfpoint{109mm}{0.0mm}}{\pgfpoint{111.5mm}{5mm}}
+
+    \end{pgfpicture}
+  }
+}
+
+\newcommand{\so@logo}{%
+  \raisebox{0mm}[0pt][0pt]{%
+    \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
+      \pgfdeclareimage[interpolate=true,height=8.36mm,width=10mm]{so-logo}{so-logo}
+
+      \pgfputat{\pgfpoint{4mm}{-10mm}}{\pgfbox[left,base]{\pgfuseimage{so-logo}}}
+    \end{pgfpicture}
+  }
+}
+
+\defbeamertemplate*{headline}{so}[1][left]
+{
+  \so@logo
+}
+
+\defbeamertemplate*{frametitle}{so}[1][right]
+{
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%
+  \advance\@tempdima by\beamer@leftmargin%
+  \advance\@tempdima by\beamer@rightmargin%
+  \begin{beamercolorbox}[sep=0.5cm,#1,wd=\the\@tempdima]{frametitle}
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1.5ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \hfill
+    \hfill
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
+      \fi
+    }%
+%    \vskip-ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+  \vskip-18pt%
+%  \insertvrule{2.0pt}{so@decorations.fg}%
+  \so@header
+  \vskip-2pt%
+}
+
+\setbeamertemplate{headline}[so][0pt]
+\setbeamerfont{frametitle}{size=\large}
+\setbeamercolor{frametitle}{fg=green!55!black}
+\setbeamertemplate{frametitle}[so][0pt]
+
+% the default contents of footline
+\newcommand{\so@footline}{%
+  %\insertshortauthor, 
+  \insertshortinstitute
+  \hfill
+  \insertshorttitle
+  \ifx\insertsubtitle\@empty\else, \insertshortsubtitle\fi
+  \hfill
+  \insertframenumber/\inserttotalframenumber}
+
+% color definition as in beamerouterthemeinfolines.sty
+%\setbeamercolor{so@ftcolor}{parent=palette secondary}
+\setbeamertemplate{footline}{%
+  \usebeamerfont{structure}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex]{so@ftcolor}%
+    \Tiny\hspace*{4mm}\so@footline\hspace{4mm}
+  \end{beamercolorbox}}
+
+% The user can override the default \umbc@footline by \setfootline{whatever}
+\newcommand{\setfootline}[1]{\renewcommand{\so@footline}{#1}}
+
+% don't show navigation buttons
+%\setbeamertemplate{navigation symbols}{}
+
+\mode<all>

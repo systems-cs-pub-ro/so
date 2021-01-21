@@ -1,0 +1,414 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {Comunicare între procese}\\
+\end{center}
+
+\section{ Semafoare POSIX}
+
+Trebuie inclus headerul \textbf{semaphore.h}
+
+\func{sem_t* sem_open(const char *name, int oflag [, mode_t mode, unsigned int value])} -- creează / deschide un semafor existent
+\begin{params}
+  \param{}{}
+  \param{name}{identifică semaforul}
+  \param{oflag}{O_CREAT sau/și O_EXCL}
+  \param{mode}{specifică permisiunile noului semafor}
+  \param{value}{valoarea inițială}
+  \returns{adresa semaforului}
+\end{params}
+
+În caz de eroare, întoarce SEM_FAILED și setează errno
+(EACCESS, EEXIST, EINVAL, EMFILE, ENAMETOOLONG, ENFILE, ENOENT, ENOMEM)
+
+\func{int sem_wait(sem_t *sem)} -- decrementează semaforul, blocându-se dacă semaforul avea valoarea 0
+
+
+\func{int sem_trywait(sem_t *sem)} --  decrementează semaforul neblocant
+
+În caz de eroare, atât sem_wait() cât și sem_trywait() întorc -1 și setează errno la EINTR, EINVAL( sau EAGAIN pentru sem_trywait() )
+
+\func{int sem_post(sem_t *sem)} -- incrementează semaforul
+
+\func{int sem_getvalue(sem_t *sem, int *sval)} -- află valoarea semaforului
+
+\func{int sem_close(sem_t *sem)} -- închide semaforul
+
+În caz de eroare, atât sem_post() și sem_getvalue(), cât și sem_close() întorc -1 și setează errno la EINVAL
+
+\func{int sem_unlink(const char *name)} -- șterge semaforul
+
+În caz de eroare, întoarce -1 și setează errno (EACCESS, ENAMETOOLONG, ENOENT)
+
+\section{ Cozi de mesaje POSIX}
+
+Trebuie inclus headerul \textbf{mqueue.h}
+
+\func{mqd_t mq_open(const char *name, int oflag [, mode_t mode, struct mq_attr *attr])} -- creează / deschide o coadă de mesaje existent
+\begin{params}
+  \param{}{}
+  \param{name}{identifică coada de mesaje}
+  \param{oflag}{opțiunea trebuie să conțină exact una din următoarele O_RDONLY, O_WRONLY, O_RDWR}
+  \param{}{și oricâte din O_NONBLOCK, O_CREAT, O_EXCL}
+  \param{mode}{specifică permisiunile}
+  \param{attr}{ NULL - atributele implicite}
+  \returns{descriptorul cozii de mesaje}
+\end{params}
+
+\func{mqd_t mq_send(mqd_t mqdes, const char *buffer, size_t length, unsigned priority)} -- adaugă mesajul la coadă
+\begin{params}
+  \param{}{}
+  \param{mqdes}{descriptorul cozii de mesaje}
+  \param{buffer}{mesajul}
+  \param{length}{lungimea mesajului}
+  \param{priority}{o valoare nenegativă ce specifică prioritatea mesajului}
+  \returns{0}
+\end{params}
+
+\func{ssize_t mq_receive(mqd_t mqdes, char *buffer, size_t length, unsigned *priority)} -- scoate cel mai vechi mesaj cu cea mai mare prioritate din coadă
+\begin{params}
+  \param{}{}
+  \param{mqdes}{descriptorul cozii de mesaje}
+  \param{buffer}{mesajul}
+  \param{length}{lungimea mesajului}
+  \param{priority}{o valoare nenegativă ce specifică prioritatea mesajului}
+  \returns{numărul de octeți ai mesajului}
+\end{params}
+
+\vspace*{-0.15cm}
+În caz de eroare,  atât mq_send(), cât și mq_receive() întorc -1 și setează errno (EAGAIN, EBADF, EMSGSIZE, EINTR, EINVAL, ETIMEDOUT)
+
+\func{mqd_t mq_close(mqd_t mqdes)} -- închide descriptorul cozii de mesaje
+\begin{params}
+  \param{mqdes}{descriptorul cozii de mesaje}
+  \returns{0}
+\end{params}
+
+În caz de eroare, întoarce -1 și setează errno la EBADF
+
+\func{mqd_t mq_unlink(const char *name)} -- șterge coada de mesaje
+\begin{params}
+  \param{name}{identifică coada de mesaje}
+  \returns{0}
+\end{params}
+
+\vspace*{-0.15cm}
+În caz de eroare, întoarce -1 și setează errno (EACCES, ENAMETOOLONG, ENOENT)
+
+\vspace*{-0.4cm}
+\section{ Memorie partajată POSIX}
+
+Trebuie incluse headerele \textbf{sys/types.h},
+ \textbf{sys/mman.h}, \textbf{fcntl.h}
+
+\func{int shm_open(const char *name, int flags, mode_t mode)} -- creează / deschide o zonă de memorie. 
+\begin{params}
+  \param{}{}
+  \param{name}{identifică zona de memorie}
+  \param{flags}{opțiunea trebuie să conțină exact una dintre O_RDONLY sau O_RDWR}
+  \param{}{și oricâte din O_CREAT, O_EXCL, O_TRUNC}
+  \param{mode}{specifică permisiunile}
+  \returns{un descriptor}
+  \param{}{}
+\end{params}
+
+\vspace*{-0.4cm}
+În caz de eroare, întoarce -1 și setează errno 
+(EACCES, \\EEXIST, EINVAL, EMFILE, ENAMETOOLONG, ENFILE, ENOENT)
+
+\func{int ftruncate(int fd, off_t length)} -- dimensioneză zona de memorie
+\begin{params}
+  \param{}{}
+  \param{fd}{descriptor ce specifică zona}
+  \param{length}{dimensiune}
+  \returns{0}
+\end{params}
+
+\vspace*{-0.15cm}
+În caz de eroare, întoarce -1 și setează errno (EBADF sau EINVAL)
+
+\func{void *mmap(void *address, size_t length, int protection, int flags, int fd, off_t offset)} -- mapează zona de memorie partajată în spaţiul de memorie al procesulu
+\begin{params}
+  \param{}{}
+  \param{address}{preferinţă asupra adresei unde se va face maparea}
+  \param{length}{dimensiunea}
+  \param{protection}{specifică permisiunile - trebuie să fie în concordanţă cu modul de deschidere a fd}
+  \param{}{PROT_EXEC, PROT_READ, PROT_WRITE, PROT_NONE}
+  \param{flag}{opţiuni asupra tipului - de exemplu}
+  \param{}{MAP_FIXED, MAP_SHARED, MAP_PRIVATE}
+  \param{fd}{descriptorul}
+  \param{offset}{poziţia de început}
+  \returns{adresa la care s-a realizat maparea}
+\end{params}
+
+În caz de eroare întoarce MAP_FAILED.
+
+\func{int munmap(void *address, size_t length)} -- realizează demaparea
+\begin{params}
+  \param{address}{adresa de început}
+  \param{length}{dimensiunea}
+  \returns{0 (în caz de eroare întoarce -1 si errno setat)}
+\end{params}
+
+\func{int shm_unlink(const char *name)} -- şterge  zona de memorie partajată
+\begin{params}
+  \param{name}{identifică coada de mesaje}
+  \returns{0}
+\end{params}
+
+\section{ Mutex Win32}
+
+\func{HANDLE  CreateMutex(
+ 	LPSECURITY_ATTRIBUTES lpMutexAttr,
+ 	BOOL bInitialOwner,
+ 	LPCTSTR lpName
+ )} -- crează un mutex
+\begin{itemize}
+  \item \textbf{lpMutexAttr} - pointer la o structură de tip SECURITY_ATTRIBUTES, dacă e NULL handle-ul nu poate fi moștenit
+  \item \textbf{bInitialOwner} - TRUE - proprietarul iniţial este cel care l-a creat
+  \item \textbf{lpName} - numele mutexului
+  \item \textbf{întoarce} - handle către mutex
+\end{itemize}
+
+\func{HANDLE  OpenMutex(
+ 	DWORD  dwDesiredAccess,
+ 	BOOL  bInheritHandle,
+ 	LPCTSTR  lpName
+ )} -- deschide un mutex
+\begin{itemize}
+  \item \textbf{dwDesireAccess} - dreturile de acces
+  \item \textbf{bInheritHandle} - TRUE - handle-ul poate fi moștenit de procesele copil
+  \item \textbf{lpName} - numele mutexului
+  \item \textbf{întoarce} - handle către mutex
+\end{itemize}
+
+\func{BOOL  ReleaseMutex(
+ 	HANDLE  hMutex
+ )} -- cedează posesia mutexului
+\begin{itemize}
+  \item \textbf{hMutex} - handle către mutex
+  \item \textbf{întoarce} - o valoare diferită de 0
+\end{itemize}
+
+\vspace*{-0.2cm}
+\section{ Funcţii de asteptare}
+
+\func{DWORD  SignalObjectAndWait(
+ 	HANDLE  hObjToSignal,
+ 	HANDLE  hObjToWaitOn,
+ 	DWORD  dwMilliseconds,
+ 	BOOL  bAlertable
+ )}
+\begin{itemize}
+  \item \textbf{hObjToSignal} - handle către obiect de semnalizat
+  \item \textbf{hObjToWaitOn} - handle către obiect de aşteaptat
+  \item \textbf{dwMilliseconds} - interval de timeout (0 până la INFINITE)
+  \item \textbf{bAlertable} - TRUE - alertează
+  \item \textbf{întoarce} - WAIT_FAILED, WAIT_IO_COMPLETION, WAIT_ABANDONED, WAIT_OBJECT_0, WAIT_TIMEOUT
+\end{itemize}
+
+\func{DWORD WaitForSingleObject( HANDLE hHANDLE, WORD dwMillisec )}
+
+\func{DWORD  WaitForSingleObjectEx(
+ 	HANDLE  hHandle,
+ 	DWORD  dwMilliseconds,
+ 	BOOL  bAlertable
+ )}
+\begin{itemize}
+  \item \textbf{hHandle} - handle către obiect
+  \item \textbf{dwMilliseconds} - interval de timeout (0 până la INFINITE)
+  \item \textbf{bAlertable} - TRUE - alertează
+  \item \textbf{întoarce} - WAIT_FAILED, WAIT_IO_COMPLETION, WAIT_ABANDONED, WAIT_OBJECT_0, WAIT_TIMEOUT
+\end{itemize}
+
+\func{DWORD  WaitForMultipleObjects(
+ 	DWORD  nCount,
+ 	const  HANDLE*  lpHandles,
+ 	BOOL  bWaitAll,
+ 	DWORD  dwMilliseconds
+ )}
+
+\func{DWORD  WaitForMultipleObjectsEx(
+ 	DWORD  nCount,
+ 	const  HANDLE*  lpHandles,
+ 	BOOL  bWaitAll,
+ 	DWORD  dwMilliseconds,
+ 	BOOL  bAlertable
+ )}
+\begin{itemize}
+  \item \textbf{nCount} - numărul de handle-uri
+  \item \textbf{lpHandles} - un vector cu handle către obiecte
+  \item \textbf{bWaitAll} - TRUE - se întoarce dacă starea tuturor obiectelor e signal
+ se întoarce când starea vreunui obiect e signal
+  \item \textbf{dwMilliseconds} - interval de timeout (0 până la INFINITE)
+  \item \textbf{bAlertable} - TRUE - alertează
+  \item \textbf{întoarce} - WAIT_FAILED, WAIT_IO_COMPLETION, WAIT_ABANDONED, WAIT_OBJECT_0, WAIT_TIMEOUT
+\end{itemize}
+
+\vspace*{-0.3cm}
+\section{ Semafoare Win32}
+
+\func{HANDLE  CreateSemaphore(
+ 	LPSECURITY_ATTRIBUTES  lpSemAttr,
+ 	LONG  lInitialCount,
+ 	LONG  lMaximumCount,
+ 	LPCTSTR  lpNAME
+ )} -- crează / deschide un semafor
+\begin{itemize}
+  \item \textbf{lpSemAttr} - pointer la o structură de tip SECURITY_ATTRIBUTES (NULL handle-ul nu poate fi moștenit)
+  \item \textbf{lInitialCount} - valoarea iniţială a semaforului
+  \item \textbf{lMaximumCount} - valoarea maximă a semaforului
+  \item \textbf{lpNAME} - numele semaforului
+  \item \textbf{întoarce} - handle către semafor
+\end{itemize}
+
+\func{HANDLE  OpenSemaphore(
+ 	DWORD  dwDesiredAccess,
+ 	BOOL  bInheritHandle,
+ 	LPCTSTR  lpNAME
+ )} -- deschide un semafor existent
+\begin{itemize}
+  \item \textbf{dwDesireAccess} - dreturile de acces
+  \item \textbf{bInheritHandle} - TRUE - handle-ul poate fi moștenit
+  \item \textbf{lpNAME} - numele semaforului
+  \item \textbf{întoarce} - handle către semafor
+\end{itemize}
+
+\func{BOOL  ReleaseSemaphore(
+ 	HANDLE  hSemaphore,
+ 	LONG  lReleaseCount,
+ 	LPLONG  lpPreviousCount
+ )} -- incrementează semaforul
+\begin{itemize}
+  \item \textbf{hSemaphore} - handle către semafor
+  \item \textbf{lReleaseCount} - cu cat se incrementează valoarea semaforului
+  \item \textbf{lpPreviousCount} - valoarea precedentă a semaforului
+  \item \textbf{întoarce} - o valoare diferită de 0
+\end{itemize}
+
+\vspace*{-0.3cm}
+\section{ Cozi de mesaje Win32}
+
+\func{HANDLE  CreateMailslot(
+ 	LPCTSTR  lpName,
+ 	DWORD  nMaxMessageSize,
+ 	DWORD  lReadTimeout,
+ 	LPSECURITY_ATTRIBUTES  lpSecAttr
+)} -- creează o coadă de mesaje
+\begin{itemize}
+  \item \textbf{lpName} -  numele cozii de mesaje
+  \item \textbf{nMaxMessSize} - dimensiunea maximă a unui mesaj - 0 pentru nelimitat
+  \item \textbf{lReadTimeout} - timpul, în milisecunde, în care o operaţie de citire așteaptă ca un mesaj să fie scris înainte de timeout
+ MAILSLOT_WAIT_FOREVER
+  \item \textbf{lpSecAttr} - NULL - handle nu poate fi mostenit
+  \item \textbf{întoarce} - handle către coada de mesaje
+\end{itemize}
+
+\func{BOOL  GetMailslotInfo(
+ 	HANDLE  hMailslot,
+ 	LPDWORD  lpMaxMessageSize,
+ 	LPDWORD  lpNextSize,
+ 	LPDWORD  lpMessageCount,
+ 	LPDWORD  lpReadTimeout
+)} -- întoarce informaţii despre coada de mesaje
+\begin{itemize}
+  \item \textbf{hMailslot} - handle către coada de mesaje
+  \item \textbf{lpMaxMessSize} - dimensiunea maximă a unui mesaj
+  \item \textbf{lpNextSize} - dimensiunea următorului mesaj sau MAILSLOT_NO_MESSAGE
+  \item \textbf{lpMessageCount} - numărul de mesaje in asteptare să fie citite
+  \item \textbf{lpReadTimeout} - timpul, în milisecunde, în care o operaţie de citire așteaptă ca un mesaj să fie scris înainte de timeout
+  \item \textbf{întoarce} - o valoare diferită de 0
+\end{itemize}
+
+\vspace*{-0.15cm}
+Ultimii 3 parametrii pot fi NULL.
+
+\func{BOOL  SetMailslotInfo(
+ 	HANDLE  hMailslot,
+ 	DWORD  lReadTimeout
+ )}
+\begin{itemize}
+  \item \textbf{hMailslot} - handle către coada de mesaje
+  \item \textbf{lReadTimeout} - timpul, în milisecunde, în care o operaţie de citire asteaptă ca un mesaj să fie scris înainte de timeout
+  \item \textbf{întoarce} - o valoare diferită de 0
+\end{itemize}
+
+\vspace*{-0.3cm}
+\section{ Memorie partajată Win32}
+
+\func{HANDLE  CreateFileMapping(
+ 	HANDLE  hFile,
+ 	LPSECURITY_ATTRIBUTES  lpAttributes,
+ 	DWORD  flProtect,
+ 	DWORD  dwMaxSizeHigh,
+ 	DWORD  dwMaxSizeLow,
+ 	LPCTSTR  lpName
+)} -- creează un obiect de tipul File Mapping
+\begin{itemize}
+  \item \textbf{hFile} - handle către fişierul din care se va crea obiectul FileMapping
+  \item \textbf{lpAttributes} -  dacă e NULL handle-ul nu poate fi moştenit
+  \item \textbf{flProtect} - specifică opţiunea de protecţie
+ PAGE_EXECUTE_READ, PAGE_READONLY, PAGE_EXECUTE_READWRITE, PAGE_READWRITE, PAGE_EXECUTE_WRITECOPY, PAGE_WRITECOPY
+  \item \textbf{dwMaxSizeHigh} - partea semnificativă din dimensiunea maximă
+  \item \textbf{dwMaxSizeLow} - partea nesemnificativă din dimensiunea maximă
+  \item \textbf{lpName} - numele obiectului de tip FileMapping
+  \item \textbf{întoarce} - handle către obiectul de tip FileMapping
+\end{itemize}
+
+\func{LPVOID  MapViewOfFile(
+ 	HANDLE  hFileMapObject,
+ 	DWORD  dwDesiredAccess,
+ 	DWORD  dwFileOffsetH,
+ 	DWORD  dwFileOffsetL,
+ 	SIZE_T  dwNrOfBytesToMap
+)} -- mapează o zonă de memorie
+\begin{itemize}
+  \item \textbf{hFileMapObject} - handle către un obiect de tip FileMapping
+  \item \textbf{dwDesireAccess} - tipul accesului ce determină protecţia paginilor :  
+ FILE_MAP_ALL_ACCESS, FILE_MAP_EXECUTE, FILE_MAP_COPY, FILE_MAP_READ, FILE_MAP_WRITE
+  \item \textbf{dwFileOffsetH} - partea semnificativă ce marchează inceputul
+  \item \textbf{dwFileOffsetL} - partea nesemnificativă din ce marchează inceputul
+  \item \textbf{dwNrBytesToMap} - numărul de octeţi mapaţi
+  \item \textbf{întoarce} - adresa de inceput a zonei mapată
+\end{itemize}
+
+\func{HANDLE  OpenFileMapping(
+ 	DWORD  dwDesiredAccess,
+ 	BOOL  bInheritHandle,
+ 	LPCTSTR  lpName
+)} -- accesează un obiect de tipul FileMapping
+\begin{itemize}
+  \item \textbf{dwDesireAccess} - drepturile de acces
+  \item \textbf{bInheritHandle} - TRUE - handle poate fi mostenit
+  \item \textbf{lpName} - numele obiectului de tip FileMapping
+  \item \textbf{întoarce} - handle deschis către obiectul de tip FileMapping
+\end{itemize}
+
+\func{BOOL UnmapViewOfFile(
+ 	LPCVOID lpBaseAddress
+)} -- demapează o zonă de memorie
+\begin{itemize}
+  \item \textbf{lpBaseAddress} - pointer către adresa de bază a zonei mapate
+  \item \textbf{întoarce} - o valoare diferită de 0
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

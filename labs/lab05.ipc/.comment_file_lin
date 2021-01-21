@@ -1,0 +1,33 @@
+1-sem.c			Using named semaphores
+1-mq.c			Using a message queue
+1-shm.c			Using a shared memory area
+
+
+2-common.h		Types and structures
+
+2-server.c		Generic server implementation
+2-client.c		Generic client implementation
+
+2-generic_queue.h	Generic queue functions
+2-generic_shm.h		Generic shared memory functions
+2-generic_sem.h		Generic semaphore functions
+
+2-unix_queue.c		Unix implementation of queue functions
+2-unix_shm.c		Unix implementation of shared memory functions
+2-unix_sem.c		Unix implementation of semaphore functions
+
+2-win_queue.c		Win implementation of queue functions
+2-win_shm.c		Win implementation of shared memory functions
+2-win_sem.c		Win implementation of semaphore functions
+
+
+2-hashthable.h		Hashtable functions
+2-hashtable.c		Hashtable implementation
+
+2-hash.h		Hash function header
+2-hash.c		Hash function implementation
+
+3-client.c		Client want's to share a magic number
+3-server.c		Server tring to find the magic number
+
+

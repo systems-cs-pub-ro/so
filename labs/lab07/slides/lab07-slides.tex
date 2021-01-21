@@ -1,0 +1,109 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{so.cs.pub.ro}
+
+\title[Laborator 07]{Laborator 07}
+\subtitle{Profiling and Debugging}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% Titlul unui frame se specifică fie în acolade, imediat după \begin{frame},
+% fie folosind \frametitle
+
+\begin{frame}{Tehnici de profiling}
+  \begin{itemize}
+    \item Instrumentare
+    \item Eșantionare
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Instrumentare}
+  \begin{itemize}
+    \item Presupune modificarea codului
+    \item Introduce latențe
+    \item Asigură o precizie sporită
+    \item Nu are nevoie de suport SO
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Eșantionare (sampling)}
+  \begin {itemize}
+    \item Nu implică modificarea codului
+    \item Are nevoie de suport SO
+    \item Are nevoie de suport hardware
+    \item Se fac verificări periodice
+  \end {itemize}
+\end{frame}
+
+\begin{frame}{perf}
+  \begin{itemize}
+    \item performance counters
+	\begin{itemize}
+	\item Registre speciale disponibile pe procesoarele moderne
+	\item Numără anumite evenimente hardware (instrucțiuni, etc)
+	\end{itemize}
+    \item perfcounters
+    \begin{itemize}
+    \item Subsistem în nucleu de gestiune a performance counters
+    \item Hardware/software counters, tracepoints
+    \item Per thread/cpu/whole system
+    \end{itemize}
+    \item perf
+     \begin{itemize}
+    \item Utilitar userspace (linux/tools/perf).
+    \item Interfață asemănătoare cu git (subcomenzi).
+    \item list, stat, record, report, top
+     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Utilizare perf}
+  \begin{itemize}
+    \item perf [--version] [--help] COMMAND [ARGS]
+    \item COMMAND
+    \begin{itemize}
+    \item list - listează toate evenimentele disponibile de urmărit cu perf. 
+    \item stat - rulează o comandă și afișează informații statistice despre rulare.
+    \item top - afișează statistici despre un eveniment în timp real.
+    \item record - rulează o comandă și salvează profilul în perf.data.
+    \item report - interpreteză un profil salvat în perf.data
+    \item sched - măsoară proprietăți ale planificatorului (e.g latență).
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Debugging}
+  \begin{itemize}
+    \item strace
+    \item gdb
+    \item valgrind
+    \item printf
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Concluzii}
+  \begin{itemize}
+    \item "Premature optimization is the root of all evil"
+    \item 80\% din timp, rulează 20\% din cod
+    \item There are lies, damned lies, and statistics
+    \item Avem nevoie de unelte foarte bune de debugging, mai ales pentru
+    proiectele mari
+  \end{itemize}
+\end{frame}
+
+
+%\begin{frame}{Întrebări}
+%  \begin{itemize}
+%    \item De ce execuția mai multor instrucțiuni de salt are influențe negative
+%    asupra performanței programului?
+%    \item Este totdeauna necesar ca un context switch să genereze tlb flush?
+%    \item De ce SO evită migrarea unui proces de pe un core pe altul?
+%    \item Pentru un proces observăm că voluntary context switches / non-voluntary context swithces = 12314/72. Este
+%acesta un proces I/O bound sau CPU bound? 
+%  \end{itemize}
+%\end{frame}
+
+\end{document}

@@ -1,0 +1,121 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{so.cs.pub.ro}
+
+%\usepackage{code/highlight}
+
+\title[Laborator 11]{Laborator 11}
+\subtitle{Operaţii I/O avansate - Linux}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% NB: Secțiunile nu sunt marcate vizual, ci doar apar în cuprins
+
+% Titlul unui frame se specifică fie în acolade, imediat după \begin{frame},
+% fie folosind \frametitle
+\begin{frame}{Multiplexare}
+\begin{itemize}
+  \item mai multe canale, un singur fir de execuţie
+  \begin{itemize}
+    \item canale = set de descriptori
+    \item evenimente IN/OUT
+  \end{itemize}
+  \item apeluri stateless
+  \begin{itemize}
+    \item înregistrare interes cuplată cu aşteptare
+    \item select, poll
+  \end{itemize}
+  \item apeluri stateful
+  \begin{itemize}
+    \item înregistrare interes separată de aşteptare
+    \item epoll
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mecanisme}
+  \begin{itemize}    % Just like normal LaTeX
+    \item select
+      \begin{itemize}
+        \item readfds, writefds, exceptfds
+        \item simplu, ineficient
+      \end{itemize}
+    \item poll
+      \begin{itemize}
+        \item pollfd (fd, events, revents)
+        \item simplu, la fel de ineficient
+      \end{itemize}
+    \item epoll
+      \begin{itemize}
+        \item struct epoll_event (events, data)
+        \item level-triggered vs edge-triggered
+        \item simplu, eficient
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Generalizarea multiplexării}
+  \begin{itemize}    % Just like normal LaTeX
+    \item eventfd
+      \begin{itemize}
+        \item notificări pentru evenimente
+      \end{itemize}
+    \item signalfd
+      \begin{itemize}
+        \item notificări pentru primire de semnale
+      \end{itemize}
+    \item timerfd
+      \begin{itemize}
+        \item notificări pentru timere
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Operaţii asincrone}
+  \begin{itemize}    % Just like normal LaTeX
+    \item POSIX AIO
+      \begin{itemize}
+        \item -lrt, dacă este suportat
+        \item aio_read, aio_write, aio_suspend ...
+      \end{itemize}
+    \item kernel AIO
+      \begin{itemize}
+        \item -laio
+        \item struct iocb
+        \item AIO context
+        \item io_setup, io_submit, io_destroy, io_getevents ...
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{IO Optimization}
+  \begin{itemize}
+    \item zero-copy
+      \begin{itemize}
+        \item splice
+      \end{itemize}
+    \item vectored IO
+      \begin{itemize}
+        \item struct iovec
+        \item readv, writev
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%\begin{frame}{Întrebări}
+%\begin{itemize}
+%\item Este posibil ca un apel write să se blocheze deşi un apel anterior
+%select indică faptul că se poate scrie?
+%\item Cum putem fi siguri că un apel write nu blochează procesul curent?
+%\item Începând cu versiunea de kernel 2.6.32 apelul open poate primi ca flag
+%O_CLOEXEC. Până la această versiune O_CLOEXEC putea fi setat doar ulterior
+%folosind apelul fcntl. De ce credeţi că s-a făcut schimbarea?
+%\item Cum depinde performanţa unei aplicaţii folosind select/poll/epoll în
+%funcţie de numărul descriptorilor de fişier urmăriţi?
+%\item Care este diferenţa între un apel writev cu 5 elemente în vectorul de
+%intrare şi 5 apeluri ale funcţiei write?
+%\end{itemize}
+%\end{frame}
+
+\end{document}

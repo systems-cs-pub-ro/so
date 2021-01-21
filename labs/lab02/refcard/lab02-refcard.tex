@@ -1,0 +1,203 @@
+% vim: set tw=78 sts=2 sw=2 ts=8 aw et:
+\documentclass{refcard.cs.pub.ro}
+%\input{../../refcard/so_reference_head.tex}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{2. Operaţii I/O simple } 
+\end{center}
+
+\section{Linux}
+\subsection{File descriptor}
+Întreg ce identifică un fişier în tabela fişierelor deschise de un proces.
+
+File descriptori standard:
+\begin{itemize}
+\item \textbf{0} sau \textbf{STDIN_FILENO}, standard input
+\item \textbf{1} sau \textbf{STDOUT_FILENO}, standard output
+\item \textbf{2} sau \textbf{STDERR_FILENO}, standard error
+\end{itemize}
+
+\subsection{Operaţii pe fişiere}
+\func{int open(const char *pathname, int flags); } \\
+\func{int open(const char *pathname, int flags, mode_t mode);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{pathname}{calea către fişiere}
+	\param{flags}{flag-uri de access şi de creare}
+	\param{mode}{permisiuni la creare}
+	\returns{file descriptorul creat sau -1 în caz de eroare}
+\end{params}
+
+\func{int close(int fd);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{fd}{descriptor fişier}
+	\returns{0 în caz de succes sau -1 în caz de eroare}
+\end{params}
+
+\func{ssize_t read(int fd, void *buf, size_t count);} \\
+\func{ssize_t write(int fd, const void *buf, size_t count);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{fd}{descriptor fişier}
+	\param{buf}{adresa de început a zonei de memorie pentru citire/scriere}
+	\param{count}{numărul de octeţi din \textbf{buf} solicitaţi pentru citire/scriere}
+	\returns{numărul de octeţi citiţi/scrişi sau -1 în caz de eroare}
+\end{params}
+
+\func{off_t lseek(int fd, off_t offset, int whence);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{fd}{descriptor fişier}
+	\param{offset}{offset folosit pentru poziţionare}
+	\param{whence}{poziţia relativă la care se face poziţionarea}
+	\returns{offset rezultat după poziţionare măsurat relativ la 	începutul fişierului}
+\end{params}
+\func{int unlink(const char *pathname);} 
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{pathname}{numele fişierului care va fi şters}
+	\returns{zer în caz de success, -1 in caz de eroare}
+\end{params}
+
+\func{int dup(int oldfd); } \\
+\func{int dup2(int oldfd, int newfd);}
+\begin{params}
+	\param{}{} % simulate new line :) 
+	\param{oldfd}{vechiul file descriptor}
+	\param{newfd}{noul file descriptor care va deveni acum o copie a vechiului file descriptor}
+	\returns{noul file descriptor}
+\end{params}
+
+\section{Windows}
+
+\subsection{File handle}
+
+Identificator pentru un obiect gestionat de kernel-ul Windows.
+Device-uri standard:
+\begin{itemize}
+\item \textbf{STD_INPUT_HANDLE}, standard input device
+\item \textbf{STD_OUTPUT_HANDLE}, standard output device
+\item \textbf{STD_ERROR_HANDLE}, standard error device
+\end{itemize}
+
+\func{BOOL WINAPI SetStdHandle(DWORD nStdHandle, HANDLE hHandle);}
+\begin{itemize}
+\item \textbf{nStdHandle} - device-ul standard pentru care va fi setat handle-ul
+\item \textbf{hHandle} - handle-ul pentru standard device
+\item \textit{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\func{HANDLE WINAPI GetStdHandle(DWORD nStdHandle);}
+\begin{itemize} 
+\item \textbf{nStdHandle} - device-ul standard pentru care va fi obţinut handle-ul
+\item \textit{întoarce} - handle-ul obţinut sau INVALID_HANDLE_VALUE în caz de eroare
+\end{itemize}
+
+\subsection{Operaţii pe fişiere}
+
+\func{HANDLE CreateFile( \\ 
+~~~~LPCTSTR lpFileName, DWORD dwDesiredAccess, \\
+~~~~DWORD dwShareMode, LPSECURITY_ATTRIBUTES \\
+~~~~lpSecurityAttributes, 
+DWORD dwCreationDisposition, \\
+~~~~DWORD dwFlagsAndAttributes, 
+HANDLE hTemplateFile );}
+
+\begin{itemize}
+\item \textbf{lpFileName} - numele fişierului creat sau deschis
+\item \textbf{dwDesiredAccess} - GENERIC_READ, GENERIC_WRITE
+\item \textbf{dwShareMode} - FILE_SHARE_READ, FILE_SHARE_WRITE, FILE_SHARE_DELETE
+\item \textbf{lpSecurityAttributes} - de obicei NULL
+\item \textbf{dwCreationDisposition} - CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING
+\item \textbf{dwFlagsAndAttributes} - FILE_ATTRIBUTE_NORMAL, FILE_ATTRIBUTE_READONLY
+\item \textbf{hTemplateFile} - de obicei NULL
+\item \textit{întoarce} - handle-ul pentru fişier sau INVALID_HANDLE_VALUE în caz de eroare
+\end{itemize}
+
+\func{BOOL CloseHandle(HANDLE hObject); }
+\begin{itemize}
+\item \textbf{hObject} - handle care se doreşte a fi închis
+\item \textit{întoarce} - nonzero pentru succes, zero în caz de eroare
+\end{itemize}
+
+\func{BOOL DeleteFile(LPCTSTR lpFileName);}
+\begin{itemize}
+\item \textbf{lpFileName} - numele fişierului care se doreşte a fi şters
+\item \textit{întoarce} - nonzero pentru succes sau zero în caz de eroare
+\end{itemize} 
+
+\func{BOOL ReadFile(
+HANDLE hFile,
+LPVOID lpBuffer,
+DWORD nNumberOfBytesToRead,
+LPDWORD lpNumberOfBytesRead,
+LPOVERLAPPED lpOverlapped
+);}
+
+\begin{itemize}
+\item \textbf{hFile} - handle către un fişier deschis
+\item \textbf{lpBuffer} - buffer în care se vor reţine octeţii citiţi din fişier
+\item \textbf{nNumberOfBytesToRead} - numărul de octeţi de citit
+\item \textbf{lpNumberOfBytesRead} - numărul de octeţi efectiv citiţi
+\item \textbf{lpOverlapped} - momentan NULL
+\item \textit{întoarce} - nonzero pentru succes sau zero în caz de eroare
+\end{itemize}
+
+\func{BOOL WriteFile(
+        HANDLE hFile,
+        LPCVOID lpBuffer,
+        DWORD nNumberOfBytesToWrite,
+        LPDWORD lpNumberOfBytesWritten,
+        LPOVERLAPPED lpOverlapped
+);}
+\begin{itemize}
+\item \textbf{hFile} - handle către un fişier deschis
+\item \textbf{lpBuffer} - buffer care se va scrie în fişier
+\item \textbf{nNumberOfBytesToWrite} - numărul de octeţi de scris
+\item \textbf{lpNumberOfBytesWritten} - numărul de octeţi efectiv scrişi
+\item \textbf{lpOverlapped} - momentan NULL
+\item \textit{întoarce} - nonzero pentru succes sau zero în caz de eroare
+\end{itemize}
+
+\func{ DWORD SetFilePointer(
+         HANDLE hFile,
+         LONG lDistanceToMove,
+         PLONG lpDistanceToMoveHigh,
+         DWORD dwMoveMethod
+ );}
+\begin{itemize}
+\item \textbf{hFile} - handle către un fişier deschis
+\item \textbf{lDistanceToMove} - numărul de octeţi cu care se mută cursorul
+\item \textbf{lpDistanceToMoveHigh} - de obicei NULL 
+\item \textbf{dwMoveMethod} - poziţia relativă faţă de care se face mutarea
+\begin{itemize}
+\item FILE_BEGIN, punctul de start este începutul fişierului
+\item FILE_CURRENT, punctul de start este valoarea curentă a cursorului 
+\item FILE_END, punctul de start este valoarea curentă a sfârşitului de fişier
+\end{itemize}
+
+\item \textit{întoarce} - noua valoarea a cursorului în cazul în care \textbf{lpDistanceToMoveHigh} este NULL, sau INVALID_HANDLE_VALUE 
+în caz de eroare.
+\end{itemize}
+
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

@@ -1,0 +1,23 @@
+CC = cl
+L = link
+CFLAGS = /nologo /W3
+
+all: bounds_dynamic.exe
+
+
+bounds_dynamic.exe: #TODO dependencies
+	#TODO create the executable file
+
+
+bounds_dynamic.dll: #TODO dependencies
+	#TODO create dynamic lib
+
+min.obj: #TODO 
+
+max.obj: #TODO 
+
+bounds.obj: #TODO 
+
+
+clean:
+	del /Q /F *.obj *.lib *.dll *.exe  *.exp

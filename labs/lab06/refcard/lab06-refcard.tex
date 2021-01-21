@@ -1,0 +1,348 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+\Large{\textbf{SO Cheat Sheet}} \\
+{Memoria virtuală}\\
+\end{center}
+
+\section{Mapare fișiere și memorie POSIX}
+
+În POSIX trebuie incluse header-ele \textbf{sys/types.h},
+\textbf{sys/mman.h}.
+
+\func{	void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t
+offset)} -- mapare fișier/memorie în spațiul de adresă al unui proces
+\begin{params}
+\param{}{}
+\param{start}{adresa de start pentru mapare, NULL înseamna lipsa unei
+preferințe; dacă e diferită de NULL, e considerată doar un hint, maparea
+fiind creată la o adresă apropiată multiplu de dimensiunea unei pagini}
+\param{length}{lungimea mapării}
+\param{prot}{tipul de acces la zona de memorie: PROT_READ, PROT_WRITE, PROT_EXEC,
+PROT_NONE}
+\param{flags}{tipul de mapare: cel puțin una din MAP_PRIVATE/MAP_SHARED,
+MAP_FIXED, MAP_LOCKED; MAP_ANONYMOUS pentru mapare memorie}
+\param{fd}{descriptorul fișierului mapat; ignorat la mapare
+memorie}
+\param{offset}{offset în cadrul fișierului mapat; ignorat la
+mapare memorie}
+\returns{adresa mapării, MAP_FAILED (care reprezintă (void *) -1) în caz de eroare}
+\end{params}
+
+\func{	int msync(void *start, size_t length, int flags)} -- declanșează în mod
+explicit sincronizarea fișierului cu maparea din memorie
+\begin{params}
+\param{}{}
+\param{start, length}{identifică zona de memorie}
+\param{flags}{MS_SYNC, MS_ASYNC, MS_INVALIDATE}
+\returns{0 în caz de succes, -1 în caz de eroare}
+\end{params}
+
+\func{	int munmap(void *start, size_t length)} --  demapează o zonă din
+spațiul de adresă al procesului ; poate identifica zone aparținând unor mapari
+diferite, unele deja demapate
+
+\func{	void *mremap(void *old_address, size_t old_size, size_t new_size,
+unsigned long flags)} -- redimensionare zonă mapată
+\begin{params}
+\param{}{}
+\param{old_address, old_size}{identifică vechea zonă mapată}
+\param{new_size}{noua dimensiune}
+\param{flags}{MREMAP_MAYMOVEE}
+\returns{pointer spre noua zonă în caz de succes, MAP_FAILED în caz de eroare}
+\end{params}
+
+
+\func{	int mprotect(const void *addr, size_t len, int prot)} -- schimbă
+drepturile de acces ale unei mapări
+\begin{params}
+\param{}{}
+\param{addr}{adresa mapării, multiplu de dimensiunea unei pagini}
+\param{len}{lungimea zonei considerate; se va aplica pentru toate
+paginile cu cel puțin un byte în intervalul [addr, addr + len -1]}
+\param{prot}{PROT_READ, PROT_WRITE, PROT_EXEC, PROT_NONE}
+\returns{0 în caz de succes, -1 în caz de eroare}
+\end{params}
+
+\func{	int madvise(void *start, size_t length, int advice)} -- indicații despre
+cum va fi folosită o zonă mapată
+\begin{params}
+\param{}{}
+\param{addr, length}{identifică zona}
+\param{advice}{MADV_NORMAL, MADV_RANDOM, MADV_SEQUENTIAL, MADV_WILLNEED,
+MADV_DONTNEED}
+\returns{0 în caz de succes, -1 în caz de eroare}
+\end{params}
+
+\section{Blocarea paginării POSIX}
+
+\func{	int mlock(const void *addr, size_t len)} -- blochează paginarea
+paginilor incluse în intervalul [addr, addr + len - 1]
+
+\func{	int mlockall(int flags)} -- blochează paginarea tuturor paginilor
+procesului
+\begin{params}
+\param{}{}
+\param{flags}{MCL_CURRENT, MCL_FUTURE}
+\end{params}
+
+\func{	int munlock(const void *addr, size_t len)} -- reporni paginarea tuturor
+paginilor din intervalul [addr, addr + len - 1]
+
+\func{	int munlockall(void)} -- reporni paginarea tuturor
+paginilor procesului
+
+\section{Excepții accesare memorie POSIX}
+
+Funcția de tip sigaction va primi ca parametru o structură siginfo_t,
+având
+setate:
+\begin{params}
+\param{}{}
+\param{si_signo}{SIGSEGV, SIGBUS}
+\param{si_code}{caz SIGSEGV: SEGV_MAPPER, SEGV_ACCERR; caz SIGBUS:
+BUS_ADRALN, BUS_ADRERR, BUS_OBJERR}
+\param{si_addr}{adresa care a generat excepția}
+\end{params}
+
+\section{ElectricFence}
+
+Folosit pentru depanare buffer overrun. Pentru a preveni și buffer underrun,
+definiți variabila de mediu EF_PROTECT_BELOW.
+
+Programul trebuie linkat cu efence: -lefence.
+
+
+
+\section{Maparea fișierelor Win32}
+
+\func{	HANDLE CreateFileMapping(
+HANDLE hFile,
+LPSECURITY_ATTRIBUTES lpAttributes,
+DWORD flProtect,
+DWORD dwMaximumSizeHigh,
+DWORD dwMaximumSizeLow,
+LPCTSTR lpName
+)} -- crează un obiect FileMapping, pentru a fi mapat
+\begin{itemize}
+\item \textbf{hFile} - handle fișier de mapat
+\item \textbf{lpAttributes} - atribute securitate pentru acces handle întors
+\item \textbf{flProtect} - tipul mapării: PAGE_READONLY, PAGE_READWRITE,
+PAGE_WRITECOPY
+\item \textbf{dwMaximumSizeHigh, dwMaximumSizeLow} - dimensiunea maximă
+\item \textbf{lpName} - șir identificare, opțional
+\item \textbf{întoarce} - în caz de succes întoarce un handle către un
+obiect FileMapping, în caz de eșec întoarce NULL
+\end{itemize}
+
+\func{	LPVOID MapViewOfFile(
+HANDLE hFileMappingObject,
+DWORD dwDesiredAccess,
+DWORD dwFileOffsetHigh,
+DWORD dwFileOffsetLow,
+SIZE_T dwNumberOfBytesToMap
+)} -- creează mapare fișier
+\begin{itemize}
+\item \textbf{hFileMappingObject} - obiect de tip FileMapping
+\item \textbf{dwDesiredAccess} - FILE_MAP_READ, FILE_MAP_WRITE, FILE_MAP_COPY
+\item \textbf{dwFileOffsetHigh, dwFileOffsetLow} - offset
+\item \textbf{dwNumberOfBytesToMap} - număr octeți de mapat
+\item \textbf{întoarce} - în caz de succes întoarce un pointer la zona
+mapată, în caz de eșec întoarce NULL
+\end{itemize}
+
+\func{	BOOL UnmapViewOfFile(
+LPCVOID lpBaseAddress
+)} -- demapare fișier mapat în memorie
+\begin{itemize}
+\item \textbf{lpBaseAddresst} - adresa început zonă
+\item \textbf{întoarce} - TRUE pentru succes, FALSE altfel
+\end{itemize}
+
+\section{Mapare memorie Win32}
+
+\func{	LPVOID VirtualAlloc(
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD flAllocationType,
+DWORD flProtect
+)} -- alocă memorie în spatiul procesului curent
+
+\func{	LPVOID VirtualAllocEx(
+HANDLE hProcess,
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD flAllocationType,
+DWORD flProtect
+)} -- alocă memorie în spațiul altui proces
+\begin{itemize}
+\item \textbf{hProcess} - handle proces pentru care se aplică funcția
+\item \textbf{fAllocationType} - MEM_RESERVE, MEM_COMMIT, MEM_RESET
+\item \textbf{lpAddress} - adresa unde începe alocarea; multiplu de 4KB
+pentru alocare și 64KB pentru rezervare; NULL - nicio preferință
+\item \textbf{dwSize} - dimensiunea zonei
+\item \textbf{flProtect} - modul de acces pentru zona alocată:
+PAGE_EXECUTE, PAGE_EXECUTE_READ, PAGE_EXECUTE_READWRITE,
+PAGE_EXECUTE_WRITECOPY, PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY,
+PAGE_NOACCESS, PAGE_GUARD, PAGE_NOCACHE
+\item \textbf{întoarce} - pointer la zona alocată
+\end{itemize}
+
+\pagebreak
+
+\func{	BOOL VirtualFree(
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD dwFreeType
+)} -- eliberează zona de memorie din spațiul procesului curent
+
+\func{	BOOL VirtualFreeEx(
+HANDLE hProcess,
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD dwFreeType
+)} -- eliberează o zonă de memorie pentru alt proces
+\begin{itemize}
+\item \textbf{hProcess} -handle proces pentru care se aplică funcția
+\item \textbf{lpAddress, dwSize} - identifică zona
+\item \textbf{dwFreeType} - tipul operației: MEM_DECOMMIT, MEM_RELEASE
+\item \textbf{întoarce} - TRUE - succes, FALSE - eroare
+\end{itemize}
+
+\func{	BOOL VirtualProtect(
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD flNewProtect,
+PDWORD lpflOldProtect
+)} -- schimbarea protectiei unei zone de memorie mapate în spațiul procesului
+curent
+
+\func{	BOOL VirtualProtectEx(
+HANDLE hProcess,
+LPVOID lpAddress,
+SIZE_T dwSize,
+DWORD flNewProtect,
+PDWORD lpflOldProtect
+)} -- schimbarea protecției unei zone de memorie mapate în alt proces
+\begin{itemize}
+\item \textbf{Process} - handle proces pentru care se aplică funcția
+\item \textbf{lpAddress, dwSize} - identifică zona
+\item \textbf{flNewProtect} - noi drepturi
+\item \textbf{lpflOldProtect} - salvare drepturi vechi
+\item \textbf{întoarce}  - TRUE - succes, FALSE - eroare
+\end{itemize}
+
+Observație: functionează doar pentru pagini din aceeasi regiune rezervată
+alocată cu apelul VirtualAlloc sau VirtualAllocEx folosind MEM_RESERVE.
+
+\section{Interogarea zonelor mapate Win32}
+
+\func{	DWORD VirtualQuery(
+LPCVOID lpAddress,
+PMEMORY_BASIC_INFORMATION lpBuffer,
+SIZE_T dwLength
+)} -- interogarea zonelor mapate din procesul curent
+\func{	DWORD VirtualQueryEx(
+HANDLE hProcess,
+LPCVOID lpAddress,
+PMEMORY_BASIC_INFORMATION lpBuffer,
+SIZE_T dwLength
+)} -- interogarea zonelor mapate din alt proces
+\begin{itemize}
+\item \textbf{hProcess} - handle proces pentru care se aplică funcția
+\item \textbf{lpAddress} - adresa din cadrul zonei de interogat
+\item \textbf{lpBuffer} - buffer ce reține informații despre zonă
+\item \textbf{dwLength} - număr octeți scriși în buffer
+\item \textbf{întoarce}  - 0 - nicio informație furnizată, diferit de 0 - altfel
+\end{itemize}
+
+\section{Blocarea paginării Win32}
+
+\func{	BOOL VirtualLock(
+LPVOID lpAddress,
+SIZE_T dwSize
+)} -- blocare paginare proces curent
+
+\func{	BOOL VirtualLockEx(
+HANDLE hProcess,
+LPVOID lpAddress,
+SIZE_T dwSize
+)} -- blocare paginare alt proces
+\begin{itemize}
+\item \textbf{hProcess}{handle proces pentru care se aplică funcția}
+\item \textbf{lpAddress, dwSize}{sunt luate in calcul paginile cu macar
+un octet în
+[lpAddress, lpAddess + dwSize]}
+\item \textbf{întoarce}{TRUE - succes, FALSE - altfel}
+\end{itemize}
+
+\func{	BOOL VirtualUnlock(
+LPVOID lpAddress,
+SIZE_T dwSize
+)} -- repornirea paginării pentru procesul curent
+
+\func{	BOOL VirtualUnlockEx(
+HANDLE hProcess,
+LPVOID lpAddress,
+SIZE_T dwSize
+)} -- repornirea paginării pentru alt proces
+
+\section{Excepții Win32}
+
+\func{	PVOID AddVectoredExceptionHandler(
+ULONG FirstHandler,
+PVECTORED_EXCEPTION_HANDLER VectoredHandler
+)} -- adaugă o funcție de tratare excepții
+\begin{itemize}
+\item \textbf{firstHandler} - adaugare la început sau la final lista de
+tratat excepții
+\item \textbf{Vectored Handler} - funcția de tratat excepții
+\end{itemize}
+
+\func{ULONG RemoveVectoredExceptionHandler(
+PVOID VectoredHandlerHandle
+)} -- elimină o funcție de tratat excepții
+
+\func{LONG WINAPI VectoredHandler(
+PEXCEPTION_POINTERS ExceptionInfo
+)} -- semnatura funcției de tratare a excepțiilor
+
+struct _EXCEPTION_POINTERS:
+PEXCEPTION_RECORD ExceptionRecord;
+PCONTEXT ContextRecord;
+
+struct _EXCEPTION_RECORD:
+DWORD ExceptionCode;
+DWORD ExceptionFlags;
+struct _EXCEPTION_RECORD* ExceptionRecord;
+PVOID ExceptionAddress;
+DWORD NumberParameters;
+ULONG_PTR ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
+\begin{itemize}
+\item \textbf{ExceptionCode}{ va fi setat la EXCEPTION_ACCESS_VIOLATION sau
+EXCEPTION_DATATYPE_MISALIGNMENT}
+\item \textbf{Exception Address}{ va fi setat la adresa instrucțiunii care a cauzat excepția}
+\item \textbf{Number Parameters}{ va fi setat la 2}
+\item \textbf{Exception Information}{ prima intrare e 0 pt citire, 1 pentru scriere; a
+doua intrare e adresa ce a generat excepția}
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

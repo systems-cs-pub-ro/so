@@ -1,0 +1,10 @@
+CFLAGS=/nologo /W4 /EHsc /Za      # TODO define
+
+main.exe:       # TODO requirements
+
+main.obj:       # TODO requirements
+
+add.obj:       # TODO requirements
+
+clean:
+	del *.obj *.exe

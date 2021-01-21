@@ -1,0 +1,152 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {5. Gestiunea Memoriei}\\
+\end{center}
+
+\vspace*{0.3cm}
+\section{WINDOWS}
+
+\func{HANDLE HeapCreate(DWORD flOptions, SIZE_T dwInitialSize, SIZE_T dwMaximumSize)}
+\begin{itemize}
+  \item \textbf{flOptions} - opțiuni pentru alocarea heapului \\ ( poate fi 0 sau
+HEAP_CREATE_ENABLE_EXECUTE, HEAP_GENERATE_EXCEPTIONS, HEAP_NO_SERIALIZE )
+  \item \textbf{dwInitialSize} - dimensiunea inițială de memorie rezervată heapului (în octeți)
+  \item \textbf{dwMaximumSize} - dimensiunea maximă în octeți \\ ( 0 - nu e limitată )
+  \item \textbf{întoarce} - handle către noul heap ( NULL în caz de eroare )
+\end{itemize}
+
+\func{BOOL HeapDestroy(HANDLE hHeap)}
+\begin{itemize}
+  \item \textbf{hHeap} - handle către heap
+  \item \textbf{întoarce} - o valoare diferită de 0 în caz de succes (pentru detalii despre eroare GetLastError)
+\end{itemize}
+
+\func{LPVOID HeapAlloc(HANDLE hHeap, DWORD dwFlags,SIZE_T dwBytes)}
+\begin{itemize}
+  \item \textbf{hHeap} - handle către heap
+  \item \textbf{dwFlags} - suprascrie valoarea specificată de HeapCreate: 
+HEAP_GENERATE_EXCEPTIONS, HEAP_NO_SERIALIZE, HEAP_ZERO_MEMORY
+  \item \textbf{dwBytes} - numărul de octeți
+  \item \textbf{întoarce} - pointer către blocul de memorie
+\end{itemize}
+
+\func{LPVOID HeapReAlloc(HANDLE hHeap, DWORD dwFlags,LPVOID lpMem, SIZE_T dwBytes)}
+\begin{itemize}
+  \item \textbf{hHeap} - handle către heap
+  \item \textbf{dwFlags} - suprascrie valoarea specificată prin flOptions:
+HEAP_GENERATE_EXCEPTIONS, HEAP_NO_SERIALIZE, HEAP_REALLOC_IN_PLACE_ONLY, HEAP_ZERO_MEMORY
+  \item \textbf{lpMem} - pointer către blocul de memorie
+  \item \textbf{dwBytes} - noua dimensiune a blocului de memorie specificată în octeți
+  \item \textbf{întoarce} - pointer către blocul de memorie
+\end{itemize}
+
+\columnbreak
+
+În caz de eroare, atât HeapAlloc, cât și HeapReAlloc, dacă nu s-a specificat HEAP_GENERATE_EXCEPTIONS, va întoarce NULL, altfel va genera una din următoarele excepții
+STATUS_NO_MEMORY sau STATUS_ACCESS_VIOLATION
+
+\vspace*{0.4cm}
+
+\func{BOOL HeapFree(HANDLE hHeap, DWORD dwFlags, LPVOID lpMem)}
+\begin{itemize}
+  \item \textbf{hHeap} - handle către heap
+  \item \textbf{dwFlags} - suprascrie valoarea specificată de HeapCreate (HEAP_NO_SERIALIZE)
+  \item \textbf{lpMem} - pointer către blocul de memorie
+  \item \textbf{întoarce} - o valoare diferită de 0 în caz de succes (pentru detalii despre eroare GetLastError)
+\end{itemize}
+
+\section{LINUX}
+
+\func{void *malloc(size_t size)} -- alocă memorie neinițializată
+\begin{params}
+  \param{}{}
+  \param{size}{numărul de octeți}
+  \returns{un pointer către memoria alocată}
+\end{params}
+
+\func{void *calloc(size_t nmemb, size_t size)} -- alocă memorie inițializată cu zero
+\begin{params}
+  \param{}{}
+  \param{nmemb}{numărul de elemente al vectorului}
+  \param{size}{dimensiunea în octeți a unui element}
+  \returns{un pointer către memoria alocată}
+\end{params}
+
+\func{void *realloc(void *ptr, size_t size)} -- modifică dimensiunea
+blocului de memorie
+\begin{params}
+  \param{}{}
+  \param{ptr}{pointer către blocul de memorie}
+  \param{size}{dimensiunea în octeți}
+  \returns{un pointer către noua zonă de memorie alocată}
+\end{params}
+
+Atât \func{malloc}, cât și \func{calloc} și \func{realloc} întorc NULL
+în caz de eroare. 
+
+\func{void free(void *ptr)} -- dezalocarea unei zone de memorie
+\begin{params}
+  \param{}{}
+  \param{ptr}{pointer către zona de memorie}
+\end{params}
+
+Dacă ptr este NULL nu se execută nici o operație.
+
+\section{MTRACE}
+
+Trebuie inclusă biblioteca \textbf{mcheck.h}
+
+\func{void mtrace(void)} -- activează monitorizarea apelurilor de bibliotecă de lucru cu memoria
+\begin{params}
+  \param{}{}
+\end{params} 
+
+\func{void muntrace(void)} -- dezactivează monitorizarea apelurilor de bibliotecă de lucru cu memoria \\
+
+\vspace*{0.6cm}
+\columnbreak
+
+\section{GDB}
+
+\begin{itemize}
+  \item \textbf{gdb ``file''}
+  \item \textbf{quit}
+  \item \textbf{help}
+  \item \textbf{run} - pornește execuția
+  \item \textbf{kill} - oprește programul
+  \item \textbf{break ``FUNC``} - setează breakpoint la începutul unei funcții
+  \item \textbf{break ''ADDR''} - setează breakpoint la adresa specificată
+  \item \textbf{nexti ``NUM``} - execută NUM instrucțiuni
+  \item \textbf{continue} - reia execuția
+  \item \textbf{backtrace} - afișează toate apelurile de funcții în curs de execuție
+  \item \textbf{info reg} - afișează conținutul registrelor
+  \item \textbf{disassamble} - afișează codul mașină generat de compilator
+\end{itemize}
+
+\vspace*{0.3cm}
+
+\section{VALGRIND}
+
+valgrind --tool=memcheck ./executabil
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

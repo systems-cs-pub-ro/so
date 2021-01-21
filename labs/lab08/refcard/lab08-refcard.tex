@@ -1,0 +1,306 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {Thread-uri - Linux}\\
+\end{center}
+
+Se va utiliza header-ul \texttt{pthread.h}
+
+\func{int pthread_create(pthread_t *tid, const pthread_attr_t *tattr, void*(*routine)(void *), void *arg)}
+ -- creează un nou fir de execuţie
+\begin{params}
+  \param{tid}{ identificatorul thread-ului}
+  \param{tattr}{ atributele noului thread (NULL - atribute implicite)}
+  \param{routine}{specifică codul ce va fi executat de thread}
+  \param{arg}{argumentele ce vor fi pasate funcţiei routine}
+  \returns{succes: 0, eroare: EAGAIN, EINVAL, EPERM}
+\end{params}
+
+În caz de eroare, întoarce EAGAIN(nu există resursele necesare / PTHREAD_THREADS_MAX), 
+EINVAL(tattr invalid), EPERM (eroare de permisiuni)
+
+\func{int pthread_join(pthread_t th, void **th_return)}
+ -- suspendă execuţia thread-ului curent până când th termină 
+\begin{params}
+  \param{th}{identificatorul thread-ului aşteptat}
+  \param{th_return}{valoarea de return a thread-ului aşteptat}
+  \returns{succes: 0, eroare: EINVAL, ESRCH sau EDEADLK}
+\end{params}
+
+\func{void pthread_exit(void *retval)} -- termină un fir de execuţie
+\begin{params}
+  \param{retval}{valoarea de retur a thread-ului}
+\end{params}
+
+\func{int pthread_key_create(pthread_key_t *key, void (*destr_func) (void *))}
+ -- creează o variabilă vizibilă tuturor threadurilor (fiecare thread va deţine valoarea specifică)
+\begin{params}
+  \param{key}{cheia variabilei}
+  \param{destr_func}{dacă e diferită de NULL se va apela la terminarea
+  thread-ului}
+  \returns{succes: 0, eroare: EAGAIN, ENOMEM}
+\end{params}
+
+\func{int pthread_key_delete(pthread_key_t key)} -- şterge o variabilă
+\begin{params}
+  \param{key}{cheia variabilei}
+  \returns{succes: 0, eroare: EINVAL}
+\end{params}
+
+\func{int pthread_setspecific(pthread_key_t key, const void *pointer)}
+ -- modifică propria copie a variabilei
+\begin{params}
+  \param{key}{cheia variabilei}
+  \param{pointer}{valoarea specifică ce trebuie stocată}
+  \returns{succes: 0, eroare: ENOMEM, EINVAL}
+\end{params}
+
+\func{void* pthread_getspecific(pthread_key_t key)}
+ -- determină valoarea unei variabile de tip TSD
+\begin{params}
+  \param{key}{cheia}
+  \returns{valoarea specifică (NULL dacă nu e definită)}
+\end{params}
+
+\func{void pthread_cleanup_push(void (*routine) (void *), void *arg)} -- înregistrează o funcţie de cleanup
+\begin{params}
+  \param{routine}{rutina care va fi apelată}
+  \param{arg}{argumentele corespunzătoare}
+\end{params}
+
+\func{void pthread_cleanup_pop(int execute)}
+ -- deînregistrează o funcţie de cleanup
+\begin{params}
+  \param{execute}{doar dacă e diferit de 0 va executa și rutina }
+\end{params}
+
+Trebuie inclus headerul \textbf{sched.h}
+
+\func{int sched_yield(void)} -- cedează dreptul de execuţie unui alt thread
+
+Nu uitaţi să iniţializaţi : \\
+
+pthread_once_t once_control = PTHREAD_ONCE_INIT;
+
+\func{int pthread_once(pthread_once_t *once_control, void (*init_routine) (void))} 
+-- asigură că o bucată de cod (de obicei folosită pentru iniţializări) se execută o singură dată 
+\begin{params}
+  \param{once_control}{pointer la o variabilă iniţializată cu }
+  \param{}{PTHREAD_ONCE_INIT ce determină dacă}
+  \param{}{init_routine a mai fost invocată}
+  \param{init_routine}{invocată prima dată fără parametri}
+  \returns{succes: 0, eroare: EINVAL}
+\end{params}
+
+\func{pthread_t pthread_self(void)} -- determină identificatorul thread-ului curent
+
+\func{int pthread_equal(pthread_t thread1, pthread_t thread2)}
+ -- determină dacă doi identificatori se referă la același thread
+\begin{params}
+  \param{thread1}{identificatorul pentru primul thread}
+  \param{thread2}{identificatorul pentru al doilea thread}
+  \returns{o valoare diferită de 0 dacă sunt egali}
+\end{params}
+
+\func{int pthread_setschedparam(pthread_t target_th, int policy, const struct sched_param *param)}
+ -- modifică priorităţile
+\begin{params}
+  \param{}{}
+  \param{target_th}{poate fi SCHED_OTHER, SCHED_FIFO sau SCHED_RR}
+  \param{param}{prioritatea pentru SCHED_FIFO sau SCHED_RR, în funcţie de implementare pentru SCHED_OTHER}
+  \returns{succes: 0, eroare: EINVAL, ENOTSUP, ENOTSUP, EPERM, EPERM , ESRCH }
+\end{params}
+
+\func{int pthread_getschedparam(pthread_t target_th, int *policy, struct sched_param *param)}
+ -- află priorităţile
+\begin{params}
+  \param{}{}
+  \param{target_th}{identificatorul thread-ului}
+  \param{policy}{poate fi SCHED_OTHER, SCHED_FIFO sau SCHED_RR}
+  \param{param}{prioritatea pentru SCHED_FIFO sau SCHED_RR, în funcţie de implementare pentru SCHED_OTHER}
+  \returns{succes: 0, eroare: ESRCH}
+\end{params}
+
+\section{Sincronizare}
+
+\subsection{Mutex-uri}
+
+\func{PTHREAD_MUTEX_INITIALIZER} -- macrodefiniţie pentru iniţializare
+
+\func{int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)} -- iniţializează un mutex cu
+atributele precizate
+\begin{params}
+  \param{}{}
+  \param{mutex}{mutex-ul ce se doreşte iniţializat}
+  \param{attr}{\texttt{NULL} sau iniţializat prin funcţiile \texttt{*mutexattr*}}
+  \returns{succes: 0}
+\end{params}
+
+\func{int pthread_mutex_destroy(pthread_mutex_t *mutex)} -- eliberează resursele alocate unui mutex
+
+\func{int pthread_mutexattr_init(pthread_mutexattr_t *attr)} -- iniţializează atributele unui mutex
+
+\func{int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)} -- eliberează atributele unui mutex
+
+\func{int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)} -- stabileşte comportamentul la preluarea
+recursivă a unui mutex
+\begin{params}
+  \param{}{}
+  \param{attr}{atributele ce se doresc iniţializate}
+  \param{type}{una din valorile
+				\begin{itemize}
+					\item \texttt{PTHREAD_MUTEX_NORMAL}
+					\item \texttt{PTHREAD_MUTEX_ERRORCHECK}
+					\item \texttt{PTHREAD_MUTEX_RECURSIVE}
+					\item \texttt{PTHREAD_MUTEX_DEFAULT}
+				\end{itemize}}
+  \returns{succes: 0}
+\end{params}
+
+\func{int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)} -- obţine comportamentul la preluarea
+recursivă a unui mutex
+
+\func{int pthread_mutexattr_setprotocol(pthread_mutexattr_t *attr, int protocol)} -- stabileşte modalitatea de moştenire
+a priorităţii de către un thread, la preluarea unui mutex
+\begin{params}
+  \param{}{}
+  \param{attr}{atributele ce se doresc iniţializate}
+  \param{protocol}{una din valorile
+				\begin{itemize}
+					\item \texttt{PTHREAD_PRIO_NONE}
+					\item \texttt{PTHREAD_PRIO_INHERIT}
+					\item \texttt{PTHREAD_PRIO_PROTECT}
+				\end{itemize}}
+  \returns{succes: 0}
+\end{params}
+
+\func{}
+
+\func{int pthread_mutexattr_getprotocol(const pthread_mutexattr_t *attr, int *protocol)} -- obţine modalitatea de
+moştenire a priorităţii de către un thread, la preluarea unui mutex
+
+\func{int pthread_mutex_lock  (pthread_mutex_t *mutex)} -- ocupă, blocant, mutex-ul
+
+\func{int pthread_mutex_trylock(pthread_mutex_t *mutex)} -- încearcă ocuparea neblocantă a mutex-ului
+
+\func{int pthread_mutex_unlock(pthread_mutex_t *mutex)} -- eliberează mutex-ul
+
+\pagebreak
+\subsection{Semafoare}
+
+\func{sem_t* sem_open(const char *name, int oflag [, mode_t mode, unsigned int value])} -- deschide un semafor cu nume,
+utilizat pentru sincronizarea mai multor procese
+\begin{params}
+  \param{}{}
+  \param{name}{identifică semaforul}
+  \param{oflag}{\texttt{O_CREAT} sau/și \texttt{O_EXCL}}
+  \param{mode}{specifică permisiunile noului semafor}
+  \param{value}{valoarea inițială}
+  \returns{adresa semaforului}
+\end{params}
+
+\func{int sem_close(sem_t *sem)} -- închide un semafor cu nume
+
+\func{int sem_unlink(const char *name)} -- înlătură din sistem un semafor cu nume
+
+\func{int sem_init(sem_t *sem, int pshared, unsigned int value)} -- deschide un semafor fără nume
+\begin{params}
+  \param{}{}
+  \param{sem}{adresa semaforului}
+  \param{pshared}{0, dacă este folosit în cadrul unui singur proces, SAU nenul, dacă este folosit pentru sincronizarea
+unor procese diferite, caz în care trebuie alocat într-o zonă de memorie partajată}
+  \param{value}{valoarea inițială}
+  \returns{succes: 0}
+\end{params}
+
+\func{int sem_destroy(sem_t *sem)} -- distruge un semafor fără nume
+
+\func{int sem_post(sem_t *sem)} -- incrementează semaforul
+
+\func{int sem_wait(sem_t *sem)} -- decrementează, blocant, semaforul
+
+\func{int sem_trywait(sem_t *sem)} -- decrementează, neblocant, semaforul
+
+\func{int sem_getvalue(sem_t *sem, int *pvalue)} -- obţine valoarea semaforului
+
+\subsection{Variabile de condiţie}
+
+\func{PTHREAD_COND_INITIALIZER} -- macrodefiniţie pentru iniţializare
+
+\func{int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *attr)} -- iniţializează o variabilă de condiţie cu
+atributele precizate
+\begin{params}
+  \param{}{}
+  \param{cond}{variabila de condiţie ce se doreşte iniţializată}
+  \param{attr}{\texttt{NULL} sau iniţializat prin funcţiile \texttt{*condattr*}}
+  \returns{succes: 0}
+\end{params}
+
+\func{int pthread_cond_destroy(pthread_cond_t *cond)} -- eliberează resursele alocate unei variabile de condiţie
+
+\func{int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)} -- suspendă execuţia firului apelant,
+eliberând, atomic, mutex-ul asociat
+\begin{params}
+  \param{}{}
+  \param{cond}{variabila de condiţie la care se suspendă firul apelant}
+  \param{mutex}{mutex-ul asociat}
+  \returns{succes: 0}
+\end{params}
+
+\func{int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime)} --
+suspendă execuţia firului apelant, nu mai mult de un interval specificat, eliberând, atomic, mutex-ul asociat
+\begin{params}
+  \param{}{}
+  \param{cond}{variabila de condiţie la care se suspendă firul apelant}
+  \param{mutex}{mutex-ul asociat}
+  \param{abstime}{perioada maxima de suspendare}
+  \returns{succes: 0, eroare: -1 cu eroarea \texttt{ETIMEDOUT}, în cazul în care expiră timeout-ul}
+\end{params}
+
+\func{int pthread_cond_signal(pthread_cond_t *cond)} -- semnalizează un fir suspendat la variabila de condiţie
+
+\func{int pthread_cond_broadcast(pthread_cond_t *cond)} -- semnalizează toate firele suspendate la variabila de condiţie
+
+\subsection{Bariere}
+
+Pentru lucrul cu bariere este necesară definirea macro-ului \texttt{_XOPEN_SOURCE} la o valoare de cel puţin 600.
+
+\func{int pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, unsigned count)} --
+iniţializează o barieră cu atributele precizate
+\begin{params}
+  \param{}{}
+  \param{barrier}{bariera ce se doreşte iniţializată}
+  \param{attr}{\texttt{NULL} sau iniţializat prin funcţiile \texttt{*barrierattr*}}
+  \param{count}{numărul de fire de execuție care trebuie să ajungă la barieră pentru ca aceasta să fie eliberată}
+  \returns{succes: 0}
+\end{params}
+
+\func{int pthread_barrier_destroy(pthread_barrier_t *barrier)} -- eliberează resursele alocate barierei
+
+\func{int pthread_barrier_wait(pthread_barrier_t *barrier)} -- suspendă primele \texttt{count-1} fire care o apelează,
+acestea fiind trezite la apelul cu numărul \texttt{count}
+\begin{params}
+  \param{}{}
+  \param{barrier}{bariera la care se realizează aşteptarea}
+  \returns{success: PTHREAD_BARRIER_SERIAL_THREAD, 0, eroare: EINVAL}
+\end{params}
+
+\end{multicols*}
+\end{document}
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

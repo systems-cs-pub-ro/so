@@ -1,0 +1,168 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {Semnale}\\
+\end{center}
+
+\section{Linux}
+
+Trebuie inclus header-ul \textbf{\texttt{signal.h}}
+
+\subsection{Descrierea semnalelor}
+
+\func{char *strsignal(int sig)} -- întoarce descrierea textuală a unui semnal
+
+\func{void psignal(int sig, const char *s)} -- afişează descrierea textuală a unui semnal, alături de mesajul dat ca parametru
+
+\subsection{Măşti de semnale}
+
+\func{int sigemptyset(sigset_t *set)} -- elimină toate semnalele din mască
+
+\func{int sigfillset(sigset_t *set)} -- adaugă toate semnalele la mască
+
+\func{int sigaddset(sigset_t *set, int signo)} -- adaugă semnalul precizat la mască
+
+\func{int sigdelset(sigset_t *set, int signo)} -- elimină semnalul precizat din mască
+
+\func{int sigismember(sigset_t *set, int signo)} -- verifică daca semnalul precizat aparţine măştii
+
+\subsection{Blocarea semnalelor}
+
+\func{int sigprocmask(int how, const sigset_t *set, sigset_t *oldset)} -- obţine sau modifică masca de semnale a firului apelant
+\begin{params}
+  \param{}{}
+  \param{how}{unul dintre \texttt{SIG_BLOCK}, \texttt{SIG_UNBLOCK}, \texttt{SIG_SETMASK}}
+  \param{set}{masca ce conţine noile semnale blocate/deblocate}
+  \param{oldset}{vechea mască de semnale}
+  \returns{0 succes, -1 eroare}
+\end{params}
+
+\subsection{Tratarea semnalelor}
+
+\func{sighandler_t signal(int signum, sighandler_t handler)} -- stabileşte acţiunea efectuată la primirea unui semnal
+\begin{params}
+  \param{}{}
+  \param{signum}{numărul semnalului}
+  \param{handler}{una din valorile \texttt{SIG_IGN}, \texttt{SIG_DFL} sau adresa unei funcţii de tratare}
+  \returns{adresa handler-ului anterior sau \texttt{SIG_ERR} în caz de eroare}
+\end{params}
+
+\func{int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)} -- stabileşte acţiunea efectuată la primirea unui semnal
+\begin{params}
+  \param{}{}
+  \param{signum}{numărul semnalului}
+  \param{act}{noua acţiune de executat}
+  \param{oldact}{vechea acţiune}
+  \returns{0 succes, -1 eroare}
+\end{params}
+
+\subsection{Semnalarea proceselor}
+
+\func{int kill(pid_t pid, int sig)} -- trimite un semnal unui proces, fără a garanta recepţia
+\begin{params}
+  \param{}{}
+  \param{pid}{procesul destinaţie}
+  \param{sig}{semnalul trimis}
+  \returns{0 succes, -1 eroare}
+\end{params}
+
+\func{int sigqueue(pid_t pid, int signo, const union sigval value)} -- trimite un semnal unui proces, garantând recepţia
+\begin{params}
+  \param{}{}
+  \param{pid}{procesul destinaţie}
+  \param{signo}{semnalul trimis}
+  \param{value}{informaţie suplimentară, ce însoţeşte semnalul, şi care poate fi obţinută din câmpul}
+  \param{}{\texttt{siginfo_t->si_value}}
+  \returns{0 succes, -1 eroare}
+\end{params}
+
+\subsection{Aşteptarea semnalelor}
+
+\func{int sigsuspend(const sigset_t *mask)} -- înlocuieşte, temporar, masca de semnale, şi se blochează în aşteptarea unui semnal neblocat
+\begin{params}
+  \param{}{}
+  \param{mask}{masca temporară}
+  \returns{întotdeauna -1}
+\end{params}
+
+\subsection{Timer-e}
+
+\func{int timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)} -- crearea unui timer
+\begin{params}
+ \param{}{}
+ \param{clockid}{specifică tipul ceasului: CLOCK_REALTIME,}
+ \param{}{CLOCK_MONOTONIC,}
+ \param{}{CLOCK_PROCESS_CPUTIME_ID,}
+ \param{}{CLOCK_THREAD_CPUTIME_ID}
+ \param{evp}{specifică modul de notificare la expirarea timer-ului}
+ \param{timerid}{întoarce identificatorul timer-ului}
+ \returns{0 succes, -1 eroare}
+\end{params}
+
+\func{int timer_settime(timer_t timerid, int flags, const struct itimerspec *new_value, struct itimerspec * old_value)} -- armarea unui timer
+\begin{params}
+ \param{}{}
+ \param{timerid}{identificator timer}
+ \param{flags}{poate fi 0 sau TIMER_ABSTIME}
+ \param{new_value}{noii parametrii ai timer-ului}
+ \param{old_value}{vechii parametrii}
+ \returns{0 succes, -1 eroare}
+\end{params}
+
+\func{int timer_delete(timer_t timerid)} -- ștergerea unui timer
+\begin{params}
+ \param{}{}
+ \param{timerid}{identificator timer}
+ \returns{0 succes, -1 eroare}
+\end{params}
+
+\section{Windows}
+
+\subsection{Waitable Timer Objects}
+
+\func{HANDLE WINAPI CreateWaitableTimer(LPSECURITY_ATTRIBUTES lpAttributes, BOOL bManualReset, LPCTSTR lpTimerName)} -- creează sau deschide un timer
+\begin{itemize}
+  \item \textbf{lpAttributes} - permite moştenirea handle-ului timer-ului în procesele copil
+  \item \textbf{bManualReset} - dacă este \texttt{TRUE}, timer-ul rămâne în starea \emph{signaled} până ce se apelează \texttt{SetWaitableTimer}
+  \item \textbf{lpTimerName} - numele timer-ului
+  \item \textbf{întoarce} - handle-ul timer-ului, \texttt{NULL} în caz de eroare
+\end{itemize}
+
+\func{BOOL WINAPI SetWaitableTimer(HANDLE hTimer, const LARGE_INTEGER *pDueTime, LONG lPeriod, PTIMERAPCROUTINE pfnRoutine, LPVOID lpRoutineArg, BOOL fResume)} -- creează sau deschide un timer
+\begin{itemize}
+  \item \textbf{hTimer} - handle-ul timer-ului
+  \item \textbf{pDueTime} - primul interval, după care expiră timer-ul, în multipli de 100 ns
+  \item \textbf{lPeriod} - perioada timer-ului, în milisecunde
+  \item \textbf{pfnRoutine} - adresa funcţiei executate la expirare (opţional)
+  \item \textbf{lpRoutineArg} - parametrul funcţiei de tratare (opţional)
+  \item \textbf{fResume} - dacă este \texttt{TRUE}, şi timer-ul intră în starea \emph{signaled}, sistemul aflat în starea de conservare a energiei îşi reia activitatea
+  \item \textbf{întoarce} - \texttt{TRUE} pentru succes
+\end{itemize}
+
+\func{BOOL WINAPI CancelWaitableTimer(HANDLE hTimer)} -- dezactivează un timer
+\begin{itemize}
+  \item \textbf{hTimer} - handle-ul timer-ului
+\end{itemize}
+
+\func{DWORD WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)} -- permite aşteptarea expirării unui timer
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

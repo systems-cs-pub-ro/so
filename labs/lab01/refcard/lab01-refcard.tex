@@ -1,0 +1,174 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+     \Large{Lab 1 - Introducere} \\
+\end{center}
+
+\section{Linux}
+
+\subsection{gcc}
+\begin{verbatim}
+gcc [-c|-S|-E] [-std=standard]
+    [-g] [-pg] [-Olevel]
+    [-Wwarn...] [-pedantic]
+    [-Idir...] [-Ldir...]
+    [-Dmacro[=defn]...] [-Umacro]
+    [-o outfile] [@file] infile...
+\end{verbatim}
+Fazele compilării
+\begin{itemize}
+\item \textbf{-E}, preprocesare fişier sursă
+\begin{itemize}
+\item gcc -o hello.i -E hello.c
+\end{itemize}
+\item \textbf{-S}, compilare fişier sursă
+\begin{itemize}
+\item gcc -o hello.s -S hello.c
+\end{itemize}
+\item \textbf{-c}, asamblare fişier sursă
+\begin{itemize}
+\item gcc -o hello.o -c hello.c
+\end{itemize}
+\end{itemize}
+Alte opţiuni
+\begin{itemize}
+\item \textbf{-Wall}, activarea tuturor avertismentelor.
+\item \textbf{-lxlib}, caută biblioteca xlib la editarea de legaturi.
+\item \textbf{-Ldir}, adaugă dir la lista directoarelor căutate pentru -l
+\item \textbf{-Idir}, adaugă dir la începutul listei de căutare pentru fişierele antet.
+\item \textbf{-DMACRO[=val]}, defineşte macro în linia de comanda.
+\item \textbf{-g}, genereare simboluri de debug folosite mai târziu de debugger. 
+\end{itemize}
+
+\subsection{make}
+\begin{verbatim}make [ -f makefile ] [ options ] ... [ targets ]
+\end{verbatim}
+\begin{verbatim}
+target: dependinte
+<tab>    comanda
+\end{verbatim}
+Variabile uzuale
+\begin{itemize}
+\item \textbf{CC}, defineşte compilatorul folosit
+\item \textbf{CFLAGS}, defineşte flag-urile de compilare
+\item \textbf{LDLIBS}, defineşte bibliotecile folosite la editarea de legături
+\item \textbf{\textdollar@}, se expandează la numele target-ului
+\item \textbf{\textdollar\textasciicircum}, se expandează la lista de dependinţe
+\item \textbf{\textdollar\textless}, se expandează la prima dependinţă
+\end{itemize}
+
+\subsection{gdb}
+\begin{verbatim}gdb prog [arguments] 
+\end{verbatim}
+Executabilul trebuie compilat cu flag-ul \textbf{-g}
+
+Comenzi:
+\begin{itemize}
+\item \textbf{b [file:]function}, setează brakepoint la funcţia dată.
+\item \textbf{r arglist}, run - rulează programul cu argumentele date.
+\item \textbf{bt}, backtrace - afişează stiva programului
+\item \textbf{p expr}, print - afişează valoarea lui expr 
+\item \textbf{c}, continue - continuă rularea programului după oprirea la un breakpoint
+\item \textbf{n}, next - execută următoare linie de program, trece peste orice apel de funcţie pe acea linie 
+\item \textbf{s}, step - execută următoarea linie de program, trece prin orice apel de funcţie de pe acea linie.
+\item \textbf{quit}, ieşire din GDB.
+\end{itemize}
+\subsection{Creare biblioteci}
+\begin{itemize}
+  \item \textbf{statice} 
+   \begin{itemize}
+     \item creare arhivă
+       \begin{itemize}
+         \item \textbf{ar rc libX_static.a X1.o X2.o}
+       \end{itemize} 
+     \item legare bibliotecă
+       \begin{itemize}
+         \item \textbf{gcc -Wall main.c -o main -lX_static -L.}
+       \end{itemize}
+   \end{itemize}
+  \item \textbf{dinamice}
+    \begin{itemize}
+      \item \textbf{creare obiect partajat}
+        \begin{itemize}
+          \item \textbf{gcc -shared f1.o f2.o -o libX_shared.so}
+        \end{itemize}
+      \item \textbf{legare bibliotecă}
+        \begin{itemize}
+          \item \begin{verbatim}export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:. \end{verbatim}
+          \item \textbf{gcc -Wall main.c -o main -lX_shared -L.}
+        \end{itemize} 
+    \end{itemize}
+\end{itemize}
+\columnbreak
+\section{Windows}
+\subsection{cl}
+\begin{verbatim}CL [option...] file... [option | file]... [lib...]  [/link link-opt...]\end{verbatim}
+Opţiuni
+\begin{itemize}
+\item \textbf{/c}, realizează doar compilare fără editare de legături.
+\item \textbf{/Wall}, activează toate avertismentele
+\item \textbf{/D}, definire macrou în linie de comandă
+\item \textbf{/I$<$dir$>$}, adaugă dir la începutul listei de căutare pentru fişierele antet.
+\item \textbf{/LIBPATH$<$dir$>$}, indică editorului de legături să caute şi în dir bibliotecile pe care le va folosi programul
+\end{itemize}
+Specificare fişiere de ieşire
+\begin{itemize}
+
+\item \textbf{/Fa$<$file$>$}, specifică numele fişierului în limbaj de asamblare.
+\item \textbf{/Fo$<$file$>$}, specifică numele fişierului obiect.
+\item \textbf{/Fe$<$file$>$}, specifică numele fişierului executabil.
+\end{itemize}
+
+\subsection{nmake}
+\begin{verbatim} NMAKE [option...] [macros...] [targets...] \end{verbatim}
+\begin{itemize}
+\item \textbf{/F}, pentru a rula alt fişier make decât cel implicit cu numele Makefile. 
+\end{itemize}
+\subsection{Creare biblioteci}
+\begin{itemize}
+  \item \textbf{statice}
+    \begin{itemize}
+    	 \item se foloseşte comanda \textbf{lib}
+       \item \textbf{lib /out:intro.lib f1.obj f2.obj}
+    \end{itemize}
+  \item \textbf{dinamice}  
+    \begin{itemize}
+    	  \item precizarea explicită a simbolurilor folosite
+    	  \begin{itemize}
+    	  \item \textbf{__declspec(dllimport)}, folosit pentru a importa o funcţie
+    	  \item \textbf{__declspec(dllexport)}, folosit pentru a exporta o funcţie
+    	  \end{itemize}
+        \item creare bibliotecă dinamică şi bibliotecă de import
+        \begin{itemize}
+        \item folosind opţiunea \textbf{/LD} a compilatorului cl
+        \begin{itemize}
+         \item \textbf{cl /LD f1.obj f2.obj}
+        \end{itemize}
+        \item folosind comanda link
+        \begin{itemize}
+        \item \textbf{link /nologo /dll /out:intro.dll /implib:intro.lib f1.obj f2.obj}
+        \end{itemize}
+        \end{itemize} 
+    \end{itemize}  
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

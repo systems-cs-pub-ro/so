@@ -1,0 +1,2 @@
+Makefile	export-subst
+.gitattributes	export-ignore

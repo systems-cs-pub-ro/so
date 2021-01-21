@@ -1,0 +1,259 @@
+\documentclass{refcard.cs.pub.ro}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters <<<
+% These lengths are set only within the two main columns
+\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+% >>>
+
+\begin{center}
+     \Large{\textbf{SO Cheat Sheet}} \\
+      {Thread-uri - Windows}\\
+\end{center}
+
+\func{HANDLE CreateThread (LPSECURITY_ATTRIBUTES  lpThAttr,
+	SIZE_T dwStackSize,
+	LPTHREAD_START_ROUTINE lpStartAddr,
+	LPVOID lpParameter,
+	DWORD dwCreatFlags,
+	LPDWORD lpThreadId)} -- creează un fir de execuţie
+\begin{itemize}
+  \item \textbf{lpThAttr} - pointer la o structură de tip SECURITY_ATTRIBUTES, dacă e NULL handle-ul nu poate fi
+moștenit
+  \item \textbf{dwStackSize} - mărimea iniţială a stivei, în bytes; 0 - mărimea implicită 
+  \item \textbf{lpStartAddr} - pointer la funcţia ce trebuie executată
+  \item \textbf{lpParameter} - opţional - pointer la o variabilă
+  \item \textbf{dwCreatFlags} - opţiuni: 0, CREATE_SUSPENDED, STACK_SIZE_PARAM_IS_A_RESERVATION
+  \item \textbf{lpThreadId} - pointer unde va fi întors identificatorul
+  \item \textbf{întoarce} - handle către threadul creat
+\end{itemize}
+
+\func{HANDLE OpenThread(DWORD dwDesireAccess,
+	BOOL bInheritHandle,
+	DWORD dwThreadId)} -- deschide un obiect de tip Thread existent
+\begin{itemize}
+  \item \textbf{dwDesireAccess} - drepturile de acces
+  \item \textbf{bInheritHandle} - TRUE - handle-ul poate fi mostenit
+  \item \textbf{dwThreadId} - identificatorul thread-ului
+  \item \textbf{întoarce} - handle către thread
+\end{itemize}
+
+\func{DWORD  WaitForSingleObject(HANDLE  hHANDLE,
+ 	DWORD  dwMilliseconds)} -- aşteptă terminarea unui fir de execuţie
+\begin{itemize}
+  \item \textbf{hHandle} - handle către obiect
+  \item \textbf{dwMilliseconds} - intervalul de timeout(0 până la INFINITE)
+\end{itemize}
+
+\func{void ExitThread(DWORD dwExitCode)}
+ -- terminarea threadului curent cu specificarea codului de terminare
+
+\func{BOOL TerminateThread(HANDLE hThread, DWORD dwExitCode)}
+ -- terminarea unui thread hThread cu specificarea codului de terminare
+
+\func{BOOL GetExitCodeThread(HANDLE hThread, LPDWORD lpExitCode)}
+\begin{itemize}
+  \item \textbf{hThread} - handle-ul threadului ce trebuie să aibă dreptul de acces THREAD_QUERY_INFORMATION
+  \item \textbf{lpExitCode} - pointer la o variabilă în care va fi plasat codul de terminare al firului. Dacă firul nu
+și-a terminat execuţia, această valoare va fi STILL_ACTIVE
+\end{itemize}
+
+\func{DWORD SuspendThread(HANDLE hThread)} -- suspendă execuţia unui thread
+
+\func{DWORD ResumeThread(HANDLE hThread)} -- reia execuţia unui thread
+
+Aceste funcţii nu pot fi folosite pentru sincronizare, dar sunt utile pentru programe de debug. 
+
+\func{void Sleep(DWORD dwMilliseconds)} -- suspendă execuţia unui thread pe o perioadă de dwMilliseconds
+
+\func{BOOL SwitchToThread(void)} -- firul de execuţie renunţă doar la timpul pe care îl avea pe procesor în momentul
+respectiv
+\begin{params}
+	\returns{TRUE dacă procesorul este cedat unui alt thread şi FALSE dacă nu există alte thread-uri gata de
+execuţie}
+\end{params}
+
+\func{HANDLE GetCurrentThread(void)} -- întoarce un pseudo-handle pentru firul curent ce nu poate fi folosit decât de
+firul apelant
+
+\func{DWORD GetCurrentThreadId(void)} -- întoarce identificatorul threadului
+
+\func{DWORD GetThreadId(HANDLE Thread)} -- întoarce identificatorul threadului ce corespunde handle-ului Thread 
+
+\section{Sincronizare}
+
+\subsection{Funcţii de asteptare}
+
+Funcţiile de aşteptare sunt cele din familia \texttt{WaitForSingleObject} şi au fost prezentate, în detaliu, în laboratorul de comunicaţie interproces.
+
+\subsection{Mutex Win32}
+
+Funcţiile de mai jos au fost prezentate, în detaliu, în cadrul laboratorului de comunicaţie interproces.
+
+\func{HANDLE  CreateMutex(LPSECURITY_ATTRIBUTES lpMutexAttr,
+ 	BOOL bInitialOwner,
+ 	LPCTSTR lpName)} -- creează un mutex
+
+\func{HANDLE  OpenMutex(DWORD  dwDesiredAccess,
+ 	BOOL  bInheritHandle,
+ 	LPCTSTR  lpName)} -- deschide un mutex
+
+\func{BOOL  ReleaseMutex(HANDLE  hMutex)} -- cedează posesia mutexului
+
+\subsection{Semafoare Win32}
+
+Funcţiile de mai jos au fost prezentate, în detaliu, în cadrul laboratorului de comunicaţie interproces.
+
+\func{HANDLE  CreateSemaphore(LPSECURITY_ATTRIBUTES  lpSemAttr,
+ 	LONG  lInitialCount,
+ 	LONG  lMaximumCount,
+ 	LPCTSTR  lpNAME)} -- creează/deschide un semafor
+
+\func{HANDLE  OpenSemaphore(DWORD  dwDesiredAccess,
+ 	BOOL  bInheritHandle,
+ 	LPCTSTR  lpNAME)} -- deschide un semafor existent
+
+\func{BOOL  ReleaseSemaphore(HANDLE  hSemaphore,
+ 	LONG  lReleaseCount,
+ 	LPLONG  lpPreviousCount)} -- incrementează semaforul
+ 
+\subsection{Evenimente}
+\func{HANDLE CreateEvent(LPSECURITY_ATTRIBUTES lpEventAttributes,
+        BOOL bManualReset,
+        BOOL bInitialState,
+        LPCTSTR lpName)} -- creează un eveniment
+\begin{itemize}
+  \item \textbf{lpEventAttributes} - pointer la o structură de tip SECURITY_ATTRIBUTES, dacă e NULL handle-ul nu poate fi moștenit
+  \item \textbf{bManualReset} - TRUE - pentru manual-reset, FALSE - auto-reset
+  \item \textbf{bInitialState} - TRUE - evenimentul e creat în starea signaled
+  \item \textbf{lpName} - numele evenimentului sau NULL dacă se dorește a fi anonim
+  \item \textbf{întoarce} - handle către evenimentul creat
+\end{itemize}
+
+\func{HANDLE SetEvent(HANDLE hEvent)} -- setează evenimentul în starea signaled
+
+\func{HANDLE ResetEvent(HANDLE hEvent)} -- setează evenimentul în starea non-signaled
+
+\func{HANDLE PulseEvent(HANDLE hEvent)} -- semnalează toate thread-urile care așteaptă la un eveniment manual-reset
+
+
+\subsection{Secţiuni critice}
+ 
+\func{void InitializeCriticalSection(LPCRITICAL_SECTION pcrit_sect)} -- iniţializează o secțiune critică cu un contor de spin implicit egal cu 0
+ 
+\func{BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION pcrit_sect, DWORD dwSpinCount)} -- permite specificarea contorului de spin
+ 
+\func{DWORD SetCriticalSectionSpinCount(LPCRITICAL_SECTION pcrit_sect, DWORD dwSpinCount)} -- permite modificarea contorului de spin al unei secțiuni critice
+ 
+\func{void DeleteCriticalSection(LPCRITICAL_SECTION pcrit_sect)} -- distruge o secțiune critică
+
+\func{void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)} -- similar cu \texttt{pthread_mutex_lock()} pentru mutexuri \texttt{RECURSIVE}
+
+\func{void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)} -- similar cu \texttt{pthread_mutex_unlock()} pentru mutexuri \texttt{RECURSIVE}
+
+\func{BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCritSect)} -- similar cu \texttt{pthread_mutex_trylock()} pentru mutexuri \texttt{RECURSIVE}
+\begin{params}
+  \param{}{}
+  \param{lpCritSect}{secţiunea critică}
+  \returns{\texttt{FALSE} dacă secțiunea critică este ocupată de alt fir de execuție}
+\end{params}
+
+\subsection{Interlocked Variable Access}
+
+\func{LONG InterlockedIncrement(LONG volatile *lpAddend)} -- incrementează, atomic, valoarea indicată de \texttt{lpAddend} și întoarce valoarea incrementată
+
+\func{LONG InterlockedDecrement(LONG volatile *lpDecend)} -- decrementează, atomic, valoarea indicată de \texttt{lpAddend} și întoarce valoarea decrementată
+
+\func{LONG InterlockedExchange(LONG volatile *Target, LONG Value)} -- scrie valoarea întreagă \texttt{Value} în zona indicată de \texttt{Target} şi întoarce vechea valoarea a lui \texttt{Target}
+
+\func{LONG InterlockedExchangeAdd(LPLONG volatile Addend, LONG Value)} -- adaugă valoarea întreagă \texttt{Value} la zona indicată de \texttt{Addend} şi întoarce vechea valoarea a lui \texttt{Addend}
+
+\func{PVOID InterlockedExchangePointer(PVOID volatile *Target, PVOID Value)} -- atribuie pointerul \texttt{Value} pointerului indicat de pointerul \texttt{Target}
+
+\func{LONG InterlockedCompareExchange(LONG volatile *dest, LONG exchange, LONG comp)} -- compară valoarea de la adresa \texttt{dest} cu valoarea \texttt{comp} şi, dacă sunt egale, setează atomic valoarea de la adresa \texttt{dest} la valoarea \texttt{exchange}
+
+\func{PVOID InterlockedCompareExchangePointer(PVOID volatile *dest, PVOID exchange, PVOID comp)} -- compară pointerul de la adresa \texttt{dest} cu pointerul \texttt{comp} şi, dacă sunt egale, setează atomic pointerul de la adresa \texttt{dest} la pointerul \texttt{exchange}
+
+\subsection{Timer Queues}
+
+\func{HANDLE CreateTimerQueue(void)} -- întoarce un handle la coada de timere
+
+\func{BOOL DeleteTimerQueue(HANDLE TimerQueue)} -- marchează coada pentru ștergere, dar NU așteaptă ca toate
+callbackurile asociate cozii să se termine
+
+\func{BOOL DeleteTimerQueueEx(HANDLE TimerQueue, HANDLE CompletionEv)} -- eliberează resursele alocate cozii, oferind
+facilităţi suplimentare
+\begin{itemize}
+  \item \textbf{TimerQueue} - coada
+  \item \textbf{CompletionEv} - una din valorile \texttt{NULL}, \texttt{INVALID_HANDLE_VALUE} SAU un handle de tip
+\texttt{Event}
+  \item \textbf{întoarce} - non-zero pentru succes
+\end{itemize}
+
+
+\func{BOOL CreateTimerQueueTimer(PHANDLE phNewTimer, HANDLE TimerQueue, WAITORTIMERCALLBACK Callback, PVOID Parameter, 
+DWORD DueTime, DWORD Period, ULONG Flags)} -- creează un timer
+\begin{itemize}
+  \item \textbf{phNewTimer} - aici întoarce un \texttt{HANDLE} la timerul nou creat
+  \item \textbf{TimerQueue} - coada la care este adăugat timerul. Dacă e \texttt{NULL} se folosește o coadă implicită
+  \item \textbf{Callback} - callback de executat
+  \item \textbf{Parameter} - parametru trimis callbackului 
+  \item \textbf{DueTime} - intervalul, în milisecunde, după care va expira, prima dată, timerul
+  \item \textbf{Period} - perioada, în milisecunde, a timerului
+  \item \textbf{Flags} - tipul callbackului: IO/NonIO, \texttt{EXECUTEONLYONCE}
+  \item \textbf{întoarce} - non-zero pentru succes
+\end{itemize}
+
+
+\func{VOID WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)} -- semnătura unui callback
+
+\func{BOOL ChangeTimerQueueTimer(HANDLE TimerQueue, HANDLE Timer, ULONG DueTime, ULONG Period)} -- modifică timpul de expirare a unui timer
+
+\func{BOOL CancelTimerQueueTimer(HANDLE TimerQueue, HANDLE Timer)} -- dezactivează unui timer
+
+\func{BOOL DeleteTimerQueueTimer(HANDLE TimerQueue, HANDLE Timer, HANDLE CompletionEvent)} -- dezactivează ȘI distruge unui timer. \texttt{CompletionEvent} e similar cu cel din \texttt{DeleteTimerQueueEx}.
+
+\subsection{Registered Wait Functions}
+
+\func{BOOL RegisterWaitForSingleObject(PHANDLE phNewWaitObject,
+	HANDLE hObject,
+	WAITORTIMERCALLBACK Callback,
+	PVOID Context,
+	ULONG dwMilliseconds,
+	ULONG dwFlags)} -- înregistrează în thread pool o funcție de așteptare, al cărei callback va fi executat când
+expiră timeout-ul SAU când obiectul la care se aşteaptă, \texttt{hObject}, trece în starea \texttt{SIGNALED}
+\begin{itemize}
+  \item \textbf{phNewWaitObject} - aici întoarce un \texttt{HANDLE} la timerul nou creat
+  \item \textbf{hObject} - obiectul de sincronizare la care se aşteaptă
+  \item \textbf{Callback} - callback de executat
+  \item \textbf{Context} - parametru trimis callbackului
+  \item \textbf{dwMilliseconds} - timeout
+  \item \textbf{dwFlags} - \texttt{EXECUTEONLYONCE} etc.
+  \item \textbf{întoarce} - non-zero pentru succes
+\end{itemize}
+
+\func{VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter,
+	BOOLEAN TimerOrWaitFired)} -- semnătura unui callback
+	
+\func{BOOL UnregisterWait(HANDLE WaitHandle)} -- anulează înregistrarea unei funcții de așteptare
+	
+\func{BOOL UnregisterWaitEx(HANDLE WaitHandle, HANDLE CompletionEv)} -- anulează înregistrarea unei funcții de așteptare
+\begin{itemize}
+  \item \textbf{WaitHandle} - handle-ul funcţiei
+  \item \textbf{CompletionEv} - asemănător cu parametrul lui \texttt{DeleteTimerQueueEx}
+  \item \textbf{întoarce} - non-zero pentru succes
+\end{itemize}
+
+\end{multicols*}
+\end{document}
+
+% vim: set tw=72 sw=2 sts=2 ai fdm=marker fmr=<<<,>>>:

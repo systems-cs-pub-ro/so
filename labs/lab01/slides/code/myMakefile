@@ -1,0 +1,16 @@
+CFLAGS = -Wall -g
+LDLIBS = -lm
+
+.PHONY: all clean
+
+all: test
+
+test: test.o func.o
+	$(CC) -o $@ $^ $(LDLIBS)
+
+test.o: test.c func.h
+
+func.o: func.c func.h
+
+clean:
+	-rm -f *~ *.o test
