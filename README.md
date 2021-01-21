@@ -1,3 +1,5 @@
-# SO labs
+# SO
 
-Aici veți găsi toate scheletele de cod (și ulterior rezolvările) din cadrul laboratoarelor de SO
+## SO Labs
+
+Aici veți găsi toate scheletele de cod din cadrul laboratoarelor de SO

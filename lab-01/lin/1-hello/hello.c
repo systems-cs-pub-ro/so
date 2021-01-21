@@ -1,1 +1,0 @@
-../../../skel/lin/1-hello/hello.c

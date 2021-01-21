@@ -1,1 +1,0 @@
-../../../skel/lin/2-lib/sample.c
