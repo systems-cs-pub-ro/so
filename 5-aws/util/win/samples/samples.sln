@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "http-reply-once", "http-reply-once.vcproj", "{726FE2D9-5ED7-4DA6-9B91-77522B5D6016}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iocp-echo-server", "iocp-echo-server.vcproj", "{6249612A-2F62-40E4-A76C-BB33A5AE76FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{726FE2D9-5ED7-4DA6-9B91-77522B5D6016}.Debug|Win32.ActiveCfg = Debug|Win32
+		{726FE2D9-5ED7-4DA6-9B91-77522B5D6016}.Debug|Win32.Build.0 = Debug|Win32
+		{726FE2D9-5ED7-4DA6-9B91-77522B5D6016}.Release|Win32.ActiveCfg = Release|Win32
+		{726FE2D9-5ED7-4DA6-9B91-77522B5D6016}.Release|Win32.Build.0 = Release|Win32
+		{6249612A-2F62-40E4-A76C-BB33A5AE76FF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6249612A-2F62-40E4-A76C-BB33A5AE76FF}.Debug|Win32.Build.0 = Debug|Win32
+		{6249612A-2F62-40E4-A76C-BB33A5AE76FF}.Release|Win32.ActiveCfg = Release|Win32
+		{6249612A-2F62-40E4-A76C-BB33A5AE76FF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

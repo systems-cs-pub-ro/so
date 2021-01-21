@@ -1,0 +1,44 @@
+Use make to compile the echo server and the HTTP request reply once server.
+
+> nmake
+
+or use GNUmakefile wrapper if using Cygwin
+
+$ make all
+
+
+== HTTP reply once server ==
+
+Start reply once server then use an HTTP client (such as wget) to request a
+resource and then receive a reply. You may also use a GUI browser. The server
+URL should be http://localhost:28282.
+
+; on one console
+> ./http_reply_once.exe
+
+; on the second console
+> wget http://localhost:28282
+
+
+== IOCP-based echo server ==
+
+Start the server and use netcat to connect to server and send messages. The
+server will reply with the same message. The server listens for connections
+on port 48484. You may download netcat from here:
+http://joncraton.org/media/files/nc111nt.zip
+
+; on one console
+> iocp_echo_server.exe
+
+; on the second, third, ... console
+> nc localhost 42424
+
+If netcat is unavailable, you may test using wget:
+
+> wget localhost:42424
+
+The server uses I/O Completion Ports for multiplexing connections and receiving
+notifications. A specialized structure (struct connection) maintains
+information regarding each connection.
+
+Wrappers over I/O Completion Ports are defined in ../w_iocp.h.

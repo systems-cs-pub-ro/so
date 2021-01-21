@@ -1,0 +1,51 @@
+#
+#  4 - Thread Scheduler (Windows)
+#
+#  2017, Operating Systems
+#
+
+# Archive:
+
+> GNUmakefile
+> NMakefile.checker
+> README
+> run_all.sh
+> _test/
+	> Makefile
+	> run_test,c
+	> run_test.h
+	> scheduler_test.h
+	> so_scheduler.h
+	> test_exec.c
+	> test_io.c
+	> test_sched.c
+
+# Build (in Cygwin):
+
+The local directory must contain the thread scheduler library
+(libscheduler.dll) and its associated import library (libscheduler.lib).
+Use the GNUmakefile to properly build the run_test.exe executable:
+
+	make all
+
+This command will also run all tests and print out the results.
+
+# Run (in Cygwin):
+
+In order to run the test suite you can either use the run_all.sh script or
+the run_test.exe executable.
+
+The run_all.sh script runs all tests and computes assignment grade (95 points
+maximum):
+
+	./run_all.sh
+
+In order to run a specific test, pass the test number (1 .. 20) to the
+run_test.exe executable:
+
+	./_test/run_test.exe 1
+
+# Debug:
+
+For debugging, define the SO_VERBOSE_ERROR symbol.
+

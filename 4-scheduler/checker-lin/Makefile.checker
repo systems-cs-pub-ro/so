@@ -1,0 +1,31 @@
+CPP = gcc
+# you can add to CFLAGS "-DSO_VERBOSE_ERROR"
+# to define the debug symbol
+CFLAGS = -Wall -g
+LIBS = -pthread -lscheduler -L.
+DIR = _test
+TEST_EXEC = $(DIR)/run_test
+OBJ_FILES = $(patsubst %.c, %.o, $(wildcard $(DIR)/*.c))
+STACK_SIZE = 4096 # KB
+
+.PHONY: all clean run pack build-pre build-post
+
+all: build-pre run build-post
+
+build-pre:
+
+$(TEST_EXEC): $(OBJ_FILES)
+	$(CPP) $(CFLAGS) $^ $(LIBS) -o $@
+
+build-post: $(TEST_EXEC)
+
+run: $(TEST_EXEC)
+	@export LD_LIBRARY_PATH=. && ulimit -s $(STACK_SIZE) && ./run_all.sh
+
+pack:
+	zip -r run_test_lin.zip _test/ Makefile.checker \
+		run_all.sh README
+
+clean:
+	-rm -f *~ _test/*.o $(TEST_EXEC)
+

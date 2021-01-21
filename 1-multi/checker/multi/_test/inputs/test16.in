@@ -1,0 +1,8 @@
+#define TEST 0
+
+int main() {
+#if TEST
+	printf("Yes!\n");
+#endif
+	return 0
+}

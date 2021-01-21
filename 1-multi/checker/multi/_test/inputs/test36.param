@@ -1,0 +1,2 @@
+-I _test/inputs/test36.dir -I _test/inputs/test36.dir/test36.subdir
+

@@ -1,0 +1,23 @@
+#define VAR0 1
+#define TEST_IF 5
+
+int main() {
+#if 0
+    printf("No\n");
+#elif 0
+    printf("Maybe\n");
+#elif VAR0
+    printf("ABC\n");
+#else
+    printf("Yes\n");
+#endif
+
+#if TEST_IF
+    printf("#defines working in #ifs\n");
+#endif
+
+    int y = VAR0 + 1;
+    printf("%d\n", VAR0);
+
+    return 0;
+}

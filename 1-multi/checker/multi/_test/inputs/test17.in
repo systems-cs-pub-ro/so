@@ -1,0 +1,8 @@
+int main() {
+#if 1
+	printf("True!\n");
+#else
+	printf("False!\n");
+#endif
+	return 0;
+}

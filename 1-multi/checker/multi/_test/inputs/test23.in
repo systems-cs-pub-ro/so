@@ -1,0 +1,14 @@
+#define FALSE 0
+#define NOT 0
+#define TRUE 1
+
+int main() {
+#if FALSE
+	printf("False!\n");
+#elif TRUE
+	printf("True!\n");
+#else
+	printf("Bad!\n");
+#endif
+	return 0;
+}

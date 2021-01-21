@@ -1,0 +1,6 @@
+int main() {
+#if 1
+	printf("Yes!\n");
+#endif
+	return 0;
+}

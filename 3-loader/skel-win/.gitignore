@@ -1,0 +1,6 @@
+Debug
+/loader.*sdf
+/ipch
+*.ilk
+*.lib
+*.dll

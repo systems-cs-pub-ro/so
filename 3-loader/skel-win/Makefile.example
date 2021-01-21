@@ -1,0 +1,26 @@
+CFLAGS = /nologo /W3 /EHsc
+CC = cl
+LINK = link
+LDFLAGS = /nologo /DYNAMICBASE:NO /FIXED /INCREMENTAL
+
+build: so_test_prog.exe so_exec.exe
+
+so_test_prog.exe: test_prog.obj
+	$(LINK) $(LDFLAGS) /entry:start /subsystem:console /BASE:0x10000000 /ALIGN:65536 /IGNORE:4108 /OUT:$@ $** kernel32.lib
+
+test_prog.obj: test_prog/hello.asm
+	ml /nologo /Fo$@ /c $**
+
+so_exec.exe: exec.obj
+	$(LINK) $(LDFLAGS) /BASE:0x20000000 /OUT:$@ $** so_loader.lib
+
+exec.obj: exec/exec.c
+	$(CC) $(CFLAGS) /Iloader /Fo$@ /c $**
+
+clean:
+	del /Q test_prog.obj 2>NUL
+	del /Q so_test_prog.exe 2>NUL
+	del /Q so_test_prog.ilk 2>NUL
+	del /Q exec.obj 2>NUL
+	del /Q so_exec.exe 2>NUL
+	del /Q so_exec.ilk 2>NUL

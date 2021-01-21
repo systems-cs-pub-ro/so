@@ -1,0 +1,28 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+#*.lib # TODO temporary
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+#*.dll # TODO temporary
+#*.so  # TODO temporary
+#*.so.*
+*.dylib
+
+# Executables
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
