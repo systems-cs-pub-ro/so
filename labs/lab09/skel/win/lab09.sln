@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1-threading", "1-threading\threading.vcproj", "{01C70E9B-C70C-4D2C-831F-DC6D924F6695}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1-threading", "1-threading\1-threading.vcproj", "{01C70E9B-C70C-4D2C-831F-DC6D924F6695}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3-interlocked", "3-interlocked\3-interlocked.vcproj", "{A9C0EAEA-8102-4568-8971-0499BEF880C1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7-sort", "7-sort\4-sort.vcproj", "{88ED226D-E843-404C-9F42-E4AF14E21F26}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7-sort", "7-sort\7-sort.vcproj", "{88ED226D-E843-404C-9F42-E4AF14E21F26}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8-dean", "8-dean\6-dean.vcproj", "{6A9CDCC0-87FF-4CF4-9298-BED705F9258C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8-dean", "8-dean\8-dean.vcproj", "{6A9CDCC0-87FF-4CF4-9298-BED705F9258C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5-timer", "5-timer\5-timer.vcproj", "{CD469522-B7BB-4CA7-B98C-41AEFDE85A09}"
 EndProject
@@ -15,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2-debug", "2-debug\2-debug.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4-TLS", "4-TLS\4-TLS.vcproj", "{6C5F103E-139E-4B0B-A363-6EFB9480FECB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6-Barrier", "6-Barrier\6-Barrier.vcproj", "{CFD7AB98-98A1-44C3-AA1A-947A8C187F72}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6-barrier", "6-barrier\6-barrier.vcproj", "{CFD7AB98-98A1-44C3-AA1A-947A8C187F72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
