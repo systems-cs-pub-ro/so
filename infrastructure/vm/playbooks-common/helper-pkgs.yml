@@ -1,10 +1,13 @@
 - name: Install helper packages (driver-level)
   apt:
+    # open-vm-tools are necessary for exporting to VMware
     name: ['virtualbox-guest-dkms', 'open-vm-tools', 'acl']
     state: present
     update_cache: yes
 
 - name: Upgrade all the packages
   apt:
-    upgrade: yes
+    update_cache: yes
+    force_apt_get: yes
+    upgrade: dist
     autoclean: yes

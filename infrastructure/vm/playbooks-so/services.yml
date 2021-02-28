@@ -11,4 +11,4 @@
     - iscsid.socket
     - snapd.seeded.service
     - snapd.service
-  when: '"{{ item }}" in ansible_facts.services'
+  when: item in ansible_facts.services
