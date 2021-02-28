@@ -7,7 +7,7 @@ Based on https://gitlab.com/adrian.stratulat/vm-scripts/
 Tested on Ubuntu 18.04.
 Any reasonable recent Linux distribution should work.
 
-    $ sudo apt-get install vagrant virtualbox virtualbox-qt git-lfs python-pip python-setuptools
+    $ sudo apt-get install vagrant virtualbox virtualbox-qt python-pip python-setuptools
     $ pip install ansible
     $ vagrant plugin install vagrant-disksize
     $ vagrant plugin install vagrant-reload
