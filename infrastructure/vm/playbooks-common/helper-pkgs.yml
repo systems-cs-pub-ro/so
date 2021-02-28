@@ -4,18 +4,6 @@
     state: present
     update_cache: yes
 
-- name: Install helper packages (GUI)
-  apt:
-    name: ['virtualbox-guest-x11', 'xubuntu-desktop', 'open-vm-tools-desktop']
-    state: present
-  when: interface == "gui"
-
-- name: Install desktop environment
-  apt:
-    name: ['virtualbox-guest-x11', 'xubuntu-desktop', 'open-vm-tools-desktop']
-    state: present
-  when: interface == "gui"
-
 - name: Upgrade all the packages
   apt:
     upgrade: yes

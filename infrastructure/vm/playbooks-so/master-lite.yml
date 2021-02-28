@@ -4,7 +4,6 @@
 
   vars:
     username: "student"
-    interface: "cli"
     hostname: "so-vm-lite"
     valgrind_dir: "/home/vagrant/valgrind"
 
