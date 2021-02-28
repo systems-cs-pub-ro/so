@@ -1,4 +1,4 @@
-- name: Clone Vlagrind
+- name: Clone Valgrind
   git:
     repo: 'git://sourceware.org/git/valgrind.git'
     dest: "{{ valgrind_dir }}"
