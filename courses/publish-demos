@@ -1,0 +1,17 @@
+#!/bin/bash
+
+remote_end=so@elf.cs.pub.ro:res/current/cursuri/
+
+if test $# -eq 1; then
+    id=$(printf "%02g" $1)
+    zip -r curs-$id-demo.zip curs-"$id"-demo/
+    scp curs-$id-demo.zip "$remote_end"
+    exit 0
+fi
+
+for id in $(seq -f "%02g" 1 14); do
+    if test -d "curs-$id-demo"; then
+        zip -r curs-$id-demo.zip curs-"$id"-demo/
+    fi
+done
+scp *.zip "$remote_end"

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if test $# -eq 1; then
+    id=$(printf "%02g" $1)
+    for path in $(find curs-"$id"-demo -name 'Makefile*'); do
+        d=$(dirname "$path")
+        f=$(basename "$path")
+        /usr/bin/make -C "$d" -f "$f" clean
+    done
+    exit 0
+fi
+
+for id in $(seq -f "%02g" 1 12); do
+    for path in $(find curs-"$id"-demo -name 'Makefile*'); do
+        d=$(dirname "$path")
+        f=$(basename "$path")
+        /usr/bin/make -C "$d" -f "$f" clean
+    done
+done
