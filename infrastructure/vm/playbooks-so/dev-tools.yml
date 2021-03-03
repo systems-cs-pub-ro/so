@@ -1,10 +1,7 @@
 - name: Install misc tools
   apt:
-    name: ['gdb', 'gcc', 'gcc-multilib', 'cppcheck', 'electric-fence', 'sysstat', 'libaio1', 'libaio-dev', 'python', 'autoconf', 'libtool']
+    name: ['gdb', 'gcc', 'gcc-multilib', 'cppcheck', 'electric-fence', 'sysstat', 'libaio1', 'libaio-dev', 'python', 'autoconf', 'libtool', 'valgrind']
     state: present
 
 - name: Install checkpatch
   include: checkpatch.yml
-
-- name: Install valgrind
-  include: valgrind.yml
