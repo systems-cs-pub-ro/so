@@ -5,7 +5,6 @@
   vars:
     username: "student"
     hostname: "so-vm-lite"
-    valgrind_dir: "/home/vagrant/valgrind"
 
   tasks:
   - name: Basic setup
