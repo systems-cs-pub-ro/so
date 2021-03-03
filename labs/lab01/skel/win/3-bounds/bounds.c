@@ -13,8 +13,8 @@
 #define FIRST_NUMBER 39
 #define SECOND_NUMBER 42
 
-int get_min(int a, int b);
-int get_max(int a, int b);
+__declspec(dllimport) int get_min(int a, int b);
+__declspec(dllimport) int get_max(int a, int b);
 
 int main(void)
 {

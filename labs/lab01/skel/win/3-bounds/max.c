@@ -8,8 +8,7 @@
  */
 
 
-int get_max(int a, int b);
-
+__declspec(dllexport) int get_max(int a, int b);
 
 int get_max(int a, int b)
 {

@@ -8,13 +8,7 @@ bounds_static.exe: #TODO dependencies
 	#TODO - link static lib with object file to create the executable
 
 bounds_static.lib: #TODO - dependencies
-	#TODO create static lib
-
-min.obj: #TODO 
-
-max.obj: #TODO 
-
-bounds.obj: #TODO 
+	#TODO create static lib 
 
 clean:
 	del /Q /F *.obj *.lib *.dll *.exe

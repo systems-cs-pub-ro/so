@@ -8,7 +8,7 @@
  */
 
 
-int get_min(int a, int b);
+__declspec(dllexport) int get_min(int a, int b);
 
 int get_min(int a, int b)
 {
