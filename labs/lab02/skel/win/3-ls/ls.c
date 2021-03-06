@@ -32,7 +32,7 @@ static void PrintFileTime(FILETIME fTime);
 /*
  * List files from directory reprezented by path
  * @path        - path to dir we want to list
- * @bRecursive  - if "ls -r" was issued
+ * @bRecursive  - if "ls -R" was issued
  * @bAll        - if "ls -a" was issued
  */
 static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
@@ -45,7 +45,6 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 	TCHAR extendedPath[MAXPATH], newPath[MAXPATH];
 	int i = 0;
 
-
 	printf("\n=== %s ===\n\n", path);
 	/*
 	 * Prepare path to FindFirst File -we must add "\*"
@@ -54,40 +53,40 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 	sprintf_s(extendedPath, MAXPATH, "%s\\*", path);
 
 	/*
-	 * TODO 1 -  Find the first file in the directory
+	 * TODO 1 - Find the first file in the directory
 	 * Use extendePath as argument
 	 */
 
 	/* TODO 1 - List all the files in the directory */
 	do {
-
-		if (/* TODO 2 - Test if file is directory */ 0) {
+		if (/* TODO 1 - Test if file is directory */ 0) {
 
 			/*
-			 * TODO 2 - print file name
-			 * For printing spaces use function
-			 * printPadding(no_spaces)
+			 * TODO 1 - print file name
+			 * For printing spaces use the PrintPadding(no_spaces) function
 			 */
 
 			if (bRecursive == TRUE) {
-
-				/* TODO 3 - Recursive */
+				/* 
+				 * TODO 3 - Recursive
+				 * Remember that . and .. are also members of the current
+				 * directory. Do not include them in your recursion, or you
+				 * might loop infinitely
+				 */
 			}
 		} else {
 			/*
-			 * TODO 2 - print file name
-			 * For printing spaces use function
-			 * printPadding(no_spaces)
+			 * TODO 1 - print file name
+			 * For printing spaces use the PrintPadding(no_spaces) function
 			 */
 
 			if (bAll == TRUE) {
-
 				/*
 				 * TODO 2 - print the time of the last access
 				 * Use the PrintFileTime function
 				 */
 
-				/* TODO 2 - get File Size */
+				/* TODO 2 - get the file size and print it */
 			}
 			printf("\n");
 		}
