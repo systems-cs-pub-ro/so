@@ -54,7 +54,7 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 
 	/*
 	 * TODO 1 - Find the first file in the directory
-	 * Use extendePath as argument
+	 * Use extendedPath as argument
 	 */
 
 	/* TODO 1 - List all the files in the directory */

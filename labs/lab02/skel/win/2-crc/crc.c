@@ -22,6 +22,8 @@
 
 static void WriteCrc(int crc, HANDLE hWrite)
 {
+	BOOL bRet;
+	DWORD dwBytesWritten, dwBytesToWrite, dwTotalWritten;
 	/* TODO 1 - Write the CRC to the file. Use a loop! */
 }
 
@@ -30,7 +32,7 @@ static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 	HANDLE hRead, hWrite;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
-	DWORD bytesRead, bytesWritten;
+	DWORD bytesRead;
 	int crc = 0;
 
 	/* TODO 1 - Open source file for reading */
@@ -65,9 +67,10 @@ static DWORD GetSize(HANDLE file)
 	return dwSize;
 }
 
-static DWORD ReadChunk(CHAR *chunk, HANDLE *hFile)
+static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
 {
-	DWORD dwTotalRead = 0;
+	BOOL bRet;
+	DWORD dwBytesRead, dwBytesToRead, dwTotalRead = 0;
 
 	/*
 	 * TODO 3
