@@ -20,32 +20,39 @@
 #define BUFSIZE 512
 #define CHUNKSIZE 32
 
+static void WriteCrc(int crc, HANDLE hWrite)
+{
+	BOOL bRet;
+	DWORD dwBytesWritten, dwBytesToWrite, dwTotalWritten;
+	/* TODO 1 - Write the CRC to the file. Use a loop! */
+}
+
 static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 {
 	HANDLE hRead, hWrite;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
-	DWORD bytesRead, bytesWritten;
+	DWORD bytesRead;
 	int crc = 0;
 
 	/* TODO 1 - Open source file for reading */
 
 	/* TODO 1 - Create destination file for writing */
 
-	/* read from file  */
+	/* Read from file  */
 	while (1) {
-
 		ZeroMemory(buf, sizeof(buf));
 
 		/* TODO 1 - Read from source file into buf BUFSIZE bytes */
 
 		/* TODO 1 - Test for end of file */
 
-		/* calculate crc for buf */
+		/* Calculate crc for buf */
 		crc = update_crc(crc, (unsigned char *) buf, bytesRead);
 	}
 
-	/* TODO 1 - Write crc to destination file */
+	/* Write crc to destination file */
+	WriteCrc(crc, hWrite);
 
 	/* TODO 1 - Close files */
 }
@@ -60,27 +67,46 @@ static DWORD GetSize(HANDLE file)
 	return dwSize;
 }
 
+static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
+{
+	BOOL bRet;
+	DWORD dwBytesRead, dwBytesToRead, dwTotalRead = 0;
+
+	/*
+	 * TODO 3
+	 * Read at most CHUNKSIZE bytes from file into the buffer. Use a loop!
+	 * Return the number of read bytes.
+	 */
+
+	return dwTotalRead;
+}
+
 static BOOL CompareFiles(CHAR *file1, CHAR *file2)
 {
-	DWORD  bytesRead;
+	DWORD bytesRead1, bytesRead2;
 	HANDLE hFile1, hFile2;
 	CHAR chunk1[CHUNKSIZE], chunk2[CHUNKSIZE];
 	BOOL result = FALSE, bRet;
 
-	/* TODO 3 - Open file handles */
+	/* TODO 4 - Open file handles */
 
-	/* TODO 3 - Compare file size */
+	/* TODO 4 - Compare file size */
 
-	/* TODO 3 - Compare the CRC files, chunk by chunk */
-	/*
-	 * while (1) {
-	 *	ZeroMemory(chunk1, sizeof(chunk1));
-	 *	ZeroMemory(chunk2, sizeof(chunk2));
-	 * }
-	 */
+	/* TODO 4 - Compare the files, chunk by chunk */
+	while (1) {
+		ZeroMemory(chunk1, sizeof(chunk1));
+	 	ZeroMemory(chunk2, sizeof(chunk2));
+
+		bytesRead1 = ReadChunk(chunk1, hFile1);
+		bytesRead2 = ReadChunk(chunk2, hFile2);
+
+		/* TODO 4 - Test for the end of the files */
+		
+		/* TODO 4 - Compare the previously read chunks */
+	}
 
 exit:
-	/* TODO 3 - Close files */
+	/* TODO 4 - Close files */
 
 	return result;
 }
