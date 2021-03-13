@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="1-tiny"
+	Name="2-tiny"
 	ProjectGUID="{2B1D549C-E1CC-4A5E-AA4E-97E8BEEBF995}"
-	RootNamespace="My1tiny"
+	RootNamespace="My2tiny"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
