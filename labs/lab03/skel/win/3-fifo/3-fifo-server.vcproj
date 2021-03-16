@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="2-fifo-server"
+	Name="3-fifo-server"
 	ProjectGUID="{F1B5FE95-912C-47C2-A011-95003E961A5E}"
-	RootNamespace="My2fifo"
+	RootNamespace="My3fifo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
