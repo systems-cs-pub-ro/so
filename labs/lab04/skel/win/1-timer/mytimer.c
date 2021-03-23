@@ -26,6 +26,7 @@ static VOID CALLBACK TimerAPCProc(LPVOID lpArgToCompletionRoutine,
 		DWORD dwTimerLowValue, DWORD dwTimerHighValue)
 {
 	/* TODO: Use ctime and time to print current time. */
+	time_t currentTime;
 }
 
 /*
@@ -40,6 +41,9 @@ static void InitSetTimer(void)
 	 * No data needs to be passeed to the completion routine.
 	 * Don't forget to check those calls for errors.
 	 */
+	HANDLE hTimer;
+	LARGE_INTEGER liDueTime;
+	BOOL bRet;
 }
 
 int main(void)
