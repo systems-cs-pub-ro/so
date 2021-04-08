@@ -34,15 +34,15 @@ static LONG CALLBACK access_violation(PEXCEPTION_POINTERS ExceptionInfo)
 	LPBYTE addr;
 	int pageNo;
 
-	/* TODO - get the memory location which caused the page fault */
+	/* TODO 2 - get the memory location which caused the page fault */
 
-	/* TODO - get the page number which caused the page fault */
-
-
-	/* TODO - test if page is one of our own */
+	/* TODO 2 - get the page number which caused the page fault */
 
 
-	/* TODO - increase protection for that page */
+	/* TODO 2 - test if page is one of our own */
+
+
+	/* TODO 2 - increase protection for that page */
 
 
 	return EXCEPTION_CONTINUE_EXECUTION;
@@ -53,7 +53,7 @@ static LONG CALLBACK access_violation(PEXCEPTION_POINTERS ExceptionInfo)
  */
 static void set_signal(void)
 {
-	/* TODO add VectoredHandler */
+	/* TODO 2 - add VectoredHandler */
 }
 
 /*
@@ -61,7 +61,7 @@ static void set_signal(void)
  */
 static void restore_signal(void)
 {
-	/* TODO remove VectoredHandler */
+	/* TODO 2 - remove VectoredHandler */
 }
 
 int main(void)
