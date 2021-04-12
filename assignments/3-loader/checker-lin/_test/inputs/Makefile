@@ -1,7 +1,7 @@
 CC = gcc
 BINS = hello sum bss data_bss no_perm inv_perm check_perm check_exec qsort
 CFLAGS = -m32 -Wall -fno-pic -fno-stack-protector -g
-LDFLAGS = -m32 -static -no-pie
+LDFLAGS = -m32 -static -no-pie -z noseparate-code
 
 all: $(BINS)
 
