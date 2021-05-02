@@ -30,7 +30,6 @@ HANDLE StartThread(LPTHREAD_START_ROUTINE ThreadFunc, LPVOID params)
 
 	/* TODO - Create Thread to executed ThreadFunc */
 
-
 	/* TODO - Return Thread Handle */
 
 	return NULL;
@@ -79,6 +78,7 @@ DWORD WINAPI MakeCake(LPVOID lpParameter)
 
 	printf("Chef %s wants to make Cake\n", ti->name);
 
+	/* TODO - Fix the order in which the semaphores are decremented */
 	dwRet = WaitForSingleObject(Sugar, INFINITE);
 	DIE(dwRet == WAIT_FAILED, "WaitForSingleObject");
 	printf("Chef %s wants the sugar\n", ti->name);
@@ -114,6 +114,7 @@ DWORD WINAPI MakeTiramisu(LPVOID lpParameter)
 
 	printf("Chef %s wants to make tiramisu\n", ti->name);
 
+	/* TODO - Fix the order in which the semaphores are decremented */
 	dwRet = WaitForSingleObject(Milk, INFINITE);
 	DIE(dwRet == WAIT_FAILED, "WaitForSingleObject");
 	printf("Chef %s wants the milk\n", ti->name);
@@ -129,9 +130,6 @@ DWORD WINAPI MakeTiramisu(LPVOID lpParameter)
 	dwRet = WaitForSingleObject(Flour, INFINITE);
 	DIE(dwRet == WAIT_FAILED, "WaitForSingleObject");
 	printf("Chef %s wants the flour\n", ti->name);
-
-
-
 
 	printf("Chef %s is making tiramisu\n", ti->name);
 	Sleep(1);

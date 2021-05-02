@@ -56,13 +56,11 @@ DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 		if (dwReturn == FALSE)
 			myPerror("function A failed\n");
 		break;
-
 	case 1:
 		dwReturn = function_B();
 		if (dwReturn == FALSE)
 			myPerror("function B failed\n");
 		break;
-
 	case 2:
 		dwReturn = function_C();
 		if (dwReturn == FALSE)
@@ -99,7 +97,7 @@ DWORD main(VOID)
 		DIE(dwReturn == WAIT_FAILED, "WaitForSingleObject");
 	}
 
-	/* TODO - free TLS index */
+	/* TODO - Free TLS index */
 
 	return 0;
 }

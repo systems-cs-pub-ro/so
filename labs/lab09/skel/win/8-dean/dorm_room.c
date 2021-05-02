@@ -8,10 +8,7 @@
 #include "utils.h"
 
 #define MAX_STUDENTS	15
-
-
-
-#define wild_party 7
+#define wild_party		7
 
 
 int students_at_party;
@@ -61,7 +58,6 @@ void break_party(void)
 	/* this code is executed by the dean */
 
 	while (1) {
-
 		/* TODO - wait for
 		 * 1. the party to get wild
 		 * or

@@ -83,7 +83,6 @@ LPCHUNK MergeChunks(LPCHUNK lpSrc, LPCHUNK lpDst)
 	merged->lpMem = mergeArray; /* srcArray; */
 	merged->dwLen = lenSrc + lenDst;
 
-
 	return merged;
 }
 
@@ -104,8 +103,8 @@ DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 
 	while ((td.threadId % (2 * pow2) == 0) &&
 			(td.threadId + pow2 < NO_THREADS)) {
-
 		/* TODO - merge chunks */
+
 	}
 
 	printf("thread %d done\n", td.threadId);
@@ -148,6 +147,7 @@ HANDLE init_setup(LPSTR filename)
 		/* TODO - init chunk */
 
 		/* TODO - create thread */
+
 	}
 
 	return hFile;
@@ -222,6 +222,4 @@ LPVOID MapFile(HANDLE hFile, DWORD size)
 
 	return p;
 }
-
-
 
