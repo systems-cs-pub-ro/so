@@ -175,6 +175,8 @@ void test2(void)
 
 DWORD main(VOID)
 {
+	setbuf(stdout, NULL);
+
 	/* init */
 	stud_mutex = CreateMutex(NULL, FALSE, NULL);
 	dean_mutex = CreateMutex(NULL, FALSE, NULL);

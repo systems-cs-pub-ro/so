@@ -163,6 +163,8 @@ int main(int argc, LPSTR argv[])
 		ExitProcess(0);
 	}
 
+	setbuf(stdout, NULL);
+
 	hFile = init_setup(argv[1]);
 	
 	/* Wait for the merging to finish */

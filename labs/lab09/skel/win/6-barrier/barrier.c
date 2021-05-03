@@ -93,6 +93,8 @@ int main(VOID)
 	HANDLE hThread[NO_THREADS];
 	int i;
 
+	setbuf(stdout, NULL);
+
 	dwRet = CreateThresholdBarrier(&barrier, NO_THREADS);
 	DIE(dwRet == FALSE, "CreateThresholdBarrier failed");
 

@@ -77,6 +77,8 @@ DWORD main(VOID)
 	HANDLE hThread[NO_THREADS];
 	int i;
 
+	setbuf(stdout, NULL);
+
 	/* TODO - allocate TLS index */
 
 	/* create threads */

@@ -58,6 +58,8 @@ int main(void)
 	HANDLE hThread[NO_THREADS];
 	DWORD dwRet, i, start_time, end_time;
 
+	setbuf(stdout, NULL);
+
 	hMutex = CreateMutex(
 		NULL,  /* default security attributes */
 		FALSE, /* initially not owned */

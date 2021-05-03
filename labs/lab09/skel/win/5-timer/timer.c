@@ -31,6 +31,8 @@ int main(void)
 	BOOL bRet;
 	DWORD dwRet;
 
+	setbuf(stdout, NULL);
+
 	/* TODO - Create a TimerQueue */
 
 	/* TODO - Create a semaphore/event */

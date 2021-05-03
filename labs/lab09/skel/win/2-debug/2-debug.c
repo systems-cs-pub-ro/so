@@ -44,6 +44,8 @@ int main(VOID)
 
 	struct thread_info ti_a, ti_b, ti_c;
 
+	setbuf(stdout, NULL);
+
 	create_ingredients();
 
 	/* Init parameters */

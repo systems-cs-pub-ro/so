@@ -29,6 +29,8 @@ DWORD main(VOID)
 	HANDLE hThread[NO_THREADS];
 	int i;
 
+	setbuf(stdout, NULL);
+
 	/* create threads */
 	for (i = 0; i < NO_THREADS; i++) {
 		hThread[i] = CreateThread(
