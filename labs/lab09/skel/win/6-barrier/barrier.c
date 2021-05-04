@@ -28,7 +28,6 @@ DWORD CreateThresholdBarrier(THB_OBJECT *pthb, DWORD b_value)
 		return FALSE;
 
 	/* TODO - Create Mutex */
-	
 
 	/* TODO - Create Event */
 	
@@ -46,7 +45,6 @@ DWORD WaitThresholdBarrier(THB_OBJECT thb)
 {
 	/* TODO - Wait for the specified number of thread to reach */
 	/* the barrier, then broadcast the release to all waiting threads */
-
 
 	return 0;
 }
@@ -94,6 +92,8 @@ int main(VOID)
 	DWORD dwRet, IDThread;
 	HANDLE hThread[NO_THREADS];
 	int i;
+
+	setbuf(stdout, NULL);
 
 	dwRet = CreateThresholdBarrier(&barrier, NO_THREADS);
 	DIE(dwRet == FALSE, "CreateThresholdBarrier failed");

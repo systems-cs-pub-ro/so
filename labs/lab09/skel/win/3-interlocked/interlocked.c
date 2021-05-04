@@ -27,6 +27,10 @@ DWORD WINAPI thread_function(LPVOID arg)
 		 * - If the counter hits LIMIT, reset counter
 		 * - Use Interlocked operations
 		 */
+
+		/* TODO 3:
+		 * - Call SwitchToThread() between the Interlocked operations
+		 */
 	}
 
 	return 0;
@@ -54,6 +58,8 @@ int main(void)
 	HANDLE hThread[NO_THREADS];
 	DWORD dwRet, i, start_time, end_time;
 
+	setbuf(stdout, NULL);
+
 	hMutex = CreateMutex(
 		NULL,  /* default security attributes */
 		FALSE, /* initially not owned */
@@ -63,15 +69,15 @@ int main(void)
 
 	start_time = GetTickCount();
 
-		for (i = 0; i < NO_THREADS; i++) {
-			hThread[i] = CreateThread(NULL, 0,
-					thread_function, NULL, 0, NULL);
-			DIE(hThread[i] == NULL, "CreateThread");
-		}
+	for (i = 0; i < NO_THREADS; i++) {
+		hThread[i] = CreateThread(NULL, 0,
+				thread_function, NULL, 0, NULL);
+		DIE(hThread[i] == NULL, "CreateThread");
+	}
 
-		dwRet = WaitForMultipleObjects(NO_THREADS,
-				hThread, TRUE, INFINITE);
-		DIE(dwRet == WAIT_FAILED, "WaitForMultipleObjects");
+	dwRet = WaitForMultipleObjects(NO_THREADS,
+			hThread, TRUE, INFINITE);
+	DIE(dwRet == WAIT_FAILED, "WaitForMultipleObjects");
 
 	end_time = GetTickCount();
 	printf("Count final value = %ld\n", count);

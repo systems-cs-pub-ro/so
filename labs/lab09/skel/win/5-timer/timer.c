@@ -20,7 +20,7 @@ VOID CALLBACK TimerFunction(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 
 	printf("'TimerFunction' has been called and count is %d\n", count);
 
-	/* TODO - check if we must increment counter or finish */
+	/* TODO - Check if we must increment counter or finish */
 
 }
 
@@ -31,15 +31,17 @@ int main(void)
 	BOOL bRet;
 	DWORD dwRet;
 
-	/* create a TimerQueue */
+	setbuf(stdout, NULL);
 
-	/* create a semaphore/event */
+	/* TODO - Create a TimerQueue */
 
-	/* create a timer and associate it with the timer queue */
+	/* TODO - Create a semaphore/event */
 
-	/* wait for the semaphore/event to be set, so we can free resources */
+	/* TODO - Create a timer and associate it with the timer queue */
 
-	/*  delete the timer queue and its timers */
+	/* TODO - Wait for the semaphore/event to be set so we can free resources */
+
+	/* TODO - Delete the timer queue and its timers */
 
 	return 0;
 }
