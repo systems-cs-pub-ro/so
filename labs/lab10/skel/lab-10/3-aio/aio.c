@@ -10,9 +10,9 @@
 #include <time.h>
 #include <windows.h>
 
-#ifndef BUFSIZ
+/* redefine BUFSIZ from 512 bytes to 4096 bytes. */
+#undef BUFSIZ
 #define BUFSIZ		4096
-#endif
 
 #define IO_SYNC		1
 #define IO_ASYNC	2
