@@ -429,13 +429,14 @@ static void test_sched_handler(unsigned int priority)
 	my_info->executed++;
 	tasks_history[exec_time++] = my_info;
 
-	if (exec_time == 0)
+	if (exec_time == 0) {
 		/* If the first task spawn other 3 tasks */
 		for (i = 0; i < 3; i++)
 			so_fork(test_sched_handler, priority);
+	}
 
 	for (i = 0; i < SO_MAX_UNITS / 2; i++) {
-		/* Run only half of the allowed quantum */
+	/* Run only half of the allowed quantum */
 		my_info->executed++;
 		tasks_history[exec_time++] = my_info;
 		so_exec();
