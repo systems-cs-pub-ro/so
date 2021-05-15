@@ -74,7 +74,6 @@ static int print_client_stats(struct logmemcache_st *client)
 	}
 
 	printf("%s\n", stats);
-	free(stats);
 
 	return 0;
 }
@@ -105,13 +104,6 @@ static int print_client_logs(struct logmemcache_st *client)
 		}
 
 		printf("%s: %s\n", time, logline);
-	}
-
-	if (lines != NULL) {
-		for (i = 0; i < count; i++)
-			if (lines[i] != NULL)
-				free(lines[i]);
-		free(lines);
 	}
 
 	return ret;
