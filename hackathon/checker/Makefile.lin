@@ -1,0 +1,22 @@
+SRCDIR ?= ../skel
+CC=gcc
+CFLAGS = -fPIC -Wall -I$(SRCDIR)/include
+LDFLAGS = -L../skel/
+
+.PHONY: build clean liblogmemcache
+build: checker
+
+checker: checker.o $(SRCDIR)/liblogmemcache.so
+
+checker.o: checker.c
+
+$(SRCDIR)/liblogmemcache.so: liblogmemcache
+
+liblogmemcache:
+	@$(MAKE) -C $(SRCDIR) -f Makefile.lin liblogmemcache.so
+
+run: build
+	@./checker
+
+clean:
+	rm -f *.o *.so checker
