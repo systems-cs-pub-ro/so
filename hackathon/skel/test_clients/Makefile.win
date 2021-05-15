@@ -1,0 +1,50 @@
+CFLAGS = /nologo /W3 /EHsc /D_CRT_SECURE_NO_WARNINGS
+CC = cl
+LIBS = ..\liblogmemcache.lib
+LINK = link
+CLIENTS= client1.exe client2.exe client3.exe client4.exe client5.exe client6.exe
+
+build: cdll  $(CLIENTS)
+
+cdll: ..\liblogmemcache.dll
+	copy ..\liblogmemcache.dll .
+
+client1.exe: client1.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client1.obj: client1.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+client2.exe: client2.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client2.obj: client2.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+
+client3.exe: client3.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client3.obj: client3.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+client4.exe: client4.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client4.obj: client4.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+client5.exe: client5.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client5.obj: client5.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+client6.exe: client6.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+client6.obj: client6.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+clean:
+	del /Q /S *.obj *.exe

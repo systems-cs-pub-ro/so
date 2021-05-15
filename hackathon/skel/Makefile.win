@@ -1,0 +1,33 @@
+CFLAGS = /nologo /W3 /EHsc /DEBUG /Z7 /D_CRT_SECURE_NO_WARNINGS
+CC = cl
+LIBS = wsock32.lib mswsock.lib ws2_32.lib shlwapi.lib Psapi.lib
+LINK = link
+
+all: liblogmemcache.dll logmemcached.exe
+
+liblogmemcache.dll: logmemcache.obj logmemcache_os.obj utils.obj
+	$(LINK) /nologo /dll /out:$@ /def:liblogmemcache/logmemcache.def /implib:liblogmemcache.lib $** $(LIBS)
+
+logmemcache.obj: liblogmemcache/logmemcache.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+logmemcache_os.obj: liblogmemcache/win/logmemcache_os.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+utils.obj: utils.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+logmemcached.exe: server.obj server_os.obj utils.obj
+	$(LINK) /nologo /out:$@ $** $(LIBS)
+
+server.obj: server/server.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+server_os.obj: server/win/server_os.c
+	$(CC) $(CFLAGS) /Fo$@ /c $**
+
+.PHONY: clean
+clean:
+	del /Q /S *.obj
+	del /Q /S liblogmemcache.dll liblogmemcache.lib liblogmemcache.exp
+	del /Q /S logmemcached.exe

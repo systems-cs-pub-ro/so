@@ -1,0 +1,12 @@
+LIBRARY "LIBLOGMEMCACHE"
+EXPORTS
+	logmemcache_create
+	logmemcache_free
+	logmemcache_add_log
+	logmemcache_flush
+	logmemcache_disconnect
+	logmemcache_unsubscribe
+	logmemcache_get_logs
+	logmemcache_get_stats
+	logmemcache_get_time
+	logmemcache_get_logline
