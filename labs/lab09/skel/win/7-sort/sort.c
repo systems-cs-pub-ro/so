@@ -86,7 +86,6 @@ LPCHUNK MergeChunks(LPCHUNK lpSrc, LPCHUNK lpDst)
 	return merged;
 }
 
-
 DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 {
 	DWORD dwRet, pow2;
@@ -199,14 +198,12 @@ int main(int argc, LPSTR argv[])
 	ExitProcess(0);
 }
 
-
 LPVOID MapFile(HANDLE hFile, DWORD size)
 {
 	HANDLE hFileMap;
 	LPVOID p;
 
-	hFileMap = CreateFileMapping(
-			hFile,
+	hFileMap = CreateFileMapping(hFile,
 			NULL,
 			PAGE_READWRITE,
 			0,
@@ -214,8 +211,7 @@ LPVOID MapFile(HANDLE hFile, DWORD size)
 			NULL);
 	DIE(hFileMap == NULL, "CreateFileMapping");
 
-	p = MapViewOfFile(
-			hFileMap,
+	p = MapViewOfFile(hFileMap,
 			FILE_MAP_ALL_ACCESS,
 			0,
 			0,
@@ -224,4 +220,3 @@ LPVOID MapFile(HANDLE hFile, DWORD size)
 
 	return p;
 }
-

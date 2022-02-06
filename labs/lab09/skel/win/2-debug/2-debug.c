@@ -35,7 +35,6 @@ HANDLE StartThread(LPTHREAD_START_ROUTINE ThreadFunc, LPVOID params)
 	return NULL;
 }
 
-
 int main(VOID)
 {
 
@@ -71,8 +70,6 @@ int main(VOID)
 	return 0;
 }
 
-
-
 DWORD WINAPI MakeCake(LPVOID lpParameter)
 {
 	DWORD dwRet;
@@ -107,7 +104,6 @@ DWORD WINAPI MakeCake(LPVOID lpParameter)
 
 	return 0;
 }
-
 
 DWORD WINAPI MakeTiramisu(LPVOID lpParameter)
 {
@@ -150,7 +146,6 @@ DWORD WINAPI MakeTiramisu(LPVOID lpParameter)
 	return 0;
 }
 
-
 DWORD WINAPI MakeMarshmallows(LPVOID lpParameter)
 {
 	DWORD dwRet;
@@ -158,6 +153,7 @@ DWORD WINAPI MakeMarshmallows(LPVOID lpParameter)
 
 	printf("Chef %s wants to make marshmallows\n", ti->name);
 
+	/* TODO - Fix the order in which the semaphores are decremented */
 	dwRet = WaitForSingleObject(Flour, INFINITE);
 	DIE(dwRet == WAIT_FAILED, "WaitForSingleObject");
 	printf("Chef %s wants the flour\n", ti->name);
@@ -187,13 +183,10 @@ DWORD WINAPI MakeMarshmallows(LPVOID lpParameter)
 	dwRet = ReleaseSemaphore(Flour, 1, NULL);
 	DIE(dwRet == 0, "ReleaseSemaphore");
 
-
 	printf("Chef %s finished!!!\n", ti->name);
 
 	return 0;
 }
-
-
 
 VOID create_ingredients(VOID)
 {

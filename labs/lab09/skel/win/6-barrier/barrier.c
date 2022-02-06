@@ -22,7 +22,7 @@ DWORD CreateThresholdBarrier(THB_OBJECT *pthb, DWORD b_value)
 	THB_OBJECT hthb;
 
 	/* Initialize a barrier object */
-	hthb = malloc(sizeof(THRESHOLD_BARRIER));
+	hthb = malloc(sizeof(*hthb));
 	*pthb = hthb;
 	if (hthb == NULL) 
 		return FALSE;
@@ -39,7 +39,6 @@ DWORD CreateThresholdBarrier(THB_OBJECT *pthb, DWORD b_value)
 
 	return TRUE;
 }
-
 
 DWORD WaitThresholdBarrier(THB_OBJECT thb)
 {
@@ -86,7 +85,6 @@ DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 	return 0;
 }
 
-
 int main(VOID)
 {
 	DWORD dwRet, IDThread;
@@ -100,12 +98,11 @@ int main(VOID)
 
 	/* create threads */
 	for (i = 0; i < NO_THREADS; i++) {
-		hThread[i] = CreateThread(
-				NULL,   /* default security attributes */
-				0,      /* default stack size */
+		hThread[i] = CreateThread(NULL,	/* default security attrs */
+				0,		/* default stack size */
 				(LPTHREAD_START_ROUTINE) ThreadFunc,
-				NULL,   /* no thread parameter */
-				0,      /* immediately run the thread */
+				NULL,		/* no thread parameter */
+				0,		/* immediately run the thread */
 				&IDThread);     /* thread id */
 		DIE(hThread[i] == NULL, "CreateThread");
 	}

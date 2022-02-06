@@ -12,10 +12,8 @@
 #define NO_THREADS	23
 #define NO_ROUNDS	1000001
 
-
 LONG count;
 HANDLE hMutex;
-
 
 DWORD WINAPI thread_function(LPVOID arg)
 {
@@ -23,13 +21,13 @@ DWORD WINAPI thread_function(LPVOID arg)
 
 	for (i = 0; i < NO_ROUNDS; i++) {
 		/* TODO 1:
-		 * - Increment counter
-		 * - If the counter hits LIMIT, reset counter
-		 * - Use Interlocked operations
+		 * Increment counter
+		 * If the counter hits LIMIT, reset counter
+		 * Use Interlocked operations
 		 */
 
 		/* TODO 3:
-		 * - Call SwitchToThread() between the Interlocked operations
+		 * Call SwitchToThread() between the Interlocked operations
 		 */
 	}
 
@@ -42,7 +40,7 @@ DWORD WINAPI thread_function_mutex(LPVOID arg)
 
 	for (i = 0; i < NO_ROUNDS; i++) {
 		/* TODO 2:
-		 * - Protect operations with a mutex
+		 * Protect operations with a mutex
 		 */
 
 		count++;
