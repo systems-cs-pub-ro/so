@@ -1,0 +1,1 @@
+../../../skel/lin/8-endian/Makefile

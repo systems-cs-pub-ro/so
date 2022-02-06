@@ -1,0 +1,1 @@
+../../../skel/lin/1-counter/Makefile
