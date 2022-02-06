@@ -17,8 +17,7 @@ char last_name[]  = "    Potter";
 
 static char *trim(char *s)
 {
-
-	char *p = malloc(strlen(s)+1);
+	char *p = malloc(strlen(s) + 1);
 
 	strcpy(p, s);
 

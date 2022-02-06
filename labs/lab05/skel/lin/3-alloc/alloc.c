@@ -8,12 +8,12 @@
   */
 #include <stdio.h>
 #include <stdlib.h>
+#include "utils.h"
+
 #define	MAX		100
 #define CHUNK		10
 #define SEED		23
 #define STOP		17
-
-#include "utils.h"
 
 int main(void)
 {
@@ -33,15 +33,13 @@ int main(void)
 		if (count % CHUNK == 0) {
 			printf("Resize buffer to fit %d elements\n", count);
 
-			/* resize bufferului to fit CHUNK elements */
+			/* resize buffer to fit CHUNK elements */
 			buffer =  malloc((count + CHUNK) * sizeof(int));
 			DIE(buffer == NULL, "malloc");
 		}
 
 		printf("buffer[%d]=%d\n", count - 1, buffer[count-1]);
-
 	} while (buffer[count-1] != STOP);
-
 
 	return 0;
 }

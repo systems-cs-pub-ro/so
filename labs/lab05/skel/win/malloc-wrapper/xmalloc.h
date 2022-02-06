@@ -17,10 +17,10 @@ void *xmalloc(size_t size);
 
 /* TODO */
 
-#define xfree(ptr) \
-	do { \
-		BOOL bRet; \
-		HANDLE hProcessHeap; \
+#define xfree(ptr)			\
+	do {				\
+		BOOL bRet;		\
+		HANDLE hProcessHeap;	\
 	} while (0)
 
 #endif

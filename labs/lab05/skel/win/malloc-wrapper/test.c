@@ -18,7 +18,6 @@
 #include "xmalloc.h"
 #include "utils.h"
 
-
 static int ***tensor_alloc(int l, int m, int n)
 {
 	int i, j;

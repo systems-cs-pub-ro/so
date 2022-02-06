@@ -14,7 +14,7 @@ char *read_message()
 {
 	char buf[BUFSIZ];
 
-	printf("Give input string:");
+	printf("Give input string: ");
 	fgets(buf, 1024, stdin);
 
 	return buf;

@@ -11,7 +11,6 @@
 
 #include "my_malloc.h"
 
-
 void *my_malloc(size_t size)
 {
 	void *current = NULL;
