@@ -1,8 +1,8 @@
 /**
  * SO - Lab #4, Signals
- * Task #1, Windows
+ * Task #1 Solution, Windows
  *
- * Timer usage.
+ * Timers usage.
  */
 
 #define _WIN32_WINNT	0x0500
@@ -14,6 +14,8 @@
 #include <time.h>
 
 #include <windows.h>
+
+#include "utils.h"
 
 #define _SECOND		10000000
 #define TIMEOUT		(-2 * _SECOND)
@@ -27,6 +29,10 @@ static VOID CALLBACK TimerAPCProc(LPVOID lpArgToCompletionRoutine,
 {
 	/* TODO: Use ctime and time to print current time. */
 	time_t currentTime;
+
+	currentTime = time(NULL);
+
+	printf("time is: %s", ctime(&currentTime));
 }
 
 /*
@@ -41,9 +47,22 @@ static void InitSetTimer(void)
 	 * No data needs to be passeed to the completion routine.
 	 * Don't forget to check those calls for errors.
 	 */
-	HANDLE hTimer;
-	LARGE_INTEGER liDueTime;
 	BOOL bRet;
+	HANDLE hTimer;
+	LARGE_INTEGER dueTime;
+
+	hTimer = CreateWaitableTimer(NULL, TRUE, NULL);
+	DIE(hTimer == NULL, "CreateWaitableTimer");
+
+	dueTime.QuadPart = TIMEOUT;
+	bRet = SetWaitableTimer(
+		hTimer,
+		&dueTime,
+		2000,
+		TimerAPCProc,
+		NULL,
+		FALSE);
+	DIE(bRet == FALSE, "SetWaitableTimer");
 }
 
 int main(void)
@@ -52,6 +71,7 @@ int main(void)
 
 	while (1) {
 		/* TODO: Wait for timer (use SleepEx function). */
+		SleepEx(INFINITE, TRUE);
 	}
 
 	return 0;

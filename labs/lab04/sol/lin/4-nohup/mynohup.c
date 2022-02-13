@@ -1,5 +1,5 @@
 /**
-  * SO, 2016
+  * SO
   * Lab #4
   *
   * Task #4, lin
@@ -26,25 +26,36 @@ static void set_signals(void)
 	struct sigaction sa;
 	int rc;
 
+	/* ignore SIGHUP */
 	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = SIG_IGN;
 
-	/* TODO - ignore SIGHUP */
-
+	rc = sigaction(SIGHUP, &sa, NULL);
+	DIE(rc == -1, "sigaction");
 }
 
 /* execute a new program */
 static void exec_func(int argc, char **argv)
 {
-	int rc;
-	int i;
 	char **exec_args;
+	int i, rc;
 
 	/* ignore SIGHUP */
 	set_signals();
 
-	/* TODO - if stdout is a terminal
-	 * redirect output to NOHUP_OUT_FILE
-	 */
+	/* if stdout is a terminal, redirect output to NOHUP_OUT_FILE */
+	if (isatty(STDOUT_FILENO)) {
+		int fd;
+
+		fd = open(NOHUP_OUT_FILE, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		DIE(fd == -1, "open");
+
+		rc = dup2(fd, STDOUT_FILENO);
+		DIE(rc == -1, "dup2");
+
+		rc = close(fd);
+		DIE(rc == -1, "close");
+	}
 
 	/* exec a new process */
 	exec_args = malloc(argc * sizeof(*exec_args));

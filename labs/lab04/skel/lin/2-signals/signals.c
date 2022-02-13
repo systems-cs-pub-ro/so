@@ -1,5 +1,5 @@
 /**
-  * SO, 2016
+  * SO
   * Lab #4
   *
   * Task #2, lin
@@ -56,7 +56,6 @@ int main(void)
 
 	rc = sigaction(SIGRTMIN, &signals, NULL);
 	DIE(rc == -1, "sigaction");
-
 
 	while (!done)
 		sleep(1);

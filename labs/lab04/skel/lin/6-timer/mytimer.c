@@ -1,5 +1,5 @@
 /**
-  * SO, 2016
+  * SO
   * Lab #4
   *
   * Task #6, lin
@@ -18,7 +18,6 @@
 #include "utils.h"
 
 #define TIMEOUT		2
-
 
 /*
  * SIGALRM handler - called when the timer expires

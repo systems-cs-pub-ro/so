@@ -24,20 +24,38 @@
 static void set_signals(void)
 {
 	struct sigaction sa;
+	int rc;
 
+	/* ignore SIGCHLD */
 	memset(&sa, 0, sizeof(sa));
-
-	/* TODO - ignore SIGCHLD */
-
+	sa.sa_handler = SIG_IGN;
+	rc = sigaction(SIGCHLD, &sa, NULL);
+	DIE(rc == -1, "sigaction");
 }
 
 int main(void)
 {
 	pid_t pid;
 
-	/* TODO - create child process without waiting */
+	set_signals();
 
-	/* TODO - sleep */
+	pid = fork();
+	switch (pid) {
+	case -1:
+		DIE(pid, "fork");
+		break;
+
+	/* child process */
+	case 0:
+		exit(EXIT_SUCCESS);
+		break;
+
+	/* parent process */
+	default:
+		break;
+	}
+
+	sleep(TIMEOUT);
 
 	return 0;
 }

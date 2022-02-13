@@ -79,6 +79,8 @@ int main(void)
 	 * choose the most elegant.
 	 */
 
+	i = *(int *)mem;
+
 	while (!must_leave)
 		sleep(1);
 

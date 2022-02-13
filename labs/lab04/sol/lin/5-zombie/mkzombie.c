@@ -22,9 +22,23 @@ int main(void)
 {
 	pid_t pid;
 
-	/* TODO - create child process without waiting */
+	pid = fork();
+	switch (pid) {
+	case -1:
+		DIE(pid, "fork");
+		break;
 
-	/* TODO - sleep */
+	/* child process */
+	case 0:
+		exit(EXIT_SUCCESS);
+		break;
+
+	/* parent process */
+	default:
+		break;
+	}
+
+	sleep(TIMEOUT);
 
 	return 0;
 }
