@@ -1,5 +1,5 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
  * Task #1, lin
@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include <utils.h>
+
 #define N	8
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;

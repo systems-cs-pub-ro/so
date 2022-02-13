@@ -15,4 +15,3 @@ mutex: malloc.c critical.c ../utils/utils.h
 
 clean:
 	-rm -f *.o *~ spin mutex
-

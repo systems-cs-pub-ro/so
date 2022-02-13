@@ -48,6 +48,11 @@ int main(void)
 		case 0:
 			/* child process */
 			/* TODO - call do_bad_task() for each 4th process */
+			if (i % 4 == 0) {
+				do_bad_task();
+				continue;
+			}
+
 			do_task();
 
 			exit(0);
@@ -58,6 +63,7 @@ int main(void)
 			break;
 		}
 	}
+
 
 	/* wait for all */
 	for (i = 0; i < NUM_TASKS; i++) {

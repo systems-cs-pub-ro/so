@@ -76,7 +76,17 @@ static int one_time_init(struct once_struct *once_control, void (*f)(void))
    * Call the f() function only if this is the first thread that got here.
    */
 
+	rc = pthread_mutex_lock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_lock");
+
+	if (!once_control->refcount) {
 		(*f)();
+	}
+
+	once_control->refcount++;
+
+	rc = pthread_mutex_unlock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_unlock");
 
 	return 0;
 }
@@ -89,7 +99,17 @@ static int one_time_deinit(struct once_struct *once_control, void (*f)(void))
    * Call the f() function only if this is the last thread that got here.
    */
 
+	rc = pthread_mutex_lock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_lock");
+
+	once_control->refcount--;
+
+	if (!once_control->refcount) {
 		(*f)();
+	}
+
+	rc = pthread_mutex_unlock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_unlock");
 
 	return 0;
 }
@@ -129,14 +149,14 @@ int main(void)
 	/* Create NUM_THREADS threads, all will call one_time_init() / one time deinit */
 
 	for (i = 0; i < NUM_THREADS; i++) {
-		rc = pthread_create(&threads[i], NULL, thread_func, (void *) i);
-		DIE(rc != 0, "pthread_create");
-	}
+        rc = pthread_create(&threads[i], NULL, thread_func, (void *) i);
+	    DIE(rc != 0, "pthread_create");
+    }
 
 	for (i = 0; i < NUM_THREADS; i++) {
-		rc = pthread_join(threads[i], NULL);
-		DIE(rc != 0, "pthread_join");
-	}
+	    rc = pthread_join(threads[i], NULL);
+	    DIE(rc != 0, "pthread_join");
+    }
 
 	exit(EXIT_SUCCESS);
 }

@@ -1,5 +1,5 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
  * Task #10, lin
@@ -17,7 +17,6 @@
 #define NO_THREADS	2
 #define MILION		1000000
 #define NO_ITER		(200 * MILION)
-
 
 #ifdef USE_SPINLOCK
 	static pthread_spinlock_t lock;

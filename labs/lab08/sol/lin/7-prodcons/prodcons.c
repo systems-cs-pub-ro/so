@@ -69,21 +69,33 @@ void *producer_fn(void *arg)
 	for (i = 0; i < NR_ITERATIONS; i++) {
 		item_to_insert = i;
 
-		/* TODO - lock mutex */
+		rc = pthread_mutex_lock(&mutex);
+		DIE(rc != 0, "pthread_mutex_lock");
 
-		/* TODO - if common area is full
-		 *		then wait until the common area is not full
-		 */
+		while (is_buffer_full(&common_area)) {
+			/* we want to produce so we must wait
+			 * until the buffer is not full
+			 */
+			rc = pthread_cond_wait(&buffer_not_full, &mutex);
+			DIE(rc != 0, "pthread_cond_wait");
+		}
 
-		/* TODO - insert item into common area */
-
+		insert_item(&common_area, item_to_insert);
 		printf("Inserted item %d\n", item_to_insert);
 
-		/* TODO - if we have one element in common area
-		 *		then signal that the buffer is not empty
-		 */
+		if (common_area.count == 1) {
+			/* if now, after producing, count == 1,
+			 * before producing count == 0,
+			 * so a consumer might be waiting because
+			 * he saw that the buffer was empty
+			 * wake up that possible consumer
+			 */
+			rc = pthread_cond_signal(&buffer_not_empty);
+			DIE(rc != 0, "pthread_cond signal");
+		}
 
-		/* TODO - unlock mutex */
+		rc = pthread_mutex_unlock(&mutex);
+		DIE(rc != 0, "pthread_mutex_unlock");
 
 		if (delay == RAND_DELAY)
 			sleep(rand() % 3);
@@ -100,21 +112,33 @@ void *consumer_fn(void *arg)
 	int delay = *(int *) arg;
 
 	for (i = 0; i < NR_ITERATIONS; i++) {
-		/* TODO - lock mutex */
+		rc = pthread_mutex_lock(&mutex);
+		DIE(rc != 0, "pthread_mutex_lock");
 
-		/* TODO - if common area is empty
-		 *		then wait until the common area is not empty
-		 */
+		while (is_buffer_empty(&common_area)) {
+			/* we want to consume so we must wait
+			 * until the buffer is not empty
+			 */
+			rc = pthread_cond_wait(&buffer_not_empty, &mutex);
+			DIE(rc != 0, "pthread_cond_wait");
+		}
 
-		/* TODO - remove item from common area */
-
+		item_consumed = remove_item(&common_area);
 		printf("\t\tConsumed item %d\n", item_consumed);
 
-		/* TODO - if we have BUFFER_SIZE - 1 elements in common area
-		 *		then signal that the buffer is not full
-		 */
+		if (common_area.count == BUFFER_SIZE - 1) {
+			/* if now, after producing, count == BUFFER_SIZE - 1,
+			 * before producing count == BUFFER_SIZE,
+			 * so a producer might be waiting because
+			 * he saw that the buffer was full
+			 * wake up that possible producer
+			 */
+			rc = pthread_cond_signal(&buffer_not_full);
+			DIE(rc != 0, "pthread_cond_signal");
+		}
 
-		/* TODO - unlock mutex */
+		rc = pthread_mutex_unlock(&mutex);
+		DIE(rc != 0, "pthread_mutex_unlock");
 
 		if (delay == RAND_DELAY)
 			sleep(rand() % 3);

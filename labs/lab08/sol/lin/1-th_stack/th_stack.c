@@ -1,0 +1,1 @@
+../../../skel/lin/1-th_stack/th_stack.c

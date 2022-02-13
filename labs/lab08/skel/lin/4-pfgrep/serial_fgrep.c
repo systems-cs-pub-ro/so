@@ -1,5 +1,5 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
  * Task #4, lin
@@ -44,7 +44,7 @@ static void map_file(const char *filename, struct file_mapping *fmap)
 }
 
 static size_t count(char *what, const size_t what_size,
-		    char *where, const size_t where_size)
+			char *where, const size_t where_size)
 {
 	unsigned int i = 0, total = 0;
 

@@ -59,7 +59,7 @@ static void map_file(const char *filename, struct file_mapping *fmap)
 }
 
 static size_t count(char *what, const size_t what_size,
-			char *where, const size_t where_size)
+		    char *where, const size_t where_size)
 {
 	unsigned int i = 0, total = 0;
 
@@ -131,10 +131,21 @@ int main(int argc, char **argv)
 	 *	- thread i will run 'thread_code' function
 	 *		passing th_params[i] as parameter
 	 */
+	for (i = 0; i < NUM_THREADS; ++i) {
+		rc = pthread_create(&th_id[i], NULL,
+			thread_code, &th_params[i]);
+		DIE(rc != 0, "pthread_create");
+	}
 
 	/* TODO - wait for threads to finish and collect results */
+	for (i = 0; i < NUM_THREADS; ++i) {
+		rc = pthread_join(th_id[i], &results[i]);
+		DIE(rc != 0, "pthread_join");
+	}
 
 	/* TODO - compute final sum */
+	for (i = 0; i < NUM_THREADS; ++i)
+		total += *(size_t *) results[i];
 
 	printf("total = %lu\n", total);
 

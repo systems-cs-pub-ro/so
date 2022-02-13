@@ -70,11 +70,12 @@ void *thread_routine_y(void *arg)
 		 */
 		int local_found = is_super_number(i);
 
-		pthread_mutex_lock(&data_y.mutex);
 		if (local_found) {
 			finished = 1;
+			pthread_mutex_lock(&data_y.mutex);
 			data_y.found = 1;
 			data_y.val = i;
+			pthread_mutex_unlock(&data_y.mutex);
 		} else {
 			/* sleep to force deadlock */
 			if ((i + 1) % 5000 == 0)
@@ -85,7 +86,6 @@ void *thread_routine_y(void *arg)
 				finished = 1;
 			pthread_mutex_unlock(&data_x.mutex);
 		}
-		pthread_mutex_unlock(&data_y.mutex);
 	}
 	return NULL;
 }
@@ -105,18 +105,18 @@ void *thread_routine_x(void *arg)
 		 */
 		int local_found = is_super_number(i);
 
-		pthread_mutex_lock(&data_x.mutex);
 		if (local_found) {
 			finished = 1;
+			pthread_mutex_lock(&data_x.mutex);
 			data_x.found = 1;
 			data_x.val = i;
+			pthread_mutex_unlock(&data_x.mutex);
 		} else {
 			pthread_mutex_lock(&data_y.mutex);
 			if (data_y.found)
 				finished = 1;
 			pthread_mutex_unlock(&data_y.mutex);
 		}
-		pthread_mutex_unlock(&data_x.mutex);
 	}
 	return NULL;
 }
