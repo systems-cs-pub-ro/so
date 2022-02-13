@@ -94,15 +94,16 @@ void f2(mytype a)
 	take_snapshot();
 }
 
-static void f1()
+static void f1(void)
 {
-	mytype v[3] = {3, 4 ,5};
+	mytype v[3] = {3, 4, 5};
+
 	f2(0xdeadbeef);
 }
 
 int main(void)
 {
-	mytype v[3] = {1, 2 ,3};
+	mytype v[3] = {1, 2, 3};
 
 	/* save current ebp for later use */
 	get_ebp(ebp);

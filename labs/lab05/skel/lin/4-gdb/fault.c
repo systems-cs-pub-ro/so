@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *read_message()
+char *read_message(void)
 {
 	char buf[BUFSIZ];
 

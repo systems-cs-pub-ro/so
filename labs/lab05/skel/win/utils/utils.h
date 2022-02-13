@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 /* useful macro for handling error codes */
-#define DIE(assertion, call_description)		\
+#define DIE(assertion, call_description)			\
 	do {							\
 		if (assertion) {				\
 			fprintf(stderr, "(%s, %s, %d): ",	\
