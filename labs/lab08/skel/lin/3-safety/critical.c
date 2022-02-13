@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #3, lin
+ * Task #3, Linux
  *
  * Thread safety
  */

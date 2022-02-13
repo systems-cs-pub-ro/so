@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #10, lin
+ * Task #10, Linux
  *
  * Mutex vs Spinlock
  */

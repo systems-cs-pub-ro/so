@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #9, lin
+ * Task #9, Linux
  *
  * Thread Specific Data
  */

@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #2, lin
+ * Task #2, Linux
  *
  * Threads vs Processes
  */

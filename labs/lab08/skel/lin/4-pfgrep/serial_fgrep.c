@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #4, lin
+ * Task #4, Linux
  *
  * Serial implementation of  'fgrep -o <string> <file> | wc -l'
  */

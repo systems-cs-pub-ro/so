@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #6, lin
+ * Task #6, Linux
  *
  * Implementing single time use init / deinit functions
  */
@@ -55,17 +55,15 @@ static void deinit_func(void)
 
 static void thread_work(int arg)
 {
-    for (int i = 0; i < NUM_CHARS; i++) {
-        printf("%c", START_CHAR + arg);
+	for (int i = 0; i < NUM_CHARS; i++) {
+		printf("%c", START_CHAR + arg);
 
-        /* What happens if you comment out the fflush ? */
+		/* What happens if you comment out the fflush ? */
+		fflush(stdout);
 
-        fflush(stdout);
-
-        /* What happens if you decrease the PERIOD ? */
-
-        usleep(PERIOD);
-    }
+		/* What happens if you decrease the PERIOD ? */
+		usleep(PERIOD);
+	}
 }
 
 static int one_time_init(struct once_struct *once_control, void (*f)(void))
@@ -73,10 +71,9 @@ static int one_time_init(struct once_struct *once_control, void (*f)(void))
 	int rc;
 
 	/* TODO - Each time a thread gets here, increment once_control->refcount.
-   * Call the f() function only if this is the first thread that got here.
-   */
-
-		(*f)();
+	 * Call the f() function only if this is the first thread that got here.
+	 */
+	(*f)();
 
 	return 0;
 }
@@ -86,10 +83,9 @@ static int one_time_deinit(struct once_struct *once_control, void (*f)(void))
 	int rc;
 
 	/* TODO - Each time a thread gets here, decrement once_control->refcount.
-   * Call the f() function only if this is the last thread that got here.
-   */
-
-		(*f)();
+	 * Call the f() function only if this is the last thread that got here.
+	 */
+	(*f)();
 
 	return 0;
 }

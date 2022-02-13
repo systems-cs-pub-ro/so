@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #2, lin
+ * Task #2, Linux
  *
  * Threads vs Processes
  */
@@ -46,7 +46,7 @@ int main(void)
 
 	for (i = 0; i < NUM_TASKS; i++) {
 		th_id[i] = i;
-	/* Create a thread and assign do_task as its starting function */
+		/* Create a thread and assign do_task as its starting function */
 		/* TODO - call do_bad_task() for each 4th thread */
 		if (i % 4 == 3)
 			rc = pthread_create(&thread[i], NULL, do_bad_task, &th_id[i]);

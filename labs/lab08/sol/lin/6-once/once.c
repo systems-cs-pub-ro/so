@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #6, lin
+ * Task #6, Linux
  *
  * Implementing single time use init / deinit functions
  */
@@ -42,7 +42,6 @@ static void init_func(void)
 
 static void deinit_func(void)
 {
-
 	time_t ts = time(NULL);
 
 	/*
@@ -55,17 +54,15 @@ static void deinit_func(void)
 
 static void thread_work(int arg)
 {
-    for (int i = 0; i < NUM_CHARS; i++) {
-        printf("%c", START_CHAR + arg);
+	for (int i = 0; i < NUM_CHARS; i++) {
+		printf("%c", START_CHAR + arg);
 
-        /* What happens if you comment out the fflush ? */
+		/* What happens if you comment out the fflush ? */
+		fflush(stdout);
 
-        fflush(stdout);
-
-        /* What happens if you decrease the PERIOD ? */
-
-        usleep(PERIOD);
-    }
+		/* What happens if you decrease the PERIOD ? */
+		usleep(PERIOD);
+	}
 }
 
 static int one_time_init(struct once_struct *once_control, void (*f)(void))
@@ -73,15 +70,14 @@ static int one_time_init(struct once_struct *once_control, void (*f)(void))
 	int rc;
 
 	/* TODO - Each time a thread gets here, increment once_control->refcount.
-   * Call the f() function only if this is the first thread that got here.
-   */
+	 * Call the f() function only if this is the first thread that got here.
+	 */
 
 	rc = pthread_mutex_lock(&(once_control->mutex));
 	DIE(rc == -1, "pthread_mutex_lock");
 
-	if (!once_control->refcount) {
+	if (!once_control->refcount)
 		(*f)();
-	}
 
 	once_control->refcount++;
 
@@ -96,17 +92,16 @@ static int one_time_deinit(struct once_struct *once_control, void (*f)(void))
 	int rc;
 
 	/* TODO - Each time a thread gets here, decrement once_control->refcount.
-   * Call the f() function only if this is the last thread that got here.
-   */
+	 * Call the f() function only if this is the last thread that got here.
+	 */
 
 	rc = pthread_mutex_lock(&(once_control->mutex));
 	DIE(rc == -1, "pthread_mutex_lock");
 
 	once_control->refcount--;
 
-	if (!once_control->refcount) {
+	if (!once_control->refcount)
 		(*f)();
-	}
 
 	rc = pthread_mutex_unlock(&(once_control->mutex));
 	DIE(rc == -1, "pthread_mutex_unlock");
@@ -149,14 +144,14 @@ int main(void)
 	/* Create NUM_THREADS threads, all will call one_time_init() / one time deinit */
 
 	for (i = 0; i < NUM_THREADS; i++) {
-        rc = pthread_create(&threads[i], NULL, thread_func, (void *) i);
-	    DIE(rc != 0, "pthread_create");
-    }
+		rc = pthread_create(&threads[i], NULL, thread_func, (void *) i);
+		DIE(rc != 0, "pthread_create");
+	}
 
 	for (i = 0; i < NUM_THREADS; i++) {
-	    rc = pthread_join(threads[i], NULL);
-	    DIE(rc != 0, "pthread_join");
-    }
+		rc = pthread_join(threads[i], NULL);
+		DIE(rc != 0, "pthread_join");
+	}
 
 	exit(EXIT_SUCCESS);
 }

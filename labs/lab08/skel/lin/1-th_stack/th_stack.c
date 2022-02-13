@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #1, lin
+ * Task #1, Linux
  *
  * Process address space when creating threads
  */

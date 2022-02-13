@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #3, lin
+ * Task #3, Linux
  *
  * Is malloc thread safe?
  */
@@ -26,16 +26,17 @@
 
 int global_storage;
 
-static void increase_numbers(int *a, int *b, int*c) {
+static void increase_numbers(int *a, int *b, int*c)
+{
 	(*a)++;
 	(*b)++;
 	(*c)++;
 }
 
 static void print_stats(int origin,
-						int *global_storage,
-						int *function_global_storage,
-						int *function_specific_storage)
+			int *global_storage,
+			int *function_global_storage,
+			int *function_specific_storage)
 {
 	char hdr[PRINT_HDR_SZ] = { 0 };
 	char buf[PRINT_BUF_SZ] = { 0 };

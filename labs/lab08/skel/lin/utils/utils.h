@@ -1,6 +1,6 @@
 /**
  * SO
- * Lab #8, Thread-uri
+ * Lab #8
  *
  * Useful structures/macros
  */

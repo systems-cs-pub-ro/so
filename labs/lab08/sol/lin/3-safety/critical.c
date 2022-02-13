@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #3, lin
+ * Task #3, Linux
  *
  * Thread safety
  */
@@ -26,7 +26,7 @@ void acquire_lock(void)
 {
 #ifdef USE_SPINLOCK
 	/* Busy waiting */
-	while(1) {
+	while (1) {
 		/* TODO2: Implement spinlock lock method
 		 *
 		 * HINT: Use atomic intrutions. ex: __atomic_test_and_set.
@@ -37,9 +37,8 @@ void acquire_lock(void)
 		 * link and search for "__ATOMIC_SEQ_CST"
 		 */
 
-		if(__atomic_test_and_set(&lock, __ATOMIC_SEQ_CST) == false) {
+		if(__atomic_test_and_set(&lock, __ATOMIC_SEQ_CST) == false)
 			return;
-		}
 
 		/* Short explanation: High-level language code is translated into
 		 * low-level code. The low level code is not guaranteed to follow

@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #5, lin
+ * Task #5, Linux
  *
  * Deadlock
  */

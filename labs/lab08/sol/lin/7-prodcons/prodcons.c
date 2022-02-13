@@ -2,7 +2,7 @@
  * SO
  * Lab #8
  *
- * Task #7, lin
+ * Task #7, Linux
  *
  */
 #include <pthread.h>

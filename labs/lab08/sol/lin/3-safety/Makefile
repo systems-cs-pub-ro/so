@@ -21,4 +21,3 @@ critical.o: critical.c
 
 clean:
 	-rm -f *.o *~ spin mutex
-
