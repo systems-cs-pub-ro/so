@@ -1,5 +1,5 @@
 /**
- * SO, 2017
+ * SO
  * Windows
  *
  * Useful structures/macros

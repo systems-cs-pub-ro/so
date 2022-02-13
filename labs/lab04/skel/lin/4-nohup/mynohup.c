@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #4
-  *
-  * Task #4, lin
-  *
-  * Simulate nohup command
-  */
+ * SO, 2016
+ * Lab #4
+ *
+ * Task #4, Linux
+ *
+ * Simulate nohup command
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

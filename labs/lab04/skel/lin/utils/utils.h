@@ -1,10 +1,9 @@
 /**
- * SO, 2016
- * Lab #4, Semnale
+ * SO
+ * Lab #4
  *
  * Useful structures/macros
  */
-
 #ifndef LIN_UTILS_H_
 #define LIN_UTILS_H_	1
 

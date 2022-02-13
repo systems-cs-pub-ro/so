@@ -1,5 +1,7 @@
 /**
- * SO - Lab #4, Signals
+ * SO
+ * Lab #4
+ *
  * Task #1, Windows
  *
  * Timer usage.
@@ -17,7 +19,6 @@
 
 #define _SECOND		10000000
 #define TIMEOUT		(-2 * _SECOND)
-
 
 /*
  * Timer APC routine

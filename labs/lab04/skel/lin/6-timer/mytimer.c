@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #4
-  *
-  * Task #6, lin
-  *
-  * Timers usage
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #6, Linux
+ *
+ * Timers usage
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

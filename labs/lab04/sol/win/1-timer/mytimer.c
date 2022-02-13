@@ -1,5 +1,7 @@
 /**
- * SO - Lab #4, Signals
+ * SO
+ * Lab #4
+ *
  * Task #1 Solution, Windows
  *
  * Timers usage.

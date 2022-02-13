@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #4
-  *
-  * Task #5, lin
-  *
-  * Creating zombies
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #5, Linux
+ *
+ * Creating zombies
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

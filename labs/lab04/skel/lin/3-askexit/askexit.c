@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #4
-  *
-  * Task #3, lin
-  *
-  * Signal handling by asking questions
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #3, Linux
+ *
+ * Signal handling by asking questions
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

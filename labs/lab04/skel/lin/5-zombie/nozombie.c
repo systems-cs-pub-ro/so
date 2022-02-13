@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #4
-  *
-  * Task #5, lin
-  *
-  * Avoid creating zombies using signals
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #5, Linux
+ *
+ * Avoid creating zombies using signals
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

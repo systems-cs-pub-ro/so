@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #4
-  *
-  * Task #2, lin
-  *
-  * Catching signals
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #2, Linux
+ *
+ * Catching signals
+ */
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
