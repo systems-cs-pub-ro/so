@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #3, Windows
+ *
+ * Interlocked increments
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

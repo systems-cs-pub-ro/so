@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #8, Windows
+ *
+ * Dorm Room Problem
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

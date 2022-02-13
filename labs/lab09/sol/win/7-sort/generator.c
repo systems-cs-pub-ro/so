@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #7, Windows
+ *
+ * Parallel Mergesort
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

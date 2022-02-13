@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #1, Windows
+ *
+ * Thread priorities
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #4, Windows
+ *
+ * Thread Local Storage
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

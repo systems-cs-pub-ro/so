@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #2, Windows
+ *
+ * Deadlock
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

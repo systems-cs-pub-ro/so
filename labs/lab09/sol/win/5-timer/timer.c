@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #5, Windows
+ *
+ * Timer Queue
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE

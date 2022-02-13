@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #6, Windows
+ *
+ * Barrier
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
