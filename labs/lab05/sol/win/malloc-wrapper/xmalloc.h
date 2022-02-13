@@ -1,6 +1,6 @@
 /**
- * SO, 2011
- * Lab #4, Gestiunea Memoriei
+ * SO
+ * Lab #5, Memory Management
  *
  * Task #1, Windows
  *

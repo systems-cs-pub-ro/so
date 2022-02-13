@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #6, lin
-  *
-  * Stack smashing
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #6, Linux
+ *
+ * Stack smashing
+ */
 #include <stdio.h>
 #include <stdlib.h>
 

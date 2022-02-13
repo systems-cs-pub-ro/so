@@ -1,10 +1,9 @@
 /**
- * SO, 2011
+ * SO
  * Windows
  *
  * Useful structures/macros
  */
-
 #ifndef WIN_UTILS_H_
 #define WIN_UTILS_H_	1
 

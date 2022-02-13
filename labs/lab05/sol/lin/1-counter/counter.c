@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #1, lin
-  *
-  * Process memory zones
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #1, Linux
+ *
+ * Process memory zones
+ */
 #include <stdio.h>
 #include <stdlib.h>
 

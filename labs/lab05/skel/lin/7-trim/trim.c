@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #7, lin
-  *
-  * Use of mcheck
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #7, Linux
+ *
+ * Use of mcheck
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

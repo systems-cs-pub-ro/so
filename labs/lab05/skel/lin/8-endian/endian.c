@@ -1,8 +1,8 @@
 /**
- * SO, 2016
- * Lab #5
+ * SO
+ * Lab #5, Memory Management
  *
- * Task #8, lin
+ * Task #8, Linux
  *
  * Endianess
  */

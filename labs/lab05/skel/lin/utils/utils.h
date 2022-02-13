@@ -1,10 +1,9 @@
 /**
- * SO, 2016
- * Lab #5, Lucrul cu memoria
+ * SO
+ * Linux
  *
  * Useful structures/macros
  */
-
 #ifndef LIN_UTILS_H_
 #define LIN_UTILS_H_	1
 

@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #3, lin
-  *
-  * Valgrind usage
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #3, Linux
+ *
+ * Valgrind usage
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"

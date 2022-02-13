@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #5, lin
-  *
-  * malloc, realloc usage on structures
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #5, Linux
+ *
+ * malloc, realloc usage on structures
+ */
 #include <stdio.h>
 #include <stdlib.h>
 

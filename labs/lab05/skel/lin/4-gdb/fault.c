@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #4, lin
-  *
-  * Use of gdb to solve "Segmentation fault" problems
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #4, Linux
+ *
+ * Use of gdb to solve "Segmentation fault" problems
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

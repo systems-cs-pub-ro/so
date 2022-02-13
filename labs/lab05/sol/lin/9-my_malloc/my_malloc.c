@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #10, lin
-  *
-  * Dumb implementation of malloc that only allocates space
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #9, Linux
+ *
+ * Dumb implementation of malloc that only allocates space
+ */
 #include <unistd.h>
 #include <sys/types.h>
 

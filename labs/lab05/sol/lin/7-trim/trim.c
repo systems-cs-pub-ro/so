@@ -1,8 +1,8 @@
 /**
- * SO, 2016
- * Lab #5
+ * SO
+ * Lab #5, Memory Management
  *
- * Task #7, lin
+ * Task #7, Linux
  *
  * mcheck usage
  */
