@@ -42,9 +42,9 @@ int main(void)
 
 	message = read_message();
 
-	upper(message);
+	upper_string(message);
 
-	upper_string("Upper string is: %s\n", message);
+	printf("Upper string is: %s\n", message);
 
 	free(message);
 

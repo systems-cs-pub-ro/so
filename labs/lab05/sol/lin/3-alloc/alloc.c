@@ -15,7 +15,6 @@
 #define SEED		23
 #define STOP		17
 
-
 int main(void)
 {
 	int nr, count = 0;

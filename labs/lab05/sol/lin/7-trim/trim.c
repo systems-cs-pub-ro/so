@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils.h"
+
 char first_name[] = "  Harry";
 char last_name[]  = "    Potter";
 
@@ -20,7 +22,7 @@ static char *trim(char *s)
 	 */
 	char *aux;
 	char *p = malloc(strlen(s) + 1);
-	
+
 	DIE(!p, "malloc");
 
 	aux = p;

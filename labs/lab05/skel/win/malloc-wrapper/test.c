@@ -7,7 +7,6 @@
  * Test source for malloc wrapper
  */
 
-
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
