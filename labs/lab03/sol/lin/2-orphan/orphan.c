@@ -1,0 +1,1 @@
+../../../skel/lin/2-orphan/orphan.c

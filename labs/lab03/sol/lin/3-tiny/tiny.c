@@ -2,7 +2,7 @@
  * SO
  * Lab #3
  *
- * Task #3, Linux
+ * Task #3, Linux 
  *
  * Implementing a minimal shell
  */
@@ -24,7 +24,7 @@
 #define REDIRECT		2
 #define PIPE			3
 #define SET_VAR			4
-#define SHELL_EXIT		5
+#define EXIT_CMD		5
 
 static char *verb;
 static char **args;
@@ -39,7 +39,6 @@ static int type;
 
 static int parse_line(char *line);
 static void alloc_mem(void);
-static void free_mem(void);
 
 /*
  * @filedes  - file descriptor to be redirected
@@ -47,20 +46,30 @@ static void free_mem(void);
  */
 static void do_redirect(int filedes, const char *filename)
 {
-	int rc;
+	int ret;
 	int fd;
 
-	/* TODO 3 - Redirect filedes into fd representing filename */
+	/* TODO - Redirect filedes into file filename */
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	DIE(fd < 0, "open");
+
+	ret = dup2(fd, filedes);
+	DIE(ret < 0, "dup2");
+
+	close(fd);
 }
 
-static void set_var(const char *name, const char *value)
+
+static void set_var(const char *var, const char *value)
 {
-	/* TODO 2 - Set the environment variable */
+	/* TODO - Set the environment variable */
+	setenv(var, value, 1);
 }
 
-static char *expand(const char *name)
+static char *expand(const char *key)
 {
-	/* TODO 2 - Return the value of environment variables */
+	/* TODO - Return the value of environment variable */
+	return getenv(key);
 }
 
 /*
@@ -72,27 +81,32 @@ static void simple_cmd(char **args)
 	pid_t wait_ret;
 	int status;
 
-	/* TODO 1 - Create a process to execute the command */
-
+	/* TODO - Create a process to execute the command */
+	pid = fork();
 	switch (pid) {
-	case -1:
-		/* TODO 1 - error */
+	case -1:	/* error */
+		perror("fork");
+		exit(EXIT_FAILURE);
 
-		break;
-	case 0:
-		/* redirect standard output if needed */
+	case 0:		/* child process */
 		if (stdout_file != NULL)
 			do_redirect(STDOUT_FILENO, stdout_file);
 
-		/* TODO 1 - child process */
+		execvp(args[0], (char *const *) args);
 
-		break;
-	default:
-		/* TODO 1 -  parent process */
+		fprintf(stderr, "Execution failed for '%s'\n", args[0]);
+		fflush(stdout);
 
-		break;
+		exit(EXIT_FAILURE);
+
+	default:	/* parent process */
+		wait_ret = waitpid(pid, &status, 0);
+		DIE(wait_ret < 0, "waitpid");
+		if (WIFEXITED(status))
+			printf("Child process (pid %d) terminated normally, "
+					"with exit code %d\n",
+					pid, WEXITSTATUS(status));
 	}
-
 }
 
 int main(void)
@@ -107,16 +121,13 @@ int main(void)
 
 		memset(line, 0, MAX_LINE_SIZE);
 
-		if (fgets(line, sizeof(line), stdin) == NULL) {
-			free_mem();
+		if (fgets(line, sizeof(line), stdin) == NULL)
 			exit(EXIT_SUCCESS);
-		}
 
 		type = parse_line(line);
 
 		switch (type) {
-		case SHELL_EXIT:
-			free_mem();
+		case EXIT_CMD:
 			exit(EXIT_SUCCESS);
 
 		case SET_VAR:
@@ -135,20 +146,14 @@ int main(void)
 static void alloc_mem(void)
 {
 	args = malloc(MAX_ARGS * sizeof(char *));
-	DIE(args == NULL, "malloc");
-}
-
-static void free_mem(void)
-{
-	free(args);
 }
 
 static int parse_line(char *line)
 {
 	int ret = SIMPLE;
 	int idx = 0;
-	char *token; 
-	char *delim = "=\n";
+	char *token;
+	char *delim = "=\n";;
 
 	stdin_file = NULL;
 	stdout_file = NULL;
@@ -156,7 +161,7 @@ static int parse_line(char *line)
 
 	/* check for exit */
 	if (strncmp("exit", line, strlen("exit")) == 0)
-		return SHELL_EXIT;
+		return EXIT_CMD;
 
 	/* var = value */
 	if (strchr(line, '=') != 0) {
@@ -185,6 +190,7 @@ static int parse_line(char *line)
 	verb = strdup(token);
 
 	/* copy args */
+	idx = 0;
 	while (token != NULL) {
 		if (token[0] == '$')
 			token = expand(token+1);

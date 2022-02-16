@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #3
-  *
-  * Task #4, Linux
-  *
-  * FIFO server
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #4, Linux
+ *
+ * FIFO server
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -25,15 +25,24 @@ int main(void)
 	char buff[BUFSIZE];
 
 	/* TODO - create named pipe */
+	rc = mkfifo(PIPE_NAME, 0644);
+	DIE(rc < 0, "mkfifo");
 
 	/* TODO - open named pipe */
+	fd = open(PIPE_NAME, O_RDONLY);
+	DIE(fd < 0, "open fifo");
 
 	/* TODO - read in buff from pipe while not EOF */
 	memset(buff, 0, sizeof(buff));
+	do {
+		bytesRead = read(fd, buff + offset, BUFSIZE);
+		DIE(bytesRead < 0, "read");
+		offset += bytesRead;
+	} while (bytesRead > 0);
 
 	printf("Message received:%s\n", buff);
 
-	/* Close and delete pipe */
+	/* TODO - close and delete pipe */
 	rc = close(fd);
 	DIE(rc < 0, "close");
 

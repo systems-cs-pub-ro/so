@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #3
-  *
-  * Task #4, Linux
-  *
-  * FIFO client
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #4, Linux
+ *
+ * FIFO client
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -26,6 +26,8 @@ int main(void)
 	char message[BUFSIZE];
 
 	/* TODO - open named pipe for writing */
+	fd = open(PIPE_NAME, O_WRONLY);
+	DIE(fd < 0, "open pipe");
 
 	/* Read message from user */
 	memset(message, 0, sizeof(message));
@@ -34,6 +36,12 @@ int main(void)
 	len = strlen(message);
 
 	/* TODO - write message to pipe */
+	do {
+		bytesWritten = write(fd, message + total, len - total);
+		DIE(bytesWritten < 0, "write");
+
+		total += bytesWritten;
+	} while (total < len);
 
 	/* close pipe */
 	rc = close(fd);

@@ -1,0 +1,1 @@
+../../../skel/lin/4-fifo/Makefile

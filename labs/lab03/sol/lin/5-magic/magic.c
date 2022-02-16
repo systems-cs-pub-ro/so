@@ -7,10 +7,11 @@
  * Use your magic to make this program print 'Hello World'
  */
 #include <stdio.h>
+#include <unistd.h>
 
 int main(void)
 {
-	if (/* TODO enter your code _only_ here */)
+	if (fork())
 		printf(" Hello ");
 	else
 		printf(" World ");
