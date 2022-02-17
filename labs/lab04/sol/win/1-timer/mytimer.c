@@ -2,7 +2,7 @@
  * SO
  * Lab #4
  *
- * Task #1 Solution, Windows
+ * Task #1, Windows
  *
  * Timers usage.
  */
@@ -23,7 +23,7 @@
 #define TIMEOUT		(-2 * _SECOND)
 
 
-/*
+/**
  * Timer APC routine
  */
 static VOID CALLBACK TimerAPCProc(LPVOID lpArgToCompletionRoutine,
@@ -37,12 +37,12 @@ static VOID CALLBACK TimerAPCProc(LPVOID lpArgToCompletionRoutine,
 	printf("time is: %s", ctime(&currentTime));
 }
 
-/*
+/**
  * Initialise and configure timer
  */
 static void InitSetTimer(void)
 {
-	/*
+	/**
 	 * TODO
 	 * First, create your timer using CreateWaitableTimer.
 	 * Then set its timeout and its routine using SetWaitableTimer.
