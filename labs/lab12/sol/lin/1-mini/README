@@ -1,11 +1,17 @@
-Exerciţiul 1:
-	* ls -l /dev va listă toate device node-urile.
-	* brw-rw---T 1 root disk 8, 1 May 14 19:50 /dev/sda1
-	* b - block device, 8 - major, 1 - minor
+# Indicații suplimentare
 
-Exerciţiul 3:
-	* trebuie să includeţi header-ul <sys/mount.h>
+##Exerciţiul 1
+* `ls -l /dev` va lista toate device node-urile.
+* Exemplu:
 
-Exerciţiul 6:
-	* man opendir
-	* trebuie incluse <sys/types.h> şi <dirent.h>
+```
+brw-rw---T 1 root disk 8, 1 May 14 19:50 /dev/sda1
+b - block device, 8 - major, 1 - minor
+```
+
+##Exerciţiul 3
+* trebuie să includeţi `<sys/mount.h>`
+
+##Exerciţiul 6
+* man opendir
+* trebuie incluse `<sys/types.h>` şi `<dirent.h>`
