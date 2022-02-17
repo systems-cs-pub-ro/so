@@ -69,7 +69,8 @@ void *thread_function(void *args)
 {
 	static int function_global_storage;
 	int function_specific_storage = 0;
-	size_t i, j;
+	size_t i;
+	size_t j;
 	char **a;
 
 	for (int i = 0; i < NUM_ROUNDS; i++) {

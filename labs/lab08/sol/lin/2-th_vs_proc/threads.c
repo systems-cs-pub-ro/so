@@ -42,7 +42,8 @@ int main(void)
 {
 	pthread_t thread[NUM_TASKS];
 	int th_id[NUM_TASKS];
-	int i, rc;
+	int i;
+	int rc;
 
 	for (i = 0; i < NUM_TASKS; i++) {
 		th_id[i] = i;

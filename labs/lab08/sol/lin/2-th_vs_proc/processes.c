@@ -36,7 +36,8 @@ void do_bad_task(void)
 
 int main(void)
 {
-	int i, rc;
+	int i;
+	int rc;
 
 	for (i = 0; i < NUM_TASKS; i++) {
 		pid_t child_pid = fork();

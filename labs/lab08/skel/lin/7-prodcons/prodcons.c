@@ -63,7 +63,9 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *producer_fn(void *arg)
 {
-	int item_to_insert, i, rc;
+	int item_to_insert;
+	int i;
+	int rc;
 	int delay = *(int *) arg;
 
 	for (i = 0; i < NR_ITERATIONS; i++) {
@@ -96,7 +98,9 @@ void *producer_fn(void *arg)
 
 void *consumer_fn(void *arg)
 {
-	int item_consumed, i, rc;
+	int item_consumed;
+	int i;
+	int rc;
 	int delay = *(int *) arg;
 
 	for (i = 0; i < NR_ITERATIONS; i++) {
@@ -128,7 +132,8 @@ void *consumer_fn(void *arg)
 void run_threads(int producer_delay, int consumer_delay)
 {
 	int rc;
-	pthread_t producer_th, consumer_th;
+	pthread_t producer_th;
+	pthread_t consumer_th;
 
 	/* initialization */
 	init_buffer(&common_area);

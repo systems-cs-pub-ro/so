@@ -62,7 +62,8 @@ static void *thread_func(void *arg)
 int main(void)
 {
 	pthread_t threads[NO_THREADS];
-	int i, rc;
+	int i;
+	int rc;
 
 #ifdef USE_SPINLOCK
 	pthread_spin_init(&lock, PTHREAD_PROCESS_SHARED);

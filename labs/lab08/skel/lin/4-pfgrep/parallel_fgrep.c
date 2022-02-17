@@ -61,7 +61,8 @@ static void map_file(const char *filename, struct file_mapping *fmap)
 static size_t count(char *what, const size_t what_size,
 			char *where, const size_t where_size)
 {
-	unsigned int i = 0, total = 0;
+	unsigned int i = 0;
+	unsigned int total = 0;
 
 	while (i < where_size - what_size + 1)
 		if (memcmp(where + i, what, what_size) == 0) {
@@ -110,7 +111,8 @@ static void split_file_mapping(struct file_mapping *fmap)
 int main(int argc, char **argv)
 {
 	struct file_mapping fmap;
-	int i, rc;
+	int i;
+	int rc;
 	pthread_t th_id[NUM_THREADS];
 	void *results[NUM_THREADS];
 	size_t total = 0;

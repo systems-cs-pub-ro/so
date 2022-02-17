@@ -26,16 +26,17 @@
 
 int global_storage;
 
-static void increase_numbers(int *a, int *b, int*c) {
+static void increase_numbers(int *a, int *b, int*c)
+{
 	(*a)++;
 	(*b)++;
 	(*c)++;
 }
 
 static void print_stats(int origin,
-						int *global_storage,
-						int *function_global_storage,
-						int *function_specific_storage)
+			int *global_storage,
+			int *function_global_storage,
+			int *function_specific_storage)
 {
 	char hdr[PRINT_HDR_SZ] = { 0 };
 	char buf[PRINT_BUF_SZ] = { 0 };
@@ -65,7 +66,8 @@ void *thread_function(void *args)
 {
 	static int function_global_storage;
 	int function_specific_storage = 0;
-	size_t i, j;
+	size_t i;
+	size_t j;
 	char **a;
 
 	for (int i = 0; i < NUM_ROUNDS; i++) {
@@ -125,8 +127,8 @@ int main(void)
 		/* TODO1: Enter critical section using acquire_lock */
 
 		increase_numbers(&global_storage,
-						 &function_global_storage,
-						 &function_specific_storage);
+				 &function_global_storage,
+				 &function_specific_storage);
 
 		/* TODO1: Leave critical section using release_lock */
 	}
