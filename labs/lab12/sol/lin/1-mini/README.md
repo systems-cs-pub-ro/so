@@ -1,6 +1,6 @@
 # Indicații suplimentare
 
-##Exerciţiul 1
+## Exerciţiul 1
 * `ls -l /dev` va lista toate device node-urile.
 * Exemplu:
 
@@ -9,9 +9,9 @@ brw-rw---T 1 root disk 8, 1 May 14 19:50 /dev/sda1
 b - block device, 8 - major, 1 - minor
 ```
 
-##Exerciţiul 3
+## Exerciţiul 3
 * trebuie să includeţi `<sys/mount.h>`
 
-##Exerciţiul 6
+## Exerciţiul 6
 * man opendir
 * trebuie incluse `<sys/types.h>` şi `<dirent.h>`
