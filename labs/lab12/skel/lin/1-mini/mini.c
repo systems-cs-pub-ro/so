@@ -53,7 +53,8 @@ int main(void)
 		if (strncmp(cmd, "quit", 4) == 0)
 			break;
 #ifdef TODO2
-		/* TODO2: implement list <device_node>
+		/**
+		 * TODO2: implement list <device_node>
 		 * Output: <c|b> <major>:<minor>
 		 * e.g: list /dev/zero
 		 * Output: /dev/zero: <c> 1:5
@@ -69,7 +70,8 @@ int main(void)
 #endif
 
 #ifdef TODO3
-		/* TODO3: implement mount source target fs_type
+		/**
+		 * TODO3: implement mount source target fs_type
 		 * e.g: mount /dev/sda1 /mnt/disk2 ext3
 		 */
 		if (strncmp(cmd, "mount", 5) == 0) {
@@ -84,7 +86,8 @@ int main(void)
 #endif
 
 #ifdef TODO4
-		/* TODO4: implement symlink oldpath newpath
+		/**
+		 * TODO4: implement symlink oldpath newpath
 		 * e.g: symlink a.txt b.txt
 		 */
 		if (strncmp(cmd, "symlink", 7) == 0) {
@@ -98,7 +101,8 @@ int main(void)
 #endif
 
 #ifdef TODO5
-		/* TODO5: implement mkdir pathname mode
+		/**
+		 * TODO5: implement mkdir pathname mode
 		 * e.g: mkdir food 0777
 		 */
 		if (strncmp(cmd, "mkdir", 5) == 0) {
@@ -111,7 +115,8 @@ int main(void)
 #endif
 
 #ifdef TODO6
-		/* TODO6: implement ls dirname
+		/**
+		 * TODO6: implement ls dirname
 		 * e.g: ls ..
 		 */
 		if (strncmp(cmd, "ls", 2) == 0) {
@@ -122,14 +127,16 @@ int main(void)
 
 #ifdef TODO7
 		if (strncmp(cmd, "chdir", 5) == 0) {
-			/* TODO7: implement chdir <dir>
+			/**
+			 * TODO7: implement chdir <dir>
 			 * e.g: chdir bar
 			 */
 			arg1 = strtok(NULL, delim); /* pathname */
 		}
 
 		if (strncmp(cmd, "pwd", 3) == 0) {
-			/* TODO7: implement pwdir
+			/**
+			 * TODO7: implement pwdir
 			 * e.g: pwd
 			 */
 			/* print workding directory */
