@@ -109,87 +109,98 @@
 #define LOG_LEVEL (WARN + 1024)
 #endif
 
-#ifdef __GNUC__  // Linux
+#ifdef __GNUC__ // Linux
 
 #include <errno.h>
 #include <string.h>
 
 #define __FUNCTION__ __func__
-#define LOG_GET_ERROR_MESSAGE \
-	char *error_buffer; \
-	char error_buffer2[512]; \
-	error_buffer = error_buffer2; \
-	error_buffer = strerror_r(errno, error_buffer, sizeof(error_buffer));
+#define LOG_GET_ERROR_MESSAGE     \
+    char *error_buffer;           \
+    char error_buffer2[512];      \
+    error_buffer = error_buffer2; \
+    error_buffer = strerror_r(errno, error_buffer, sizeof(error_buffer));
 
-#else  // Windows
+#else // Windows
 
 #include <windows.h>
 
-#define LOG_GET_ERROR_MESSAGE \
-	char error_buffer[512]; \
-	FormatMessage( \
-		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_MAX_WIDTH_MASK, \
-		NULL, \
-		GetLastError(), \
-		0, \
-		error_buffer, \
-		sizeof(error_buffer), \
-		NULL);
+#define LOG_GET_ERROR_MESSAGE                                       \
+    char error_buffer[512];                                         \
+    FormatMessage(                                                  \
+        FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_MAX_WIDTH_MASK, \
+        NULL,                                                       \
+        GetLastError(),                                             \
+        0,                                                          \
+        error_buffer,                                               \
+        sizeof(error_buffer),                                       \
+        NULL);
 
 #endif
 
-enum LogType {
-	NONE, FATAL, WARN, INFO, DEBUG
+enum LogType
+{
+    NONE,
+    FATAL,
+    WARN,
+    INFO,
+    DEBUG
 };
 
-#define LOG(type, ...) \
-	do { \
-		if (type <= LOG_LEVEL) { \
-			if (type <= DEBUG) \
-				fprintf(stderr, " %c", " FWID"[type]); \
-			else \
-				fprintf(stderr, "%02d", type - DEBUG); \
-			\
-			fprintf(stderr, " %s (%s) %d: ", __FILE__, __FUNCTION__, __LINE__); \
-			fprintf(stderr, __VA_ARGS__); \
-			fprintf(stderr, "\n"); \
-			fflush(stderr); \
-			\
-			/* abort() is C89 compliant. */ \
-			if (type == FATAL) \
-				abort(); \
-		} \
-	} while (0)
+#define LOG(type, ...)                                                          \
+    do                                                                          \
+    {                                                                           \
+        if (type <= LOG_LEVEL)                                                  \
+        {                                                                       \
+            if (type <= DEBUG)                                                  \
+                fprintf(stderr, " %c", " FWID"[type]);                          \
+            else                                                                \
+                fprintf(stderr, "%02d", type - DEBUG);                          \
+                                                                                \
+            fprintf(stderr, " %s (%s) %d: ", __FILE__, __FUNCTION__, __LINE__); \
+            fprintf(stderr, __VA_ARGS__);                                       \
+            fprintf(stderr, "\n");                                              \
+            fflush(stderr);                                                     \
+                                                                                \
+            /* abort() is C89 compliant. */                                     \
+            if (type == FATAL)                                                  \
+                abort();                                                        \
+        }                                                                       \
+    } while (0)
 
-#define LOG_ERROR(...) \
-	do { \
-		LOG_GET_ERROR_MESSAGE \
-		LOG(NONE, __VA_ARGS__); \
-		LOG(FATAL, "Last error: %s.", error_buffer); \
-	} while (0)
+#define LOG_ERROR(...)                               \
+    do                                               \
+    {                                                \
+        LOG_GET_ERROR_MESSAGE                        \
+        LOG(NONE, __VA_ARGS__);                      \
+        LOG(FATAL, "Last error: %s.", error_buffer); \
+    } while (0)
 
 #define DLOG(level, ...) LOG(DEBUG + (level), __VA_ARGS__)
 
-#define ASSERT(condition) \
-	do { \
-		if (!(condition)) { \
-			LOG_GET_ERROR_MESSAGE \
-			LOG(NONE, "ASSERT failed: %s.", #condition); \
-			LOG(FATAL, "Last error: %s.", error_buffer); \
-		} \
-	} while (0)
+#define ASSERT(condition)                                \
+    do                                                   \
+    {                                                    \
+        if (!(condition))                                \
+        {                                                \
+            LOG_GET_ERROR_MESSAGE                        \
+            LOG(NONE, "ASSERT failed: %s.", #condition); \
+            LOG(FATAL, "Last error: %s.", error_buffer); \
+        }                                                \
+    } while (0)
 
-#define CHECK(left, operation, right) \
-	do { \
-		if (!((left) operation (right))) { \
-			LOG_GET_ERROR_MESSAGE \
-			LOG(NONE, "CHECK failed: %s %s %s.", #left, #operation, #right); \
-			LOG(FATAL, "Last error: %s.", error_buffer); \
-		} \
-	} while (0)
+#define CHECK(left, operation, right)                                        \
+    do                                                                       \
+    {                                                                        \
+        if (!((left)operation(right)))                                       \
+        {                                                                    \
+            LOG_GET_ERROR_MESSAGE                                            \
+            LOG(NONE, "CHECK failed: %s %s %s.", #left, #operation, #right); \
+            LOG(FATAL, "Last error: %s.", error_buffer);                     \
+        }                                                                    \
+    } while (0)
 
 #define CHECK_EQ(left, right) CHECK(left, ==, right)
 #define CHECK_NE(left, right) CHECK(left, !=, right)
 
 #endif
-

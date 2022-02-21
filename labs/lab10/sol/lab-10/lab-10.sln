@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1-test_overlapp", "1-test_overlapp\2-test_overlapp.vcproj", "{039BE9D6-463C-4A73-B406-3DEC70598B31}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2-transmit-client", "2-transmit\2-transmit-client.vcproj", "{3AA2BA2F-5D9C-4FD2-9363-A1F7F13D9F76}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2-transmit-server", "2-transmit\2-transmit-server.vcproj", "{A2CC4055-A6FC-45E3-9A78-4B74689B1BA3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "generator", "generator\generator.vcproj", "{686D1081-F8A1-4BE9-844F-FA33206237A2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3-aio", "3-aio\3-aio.vcproj", "{9BD8D425-CAC3-4C4D-9375-7BB82BE92E18}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4-iocp", "iocp\iocp.vcproj", "{7E695506-9F9A-4A21-B24F-F3449CC9F989}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{039BE9D6-463C-4A73-B406-3DEC70598B31}.Debug|Win32.ActiveCfg = Debug|Win32
+		{039BE9D6-463C-4A73-B406-3DEC70598B31}.Debug|Win32.Build.0 = Debug|Win32
+		{039BE9D6-463C-4A73-B406-3DEC70598B31}.Release|Win32.ActiveCfg = Release|Win32
+		{039BE9D6-463C-4A73-B406-3DEC70598B31}.Release|Win32.Build.0 = Release|Win32
+		{3AA2BA2F-5D9C-4FD2-9363-A1F7F13D9F76}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3AA2BA2F-5D9C-4FD2-9363-A1F7F13D9F76}.Debug|Win32.Build.0 = Debug|Win32
+		{3AA2BA2F-5D9C-4FD2-9363-A1F7F13D9F76}.Release|Win32.ActiveCfg = Release|Win32
+		{3AA2BA2F-5D9C-4FD2-9363-A1F7F13D9F76}.Release|Win32.Build.0 = Release|Win32
+		{A2CC4055-A6FC-45E3-9A78-4B74689B1BA3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2CC4055-A6FC-45E3-9A78-4B74689B1BA3}.Debug|Win32.Build.0 = Debug|Win32
+		{A2CC4055-A6FC-45E3-9A78-4B74689B1BA3}.Release|Win32.ActiveCfg = Release|Win32
+		{A2CC4055-A6FC-45E3-9A78-4B74689B1BA3}.Release|Win32.Build.0 = Release|Win32
+		{686D1081-F8A1-4BE9-844F-FA33206237A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{686D1081-F8A1-4BE9-844F-FA33206237A2}.Debug|Win32.Build.0 = Debug|Win32
+		{686D1081-F8A1-4BE9-844F-FA33206237A2}.Release|Win32.ActiveCfg = Release|Win32
+		{686D1081-F8A1-4BE9-844F-FA33206237A2}.Release|Win32.Build.0 = Release|Win32
+		{9BD8D425-CAC3-4C4D-9375-7BB82BE92E18}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9BD8D425-CAC3-4C4D-9375-7BB82BE92E18}.Debug|Win32.Build.0 = Debug|Win32
+		{9BD8D425-CAC3-4C4D-9375-7BB82BE92E18}.Release|Win32.ActiveCfg = Release|Win32
+		{9BD8D425-CAC3-4C4D-9375-7BB82BE92E18}.Release|Win32.Build.0 = Release|Win32
+		{7E695506-9F9A-4A21-B24F-F3449CC9F989}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E695506-9F9A-4A21-B24F-F3449CC9F989}.Debug|Win32.Build.0 = Debug|Win32
+		{7E695506-9F9A-4A21-B24F-F3449CC9F989}.Release|Win32.ActiveCfg = Release|Win32
+		{7E695506-9F9A-4A21-B24F-F3449CC9F989}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

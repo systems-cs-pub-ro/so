@@ -1,7 +1,9 @@
 /*
  * SO
- * Lab 10, Advanced I/O Windows
- * Task #3
+ * Lab 10 - Advanced I/O Windows
+ *
+ * I/O completion ports wrapper functions
+ * Task #4 (I/O completion ports)
  */
 
 #include "utils.h"
@@ -11,9 +13,10 @@
 #include <time.h>
 #include <windows.h>
 
-#ifndef BUFSIZ
+#include "iocp.h"
+
+#undef BUFSIZ
 #define BUFSIZ 4096
-#endif
 
 #define IO_SYNC 1
 #define IO_ASYNC 2
@@ -26,8 +29,15 @@ static char *files[] = {
     "rse.txt",
     "ufver.txt"};
 
-/* file descriptors */
+/* file handles */
 static HANDLE *fds;
+
+/* OVERLAPPED array (one for each file) */
+static OVERLAPPED *ov;
+
+/* I/O completion port handle */
+static HANDLE iocp;
+
 static char g_buffer[BUFSIZ];
 
 static void open_files(void)
@@ -36,7 +46,11 @@ static void open_files(void)
     size_t i;
 
     fds = (HANDLE *)malloc(n_files * sizeof(HANDLE));
-    DIE(fds == NULL, "malloc");
+    if (fds == NULL)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
 
     for (i = 0; i < n_files; i++)
     {
@@ -63,7 +77,6 @@ static void close_files(void)
 
     for (i = 0; i < n_files; i++)
         CloseHandle(fds[i]);
-
     free(fds);
 }
 
@@ -75,7 +88,7 @@ static void init_buffer(void)
 {
     size_t i;
 
-    srand((int)time(NULL));
+    srand((unsigned int)time(NULL));
 
     for (i = 0; i < BUFSIZ; i++)
         g_buffer[i] = (char)rand();
@@ -119,7 +132,39 @@ static void do_io_sync(void)
 static void init_overlapped(OVERLAPPED *lpo, DWORD offset,
                             HANDLE hEvent)
 {
-    /* TODO - prepare overlapp structure */
+    memset(lpo, 0, sizeof(*lpo));
+    lpo->Offset = offset;
+    lpo->hEvent = hEvent;
+}
+
+static void init_io_async(void)
+{
+    size_t n_files = sizeof(files) / sizeof(files[0]);
+    size_t i;
+
+    /*
+     * TODO:
+     *    * allocate memory for ov array
+     *    * init I/O completion port context
+     *    * add handles to completion port
+     */
+
+    ov = (OVERLAPPED *)malloc(n_files * sizeof(*ov));
+    DIE(ov == NULL, "malloc");
+
+    for (i = 0; i < n_files; i++)
+        init_overlapped(&ov[i], 0, 0);
+
+    iocp = iocp_init();
+    DIE(iocp == NULL, "iocp_init");
+
+    for (i = 0; i < n_files; i++)
+        DIE(iocp_add(iocp, fds[i]) == NULL, "iocp_add");
+}
+
+static void free_io_async(void)
+{
+    free(ov);
 }
 
 /*
@@ -130,14 +175,41 @@ static void do_io_async(void)
 {
     size_t n_files = sizeof(files) / sizeof(files[0]);
     size_t i;
-    OVERLAPPED *ov;
-    DWORD bytes_written, dwRet;
+    DWORD dwRet;
 
-    /* TODO - allocate memory for ov array (n_files elements) */
+    for (i = 0; i < n_files; i++)
+    {
+        dwRet = WriteFile(
+            fds[i],
+            g_buffer,
+            BUFSIZ,
+            NULL,
+            &ov[i]);
+        if (dwRet == FALSE)
+        {
+            dwRet = GetLastError();
+            DIE(dwRet != ERROR_IO_PENDING, "WriteFile");
+        }
+    }
+}
 
-    /* TODO - init structure and write data asynchronously for all files */
+static void wait_io_async(void)
+{
+    size_t n_files = sizeof(files) / sizeof(files[0]);
+    size_t i;
+    BOOL bRet;
 
-    /* TODO - wait for all asynchronous operations to complete */
+    for (i = 0; i < n_files; i++)
+    {
+        DWORD bytes;
+        OVERLAPPED *op;
+        ULONG_PTR key;
+
+        bRet = iocp_wait(iocp, &bytes, &key, &op);
+        DIE(bRet == FALSE, "iocp_wait");
+
+        printf("Written %lu bytes\n", bytes);
+    }
 }
 
 int main(void)
@@ -146,7 +218,10 @@ int main(void)
     init_buffer();
 
 #if IO_OP_TYPE == IO_ASYNC
+    init_io_async();
     do_io_async();
+    wait_io_async();
+    free_io_async();
 #elif IO_OP_TYPE == IO_SYNC
     do_io_sync();
 #else

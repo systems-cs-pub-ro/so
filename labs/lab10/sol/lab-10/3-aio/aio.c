@@ -1,6 +1,6 @@
 /*
  * SO
- * Lab 10, Advanced I/O Windows
+ * Lab 10 - Advanced I/O Windows
  * Task #3
  */
 
@@ -11,9 +11,8 @@
 #include <time.h>
 #include <windows.h>
 
-#ifndef BUFSIZ
+#undef BUFSIZ
 #define BUFSIZ 4096
-#endif
 
 #define IO_SYNC 1
 #define IO_ASYNC 2
@@ -119,7 +118,9 @@ static void do_io_sync(void)
 static void init_overlapped(OVERLAPPED *lpo, DWORD offset,
                             HANDLE hEvent)
 {
-    /* TODO - prepare overlapp structure */
+    memset(lpo, 0, sizeof(*lpo));
+    lpo->Offset = offset;
+    lpo->hEvent = hEvent;
 }
 
 /*
@@ -133,11 +134,42 @@ static void do_io_async(void)
     OVERLAPPED *ov;
     DWORD bytes_written, dwRet;
 
-    /* TODO - allocate memory for ov array (n_files elements) */
+    /*
+     * TODO
+     *   * allocate memory for ov array (n_files elements)
+     *   * write data asynchronously
+     *   * wait for completion
+     */
 
-    /* TODO - init structure and write data asynchronously for all files */
+    ov = (OVERLAPPED *)calloc(n_files, sizeof(*ov));
+    DIE(ov == NULL, "malloc");
 
-    /* TODO - wait for all asynchronous operations to complete */
+    for (i = 0; i < n_files; i++)
+    {
+        init_overlapped(&ov[i], 0, NULL);
+        dwRet = WriteFile(
+            fds[i],
+            g_buffer,
+            BUFSIZ,
+            NULL,
+            &ov[i]);
+        if (dwRet == FALSE)
+        {
+            dwRet = GetLastError();
+            DIE(dwRet != ERROR_IO_PENDING, "WriteFile");
+        }
+    }
+
+    /* wait for all asynchronous operations to complete */
+    for (i = 0; i < n_files; i++)
+    {
+        dwRet = GetOverlappedResult(
+            fds[i],
+            &ov[i],
+            &bytes_written,
+            TRUE);
+        DIE(dwRet == FALSE, "GetOverlappedResult");
+    }
 }
 
 int main(void)

@@ -41,7 +41,15 @@ static void transmit_file(SOCKET hSocket, HANDLE hFile)
 {
     DWORD dwRet;
 
-    /* TODO - send file to server */
+    dwRet = TransmitFile(
+        hSocket,
+        hFile,
+        0,
+        0,
+        NULL,
+        NULL,
+        0);
+    DIE(dwRet == FALSE, "TransmitFile");
 }
 
 static void close_file(HANDLE hFile)

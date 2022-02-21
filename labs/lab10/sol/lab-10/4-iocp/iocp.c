@@ -16,7 +16,11 @@
 
 HANDLE iocp_init(void)
 {
-    /* TODO */
+    return CreateIoCompletionPort(
+        INVALID_HANDLE_VALUE,
+        NULL,
+        (ULONG_PTR)NULL,
+        0);
 }
 
 /*
@@ -25,7 +29,11 @@ HANDLE iocp_init(void)
 
 HANDLE iocp_add(HANDLE iocp, HANDLE hFile)
 {
-    /* TODO */
+    return CreateIoCompletionPort(
+        hFile,
+        iocp,
+        (ULONG_PTR)hFile,
+        0);
 }
 
 /*
@@ -34,7 +42,11 @@ HANDLE iocp_add(HANDLE iocp, HANDLE hFile)
 
 HANDLE iocp_add_key(HANDLE iocp, HANDLE hFile, ULONG_PTR key)
 {
-    /* TODO */
+    return CreateIoCompletionPort(
+        hFile,
+        iocp,
+        key,
+        0);
 }
 
 /*
@@ -43,5 +55,10 @@ HANDLE iocp_add_key(HANDLE iocp, HANDLE hFile, ULONG_PTR key)
 
 BOOL iocp_wait(HANDLE iocp, PDWORD bytes, PULONG_PTR key, LPOVERLAPPED *op)
 {
-    /* TODO */
+    return GetQueuedCompletionStatus(
+        iocp,
+        bytes,
+        key,
+        op,
+        INFINITE);
 }
