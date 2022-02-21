@@ -1,10 +1,10 @@
 /**
- * SO, 2017
- * Lab #3, Procese
+ * SO
+ * Lab #3
  *
  * Task #1, Windows
  *
- * "Fork bomb" on windows
+ * "Fork bomb"
  */
 
 /* do not use UNICODE */

@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #3, Procese
+ * SO
+ * Lab #3
  *
  * Task #3, Windows
  *
@@ -27,9 +27,9 @@ int main(void)
 
 	/* TODO - Create named pipe - assure inbound access */
 
-	/* TODO - connect to pipe */
+	/* TODO - Connect to pipe */
 
-	/* TODO - read data from pipe */
+	/* TODO - Read data from pipe */
 	ZeroMemory(buff, sizeof(buff));
 
 	printf("Message received: %s\n", buff);

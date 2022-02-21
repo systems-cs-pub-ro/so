@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #3, Procese
+ * SO
+ * Lab #3
  *
  * Task #3, Windows
  *
