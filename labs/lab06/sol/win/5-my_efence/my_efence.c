@@ -31,30 +31,36 @@ static LPVOID MyMalloc(DWORD dwSize)
     dwNoPages = dwSize / dwPageSize + 1;
 
     /* TODO - alocate dwNoPages + 1 pages*/
+    lpMem = VirtualAlloc(NULL, dwPageSize * (dwNoPages + 1),
+                         MEM_COMMIT, PAGE_READWRITE);
+    DIE(lpMem == NULL, "VirtualAlloc");
 
     /* TODO - change accces for the last page (guard page)
      * to PAGE_NOACCESS
      */
+    rc = VirtualProtect(lpMem + dwNoPages * dwPageSize, dwPageSize,
+                        PAGE_NOACCESS, &oldProt);
+    DIE(rc == FALSE, "VirtualProtect");
 
     /* TODO - return a pointer to an offest in the allocated memory
      * so that memory area has dwSize bytes and ends before the guard page
      */
-
-    return NULL;
+    dwOffest = dwPageSize - dwSize % dwPageSize;
+    return lpMem + dwOffest;
 }
 
 int main(void)
 {
     int i;
 
-    int *v = malloc(10 * sizeof(int));
-    // int *v = MyMalloc(10 * sizeof(int));
+    /* int *v = malloc(10 * sizeof(int)); */
+    int *v = MyMalloc(10 * sizeof(int));
 
     for (i = 0; i <= 10; i++)
     {
         __try
         {
-            // Write to memory.
+            /* Write to memory. */
             v[i] = i;
         }
         __except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)

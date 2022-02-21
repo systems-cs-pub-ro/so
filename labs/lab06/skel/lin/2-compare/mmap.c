@@ -1,8 +1,8 @@
 /**
- * SO, 2017
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #2, lin
+ * Task #2, Linux
  *
  * write vs mmap
  */
@@ -21,31 +21,29 @@
 
 int main(void)
 {
-	char msg[] = "Testing testing 123...\n";
-	int rc, i;
-	int fd;
-	char *mem;
+    char msg[] = "Testing testing 123...\n";
+    int rc, i;
+    int fd;
+    char *mem;
 
-	fd = open("test_mmap", O_CREAT | O_TRUNC | O_RDWR, 0644);
-	DIE(fd == -1, "open");
+    fd = open("test_mmap", O_CREAT | O_TRUNC | O_RDWR, 0644);
+    DIE(fd == -1, "open");
 
-	rc = ftruncate(fd, N * sizeof(msg));
-	DIE(rc == -1, "ftruncate");
+    rc = ftruncate(fd, N * sizeof(msg));
+    DIE(rc == -1, "ftruncate");
 
-	mem = mmap(0, N * sizeof(msg), PROT_READ | PROT_WRITE,
-		   MAP_SHARED, fd, 0);
-	DIE(mem == MAP_FAILED, "mmap");
+    mem = mmap(0, N * sizeof(msg), PROT_READ | PROT_WRITE,
+               MAP_SHARED, fd, 0);
+    DIE(mem == MAP_FAILED, "mmap");
 
-	for (i = 0; i < N; i++)
-		memcpy(mem + i * sizeof(msg), msg, sizeof(msg));
+    for (i = 0; i < N; i++)
+        memcpy(mem + i * sizeof(msg), msg, sizeof(msg));
 
-	rc = munmap(mem, N * sizeof(msg));
-	DIE(rc == -1, "munmap");
+    rc = munmap(mem, N * sizeof(msg));
+    DIE(rc == -1, "munmap");
 
-	rc = close(fd);
-	DIE(rc == -1, "close");
+    rc = close(fd);
+    DIE(rc == -1, "close");
 
-	return 0;
+    return 0;
 }
-
-

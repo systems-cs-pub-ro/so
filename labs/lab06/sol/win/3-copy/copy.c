@@ -42,6 +42,22 @@ LPVOID map(HANDLE fd, DWORD size)
     LPVOID p;
 
     /* TODO map file */
+    hFileMap = CreateFileMapping(
+        fd,
+        NULL,
+        PAGE_READWRITE,
+        0,
+        size,
+        NULL);
+    DIE(hFileMap == NULL, "CreateFileMapping");
+
+    p = MapViewOfFile(
+        hFileMap,
+        FILE_MAP_ALL_ACCESS,
+        0,
+        0,
+        0);
+    DIE(p == NULL, "MapViewOfFile");
 
     return p;
 }
@@ -63,10 +79,29 @@ int main(int argc, char **argv)
     hDst = open(argv[2], CREATE_ALWAYS);
 
     /* TODO - truncate the output file to the input file size */
+    rc = SetFilePointer(hDst, size, NULL, FILE_BEGIN);
+    DIE(rc == INVALID_SET_FILE_POINTER, "SetFilePointer");
+    rc = SetEndOfFile(hDst);
+    DIE(rc == FALSE, "SetEndOfFile");
 
     /* TODO - map files and copy content */
+    pin = map(hSrc, size);
+    pout = map(hDst, size);
+
+    memcpy(pout, pin, size);
 
     /* TODO - cleanup */
+    rc = UnmapViewOfFile(pin);
+    DIE(rc == FALSE, "UnmapViewOfFile");
+
+    rc = UnmapViewOfFile(pout);
+    DIE(rc == FALSE, "UnmapViewOfFile");
+
+    rc = CloseHandle(hSrc);
+    DIE(rc == FALSE, "Closehandle");
+
+    rc = CloseHandle(hDst);
+    DIE(rc == FALSE, "Closehandle");
 
     return 0;
 }

@@ -1,8 +1,8 @@
 /**
- * SO, 2014
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #8, lin
+ * Task #8, Linux
  *
  * Changing code will running
  */
@@ -15,7 +15,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define ALIGN_TO_PAGE(addr) ((void *)((intptr_t)(addr) & ~(getpagesize()-1)))
+#define ALIGN_TO_PAGE(addr) ((void *)((intptr_t)(addr) & ~(getpagesize() - 1)))
 
 static int pagesize;
 
@@ -29,52 +29,52 @@ static int pagesize;
 */
 int foo(void)
 {
-	return 12;
+    return 12;
 }
 
 int main(void)
 {
-	void *addr, *addr_aligned, *page_end;
-	int (*f)();
-	char *crt;
+    void *addr, *addr_aligned, *page_end;
+    int (*f)();
+    char *crt;
 
-	pagesize = getpagesize();
+    pagesize = getpagesize();
 
-	// adresa functiei
-	addr = &foo;
-	printf("adresa functiei %p\n", addr);
+    // adresa functiei
+    addr = &foo;
+    printf("adresa functiei %p\n", addr);
 
-	// aliniere adresa a multiplu de pagina
-	addr_aligned = ALIGN_TO_PAGE(addr);
-	printf("adresa paginii ce contine functia %p\n", addr_aligned);
+    // aliniere adresa a multiplu de pagina
+    addr_aligned = ALIGN_TO_PAGE(addr);
+    printf("adresa paginii ce contine functia %p\n", addr_aligned);
 
-	// final pagina
-	page_end = addr_aligned + pagesize;
+    // final pagina
+    page_end = addr_aligned + pagesize;
 
-	// pid
-	printf("process id %i\n", getpid());
+    // pid
+    printf("process id %i\n", getpid());
 
-	printf("primul apel: foo intoarce %d\n", foo());
+    printf("primul apel: foo intoarce %d\n", foo());
 
-	// schimbare protectie pagina
-	if (mprotect(addr_aligned, pagesize, PROT_READ|PROT_WRITE|PROT_EXEC)) {
-		perror("mprotect");
-		return 1;
-	}
+    // schimbare protectie pagina
+    if (mprotect(addr_aligned, pagesize, PROT_READ | PROT_WRITE | PROT_EXEC))
+    {
+        perror("mprotect");
+        return 1;
+    }
 
-	// schimbare valoare de intors functie
-	f = (int (*)())foo;
+    // schimbare valoare de intors functie
+    f = (int (*)())foo;
 
-	while ((int)f < (int)page_end &&
-		((int)*f != 0xb8 && (char)*((char *)f + 1) != 0x0c))
-		f++;
+    while ((int)f < (int)page_end &&
+           ((int)*f != 0xb8 && (char)*((char *)f + 1) != 0x0c))
+        f++;
 
-	crt = (char *)(++f);
-	printf("f = %p\t*bla = %hhx\n", f, *crt);
-	*crt = 0xff;
+    crt = (char *)(++f);
+    printf("f = %p\t*bla = %hhx\n", f, *crt);
+    *crt = 0xff;
 
-	printf("al doilea apel: foo intoarce %d\n", foo());
+    printf("al doilea apel: foo intoarce %d\n", foo());
 
-	return 0;
+    return 0;
 }
-

@@ -30,8 +30,12 @@ static void lock_memory(char *addr, DWORD size)
     DWORD page_offset = (DWORD)addr % pageSize;
 
     /* TODO - align addr to page offset and adjust size */
+    addr -= page_offset;
+    size += page_offset;
 
     /* TODO - lock memory */
+    rc = VirtualLock(addr, size);
+    DIE(rc == FALSE, "VirtualLock");
 }
 
 /* unlock memory interval [addr, addr + size - 1] */
@@ -41,22 +45,26 @@ static void unlock_memory(char *addr, DWORD size)
     DWORD page_offset = (DWORD)addr % pageSize;
 
     /* TODO - align addr to page offset and adjust size */
+    addr -= page_offset;
+    size += page_offset;
 
     /* TODO - unlock memory */
+    rc = VirtualUnlock(addr, size);
+    DIE(rc == FALSE, "VirtualUnLock");
 }
 
 int main(void)
 {
     char data[SIZE];
 
-    /* TODO - Lock data */
+    lock_memory(data, SIZE);
 
-    /* TODO - copy msg into data */
+    memcpy(data, msg, strlen(msg));
+    data[strlen(msg)] = '\0';
 
-    /* printing data to see it's there */
     printf("data=%s\n", data);
 
-    /* TODO - UnLock data */
+    unlock_memory(data, SIZE);
 
     return 0;
 }

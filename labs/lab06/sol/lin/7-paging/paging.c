@@ -36,8 +36,12 @@ static void lock_memory(char *addr, size_t size)
     page_offset = (unsigned long)addr % pagesize;
 
     /* TODO - align addr to page offset and adjust size */
+    addr -= page_offset;
+    size += page_offset;
 
     /* TODO - lock memory */
+    rc = mlock(addr, size);
+    DIE(rc == -1, "mlock");
 }
 
 /* unlock memory interval [addr, addr + size - 1] */
@@ -50,8 +54,12 @@ static void unlock_memory(char *addr, size_t size)
     page_offset = (unsigned long)addr % pagesize;
 
     /* TODO - align addr to page offset and adjust size */
+    addr -= page_offset;
+    size += page_offset;
 
     /* TODO - unlock memory */
+    rc = munlock(addr, size);
+    DIE(rc == -1, "munlock");
 }
 
 int main(void)

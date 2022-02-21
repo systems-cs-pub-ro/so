@@ -1,0 +1,1 @@
+../../../skel/lin/7-paging/Makefile

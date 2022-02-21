@@ -96,10 +96,10 @@ int main(void)
     wait_for_input("closing mapped file");
 
     mem = VirtualAlloc(
-        NULL,            // System selects address
-        dwPageSize,      // Size of allocation
-        MEM_COMMIT,      // Allocate reserved pages
-        PAGE_READWRITE); // Protection
+        NULL,            /* System selects address */
+        dwPageSize,      /* Size of allocation */
+        MEM_COMMIT,      /* Allocate reserved pages */
+        PAGE_READWRITE); /* Protection */
     DIE(mem == NULL, "VirtualAlloc");
 
     wait_for_input("mapped private memory");
