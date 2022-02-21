@@ -1,5 +1,7 @@
 /**
- * SO, 2017 - Lab #07, Profiling & Debugging
+ * SO
+ * Lab #07
+ * 
  * Task #6, Linux
  *
  * Flowers reloaded

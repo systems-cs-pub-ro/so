@@ -1,5 +1,7 @@
 /**
- * SO, 2017 - Lab #07, Profiling
+ * SO
+ * Lab #07
+ * 
  * Task #2, Linux
  *
  * Column major
@@ -10,8 +12,7 @@
 
 char x[SIZE][SIZE];
 
-int
-main(void)
+int main(void)
 {
 	int i, j;
 

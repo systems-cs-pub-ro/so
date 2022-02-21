@@ -1,0 +1,20 @@
+Se vor urmări evenimentele L1-dcache-load şi L1-dcache-load-misses şi 
+se va observa că numărul de dcache misses este mult mai mare în cazul
+parcurgerii pe coloane.
+
+$perf stat -e L1-dcache-load-misses ./row
+
+ Performance counter stats for './row':
+
+           415.973 L1-dcache-load-misses                                       
+
+       0,144622930 seconds time elapsed
+
+$ perf stat -e L1-dcache-load-misses ./column
+
+ Performance counter stats for './column':
+
+        18.051.604 L1-dcache-load-misses                                       
+
+       0,482737143 seconds time elapsed
+

@@ -1,8 +1,10 @@
 /**
- * SO, 2017 - Lab #07, Profiling
+ * SO
+ * Lab #07
+ * 
  * Task #3, Linux
  *
- * busy wating
+ * Busy waiting
  */
 
 #include <stdio.h>
@@ -10,7 +12,9 @@
 int main(void)
 {
 
-	/* Linux can run infinite loops in 5 seconds :) */
+	/**
+	 * Linux can run infinite loops in 5 seconds :)
+	 */
 	while (1)
 		;
 
