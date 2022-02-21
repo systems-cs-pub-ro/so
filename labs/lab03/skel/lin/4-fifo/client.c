@@ -1,11 +1,11 @@
 /**
-  * SO
-  * Lab #3
-  *
-  * Task #4, Linux
-  *
-  * FIFO client
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #4, Linux
+ *
+ * FIFO client
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>

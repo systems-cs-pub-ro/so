@@ -6,9 +6,9 @@
  *
  * Anonymous pipe.
  * Parent process reads a string from standard input and sends
- * 	it to the child process through an anonymous pipe.
+ * it to the child process through an anonymous pipe.
  * Child process reads data from the anonymous pipe and prints
- * 	it to standard output.
+ * it to standard output.
  */
 
 #include <stdbool.h>
@@ -84,10 +84,10 @@ int main(void)
 	rc = pipe(fds);
 	DIE(rc != 0, "pipe() failed");
 
-	/* 
+	/**
 	 * Sometimes I wish I could do a fork() in real life. No more
-   * hard choices to think about. Endless possibillites to explore. MH.
-   */
+	 * hard choices to think about. Endless possibillites to explore. MH.
+	 */
 	pid = fork();
 	switch (pid) {
 	case -1:

@@ -40,7 +40,7 @@ static int type;
 static int parse_line(char *line);
 static void alloc_mem(void);
 
-/*
+/**
  * @filedes  - file descriptor to be redirected
  * @filename - filename used for redirection
  */
@@ -49,7 +49,9 @@ static void do_redirect(int filedes, const char *filename)
 	int ret;
 	int fd;
 
-	/* TODO - Redirect filedes into file filename */
+	/**
+	 * TODO - Redirect filedes into file filename
+	 */
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	DIE(fd < 0, "open");
 
@@ -62,17 +64,21 @@ static void do_redirect(int filedes, const char *filename)
 
 static void set_var(const char *var, const char *value)
 {
-	/* TODO - Set the environment variable */
+	/**
+	 * TODO - Set the environment variable
+	 */
 	setenv(var, value, 1);
 }
 
 static char *expand(const char *key)
 {
-	/* TODO - Return the value of environment variable */
+	/**
+	 * TODO - Return the value of environment variable
+	 */
 	return getenv(key);
 }
 
-/*
+/**
  *  @args - array that contains a simple command with parrameters
  */
 static void simple_cmd(char **args)
@@ -81,7 +87,9 @@ static void simple_cmd(char **args)
 	pid_t wait_ret;
 	int status;
 
-	/* TODO - Create a process to execute the command */
+	/**
+	 * TODO - Create a process to execute the command
+	 */
 	pid = fork();
 	switch (pid) {
 	case -1:	/* error */
@@ -159,7 +167,7 @@ static int parse_line(char *line)
 	stdout_file = NULL;
 	stderr_file = NULL;
 
-	/* check for exit */
+	/* Check for exit */
 	if (strncmp("exit", line, strlen("exit")) == 0)
 		return EXIT_CMD;
 
@@ -180,7 +188,7 @@ static int parse_line(char *line)
 		return SET_VAR;
 	}
 
-	/* normal command */
+	/* Normal command */
 	delim = " \t\n";
 	token = strtok(line, delim);
 
@@ -189,7 +197,7 @@ static int parse_line(char *line)
 
 	verb = strdup(token);
 
-	/* copy args */
+	/* Copy args */
 	idx = 0;
 	while (token != NULL) {
 		if (token[0] == '$')

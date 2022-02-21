@@ -24,15 +24,15 @@ int main(void)
 	int offset = 0;
 	char buff[BUFSIZE];
 
-	/* TODO - create named pipe */
+	/* TODO - Create named pipe */
 	rc = mkfifo(PIPE_NAME, 0644);
 	DIE(rc < 0, "mkfifo");
 
-	/* TODO - open named pipe */
+	/* TODO - Open named pipe */
 	fd = open(PIPE_NAME, O_RDONLY);
 	DIE(fd < 0, "open fifo");
 
-	/* TODO - read in buff from pipe while not EOF */
+	/* TODO - Read in buff from pipe while not EOF */
 	memset(buff, 0, sizeof(buff));
 	do {
 		bytesRead = read(fd, buff + offset, BUFSIZE);
@@ -42,7 +42,7 @@ int main(void)
 
 	printf("Message received:%s\n", buff);
 
-	/* TODO - close and delete pipe */
+	/* TODO - Close and delete pipe */
 	rc = close(fd);
 	DIE(rc < 0, "close");
 

@@ -132,7 +132,7 @@ static VOID RunSimpleCommand(PCHAR command)
 }
 
 /**
- * Purpouse: launch a command like' command1 | command2 '
+ * Purpose: launch a command like' command1 | command2 '
  *   @command1 - first command string
  *   @command2 - second command string
  */

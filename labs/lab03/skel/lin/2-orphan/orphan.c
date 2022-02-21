@@ -20,8 +20,8 @@ int main(void)
 	switch (child_pid) {
 	case -1:
 		DIE(child_pid, "fork");
-	  break;
-  case 0:
+		break;
+	case 0:
 		/* child process */
 		sleep(20);
 		break;

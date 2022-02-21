@@ -1,15 +1,15 @@
 /**
-  * SO
-  * Lab #3
-  *
-  * Task #6, Linux
-  *
-  * Anonymous pipe.
-  * Parent process reads a string from standard input and sends
-  * 	it to the child process through an anonymous pipe.
-  * Child process reads data from the anonymous pipe and prints
-  * 	it to standard output.
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #6, Linux
+ *
+ * Anonymous pipe.
+ * Parent process reads a string from standard input and sends
+ * it to the child process through an anonymous pipe.
+ * Child process reads data from the anonymous pipe and prints
+ * it to standard output.
+ */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -83,7 +83,7 @@ int main(void)
 
 	/* TODO - Create anonymous pipe */
 
-	/* 
+	/**
 	 * Sometimes I wish I could do a fork() in real life. No more
 	 * hard choices to think about. Endless possibillites to explore. MH.
 	 */
