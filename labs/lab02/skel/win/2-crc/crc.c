@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #2, Windows
  *
@@ -20,119 +20,95 @@
 #define BUFSIZE 512
 #define CHUNKSIZE 32
 
-static void WriteCrc(int crc, HANDLE hWrite)
-{
-	BOOL bRet;
-	DWORD dwBytesWritten, dwBytesToWrite, dwTotalWritten;
-	/* TODO 1 - Write the CRC to the file. Use a loop! */
-}
-
 static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 {
-	HANDLE hRead, hWrite;
-	CHAR buf[BUFSIZE];
-	BOOL bRet;
-	DWORD bytesRead;
-	int crc = 0;
+    HANDLE hRead, hWrite;
+    CHAR buf[BUFSIZE];
+    BOOL bRet;
+    DWORD bytesRead, bytesWritten;
+    int crc = 0;
 
-	/* TODO 1 - Open source file for reading */
+    /* TODO 1 - Open source file for reading */
 
-	/* TODO 1 - Create destination file for writing */
+    /* TODO 1 - Create destination file for writing */
 
-	/* Read from file  */
-	while (1) {
-		ZeroMemory(buf, sizeof(buf));
+    /* read from file  */
+    while (1)
+    {
 
-		/* TODO 1 - Read from source file into buf BUFSIZE bytes */
+        ZeroMemory(buf, sizeof(buf));
 
-		/* TODO 1 - Test for end of file */
+        /* TODO 1 - Read from source file into buf BUFSIZE bytes */
 
-		/* Calculate crc for buf */
-		crc = update_crc(crc, (unsigned char *) buf, bytesRead);
-	}
+        /* TODO 1 - Test for end of file */
 
-	/* Write crc to destination file */
-	WriteCrc(crc, hWrite);
+        /* calculate crc for buf */
+        crc = update_crc(crc, (unsigned char *)buf, bytesRead);
+    }
 
-	/* TODO 1 - Close files */
+    /* TODO 1 - Write crc to destination file */
+
+    /* TODO 1 - Close files */
 }
-
 
 static DWORD GetSize(HANDLE file)
 {
-	DWORD dwSize;
+    DWORD dwSize;
 
-	/* TODO 2 - Calculate and return file size using SetFilePointer */
+    /* TODO 2 - Calculate and return file size using SetFilePointer */
 
-	return dwSize;
-}
-
-static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
-{
-	BOOL bRet;
-	DWORD dwBytesRead, dwBytesToRead, dwTotalRead = 0;
-
-	/*
-	 * TODO 3
-	 * Read at most CHUNKSIZE bytes from file into the buffer. Use a loop!
-	 * Return the number of read bytes.
-	 */
-
-	return dwTotalRead;
+    return dwSize;
 }
 
 static BOOL CompareFiles(CHAR *file1, CHAR *file2)
 {
-	DWORD bytesRead1, bytesRead2;
-	HANDLE hFile1, hFile2;
-	CHAR chunk1[CHUNKSIZE], chunk2[CHUNKSIZE];
-	BOOL result = FALSE, bRet;
+    DWORD bytesRead;
+    HANDLE hFile1, hFile2;
+    CHAR chunk1[CHUNKSIZE], chunk2[CHUNKSIZE];
+    BOOL result = FALSE, bRet;
 
-	/* TODO 4 - Open file handles */
+    /* TODO 3 - Open file handles */
 
-	/* TODO 4 - Compare file size */
+    /* TODO 3 - Compare file size */
 
-	/* TODO 4 - Compare the files, chunk by chunk */
-	while (1) {
-		ZeroMemory(chunk1, sizeof(chunk1));
-	 	ZeroMemory(chunk2, sizeof(chunk2));
-
-		bytesRead1 = ReadChunk(chunk1, hFile1);
-		bytesRead2 = ReadChunk(chunk2, hFile2);
-
-		/* TODO 4 - Test for the end of the files */
-		
-		/* TODO 4 - Compare the previously read chunks */
-	}
+    /* TODO 3 - Compare the CRC files, chunk by chunk */
+    /*
+     * while (1) {
+     *	ZeroMemory(chunk1, sizeof(chunk1));
+     *	ZeroMemory(chunk2, sizeof(chunk2));
+     * }
+     */
 
 exit:
-	/* TODO 4 - Close files */
+    /* TODO 3 - Close files */
 
-	return result;
+    return result;
 }
 
 int main(int argc, char *argv[])
 {
-	BOOL equal;
+    BOOL equal;
 
-	if (argc != 4) {
-		fprintf(stderr, "Usage:\n"
-				"\tcrc.exe -g <input_file> <output_file> - generate crc\n"
-				"\tcrc.exe -c <file1> <file2>            - compare files\n");
-		exit(EXIT_FAILURE);
-	}
+    if (argc != 4)
+    {
+        fprintf(stderr, "Usage:\n"
+                        "\tcrc.exe -g <input_file> <output_file> - generate crc\n"
+                        "\tcrc.exe -c <file1> <file2>            - compare files\n");
+        exit(EXIT_FAILURE);
+    }
 
-	if (strcmp(argv[1], "-g") == 0)
-		GenerateCrc(argv[2], argv[3]);
+    if (strcmp(argv[1], "-g") == 0)
+        GenerateCrc(argv[2], argv[3]);
 
-	if (strcmp(argv[1], "-c") == 0) {
-		equal = CompareFiles(argv[2], argv[3]);
+    if (strcmp(argv[1], "-c") == 0)
+    {
+        equal = CompareFiles(argv[2], argv[3]);
 
-		if (equal)
-			printf("Files are equal\n");
-		else
-			printf("Files differ\n");
-	}
+        if (equal)
+            printf("Files are equal\n");
+        else
+            printf("Files differ\n");
+    }
 
-	return 0;
+    return 0;
 }

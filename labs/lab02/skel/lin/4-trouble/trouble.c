@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #4, Linux
  *
@@ -19,19 +19,18 @@
 
 int main(void)
 {
-	int fd, rc;
-	char *msg = "Ana are mere!\n";
+    int fd, rc;
+    char *msg = "Ana are mere!\n";
 
-	/* opening files */
-	fd = open("tmp1.txt", O_CREAT | O_WRONLY);
-	DIE(fd < 0, "open failed");
+    /* opening files */
+    fd = open("tmp1.txt", O_CREAT | O_WRONLY);
+    DIE(fd < 0, "open failed");
 
-	rc = write(fd, msg, strlen(msg));
-	DIE(rc < 0, "write failed");
+    rc = write(fd, msg, strlen(msg));
+    DIE(rc < 0, "write failed");
 
-	rc = close(fd);
-	DIE(rc < 0, "close failed");
+    rc = close(fd);
+    DIE(rc < 0, "close failed");
 
-	return 0;
+    return 0;
 }
-

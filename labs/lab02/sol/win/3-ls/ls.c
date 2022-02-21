@@ -29,11 +29,14 @@ static void PrintPadding(DWORD count);
 /* Prints human readable date and time out of a FILETIME structure */
 static void PrintFileTime(FILETIME fTime);
 
+/* Print program parameters and usage */
+static void PrintUsage(char *program);
+
 /*
  * List files from directory reprezented by path
- * @path        - path to dir we want to list
- * @bRecursive  - if "ls -r" was issued
- * @bAll        - if "ls -a" was issued
+ * @path		- path to dir we want to list
+ * @bRecursive	- if "ls -r" was issued
+ * @bAll		- if "ls -a" was issued
  */
 static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 {
@@ -45,7 +48,7 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
     TCHAR extendedPath[MAXPATH], newPath[MAXPATH];
     int i = 0;
 
-    printf("\n=== %s ===\n\n", path);
+    printf("\n === %s ===\n\n", path);
     /*
      * Prepare path to FindFirst File -we must add "\*"
      * extendedPath = path + "\*"
@@ -54,64 +57,83 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 
     /*
      * TODO 1 -  Find the first file in the directory
-     * Use extendePath as argument
+     * Use extendedPath as argument
      */
+    hFind = FindFirstFile(extendedPath, &ffd);
+    DIE(hFind == INVALID_HANDLE_VALUE, "FindFirstFile");
 
     /* TODO 1 - List all the files in the directory */
     do
     {
-
-        if (/* TODO 2 - Test if file is directory */ 0)
+        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
-
             /*
-             * TODO 2 - print file name
-             * For printing spaces use function
-             * printPadding(no_spaces)
+             * TODO 1 - print file name
+             * For printing spaces use the PrintPadding(no_spaces) function
              */
+            printf("<DIR>\t%s", ffd.cFileName);
+            PrintPadding(MAX_FILE_NAME - strlen(ffd.cFileName));
+            printf("\n");
 
             if (bRecursive == TRUE)
             {
-
-                /* TODO 3 - Recursive */
+                /*
+                 * TODO 3 - Recursive
+                 * Remember that . and .. are also members of the current
+                 * directory. Do not include them in your recursion, or you
+                 * might loop infinitely
+                 */
+                if ((strncmp(ffd.cFileName, ".", 1) != 0) &&
+                    (strncmp(ffd.cFileName,
+                             "..", 2) != 0))
+                {
+                    sprintf_s(newPath, MAXPATH, "%s\\%s",
+                              path, ffd.cFileName);
+                    ListFiles(newPath, bRecursive, bAll);
+                }
             }
         }
         else
         {
             /*
-             * TODO 2 - print file name
-             * For printing spaces use function
-             * printPadding(no_spaces)
+             * TODO 1 - print file name
+             * For printing spaces use the PrintPadding(no_spaces) function
              */
+            printf("     \t%s", ffd.cFileName);
+            PrintPadding(MAX_FILE_NAME - strlen(ffd.cFileName));
 
             if (bAll == TRUE)
             {
-
                 /*
                  * TODO 2 - print the time of the last access
                  * Use the PrintFileTime function
                  */
+                ftWrite = ffd.ftLastWriteTime;
+                PrintFileTime(ftWrite);
 
                 /* TODO 2 - get File Size */
+                filesize.LowPart = ffd.nFileSizeLow;
+                filesize.HighPart = ffd.nFileSizeHigh;
+                printf("%lld bytes", filesize.QuadPart);
             }
             printf("\n");
         }
-    } while (/* TODO 1 - interate if there are still files in list */ 0);
+    } while (FindNextFile(hFind, &ffd) == TRUE);
 
     /* TODO 1 - cleanup */
+    dwRet = FindClose(hFind);
+    DIE(dwRet == FALSE, "FindClose");
 }
 
 int main(int argc, char *argv[])
 {
     TCHAR path[MAXPATH];
-    BOOL bRecursive = FALSE, bAll = FALSE;
+    BOOL bRecursive = FALSE, bAll = FALSE, gotPath = FALSE;
     int i;
 
     if (argc < 2 || argc > 4)
     {
-        printf("\nUsage: %s <directory name>"
-               "\n\t-R -recursive\n\t-a all atributes\n",
-               argv[0]);
+        PrintUsage(argv[0]);
         return (-1);
     }
 
@@ -131,9 +153,13 @@ int main(int argc, char *argv[])
 
         /* save path */
         strcpy_s(path, MAXPATH, argv[i]);
+        gotPath = TRUE;
     }
 
-    ListFiles(path, bRecursive, bAll);
+    if (gotPath)
+        ListFiles(path, bRecursive, bAll);
+    else
+        PrintUsage(argv[0]);
 
     return 0;
 }
@@ -151,7 +177,7 @@ static void PrintFileTime(FILETIME fTime)
     DIE(dwRet == FALSE, "SystemTimeToTzSpecificLocalTime");
 
     /* Printing the date and time */
-    printf("%02d/%02d/%d  %02d:%02d",
+    printf("%02d/%02d/%d  %02d:%02d  ",
            stLocal.wMonth, stLocal.wDay, stLocal.wYear,
            stLocal.wHour, stLocal.wMinute);
 }
@@ -162,4 +188,11 @@ static void PrintPadding(DWORD count)
 
     for (i = 0; i < count; i++)
         printf(" ");
+}
+
+static void PrintUsage(char *program)
+{
+    printf("\nUsage: %s <directory name>"
+           "\n\t-R -recursive\n\t-a all atributes\n",
+           program);
 }

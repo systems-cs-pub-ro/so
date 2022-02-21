@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     HANDLE hFile;
     CHAR buf[BUFSIZE];
     BOOL bRet;
-    DWORD bytesRead, bytesWritten, totalWritten = 0;
+    DWORD bytesRead, bytesWritten, totalWritten;
 
     if (argc != 2)
     {
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         {
             bRet = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),
                              buf + totalWritten,
-                             bytesRead - totalWritten,
+                             bytesRead,
                              &bytesWritten,
                              NULL);
             DIE(bRet == FALSE, "WriteFile");

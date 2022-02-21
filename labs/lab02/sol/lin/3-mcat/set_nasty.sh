@@ -1,0 +1,1 @@
+../../../skel/lin/3-mcat/set_nasty.sh

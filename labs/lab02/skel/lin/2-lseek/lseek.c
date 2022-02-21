@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #2, Linux
  *
@@ -19,23 +19,23 @@
 int main(void)
 {
 
-	int fd1, fd2, rc, pos;
+    int fd1, fd2, rc, pos;
 
-	fd1 = open("Makefile", O_RDWR);
-	DIE(fd1 < 0, "open file.txt");
+    fd1 = open("Makefile", O_RDWR);
+    DIE(fd1 < 0, "open file.txt");
 
-	pos = lseek(fd1, 100, SEEK_SET);
-	DIE(pos < 0, "lseek");
+    pos = lseek(fd1, 100, SEEK_SET);
+    DIE(pos < 0, "lseek");
 
-	fd2 = dup(fd1);
-	DIE(fd2 < 0, "dup");
+    fd2 = dup(fd1);
+    DIE(fd2 < 0, "dup");
 
-	pos = lseek(fd2, 100, SEEK_CUR);
+    pos = lseek(fd2, 100, SEEK_CUR);
 
-	/* printf("pos = %d\n", pos); */
+    /* printf("pos = %d\n", pos); */
 
-	rc = close(fd1);
-	DIE(rc < 0, "fd1");
+    rc = close(fd1);
+    DIE(rc < 0, "fd1");
 
-	return 0;
+    return 0;
 }

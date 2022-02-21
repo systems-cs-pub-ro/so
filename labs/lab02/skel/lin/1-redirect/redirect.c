@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #1, Linux
  *
@@ -20,54 +20,54 @@
 
 static void wait_for_input(const char *msg)
 {
-	char buf[32];
+    char buf[32];
 
-	printf(" * %s\n", msg);
-	printf(" -- Press ENTER to continue ..."); fflush(stdout);
-	fgets(buf, 32, stdin);
+    printf(" * %s\n", msg);
+    printf(" -- Press ENTER to continue ...");
+    fflush(stdout);
+    fgets(buf, 32, stdin);
 }
-
 
 int main(void)
 {
-	int fd1, fd2, rc;
+    int fd1, fd2, rc;
 
-	wait_for_input("beginning");
+    wait_for_input("beginning");
 
-	/* open files */
-	fd1 = open("tmp1.txt", O_CREAT | O_RDWR, 0644);
-	DIE(fd1 < 0, "open tmp1.txt");
-	wait_for_input("created tmp1.txt");
+    /* open files */
+    fd1 = open("tmp1.txt", O_CREAT | O_RDWR, 0644);
+    DIE(fd1 < 0, "open tmp1.txt");
+    wait_for_input("created tmp1.txt");
 
-	fd2 = open("Makefile", O_RDONLY);
-	DIE(fd2 < 0, "open Makefile");
-	wait_for_input("opened Makefile");
+    fd2 = open("Makefile", O_RDONLY);
+    DIE(fd2 < 0, "open Makefile");
+    wait_for_input("opened Makefile");
 
-	/* redirect stderr to fd1 */
-	rc = close(STDERR_FILENO);
-	DIE(rc < 0, "close stderr");
-	wait_for_input("closed stderr");
+    /* redirect stderr to fd1 */
+    rc = close(STDERR_FILENO);
+    DIE(rc < 0, "close stderr");
+    wait_for_input("closed stderr");
 
-	rc = dup(fd1);
-	DIE(rc < 0, "dup fd1");
+    rc = dup(fd1);
+    DIE(rc < 0, "dup fd1");
 
-	/* write something to stderr */
-	write(STDERR_FILENO, "something", strlen("something"));
-	wait_for_input("dup - redirected stderr to fd1. Written "
-                       "something to STDERR_FILE. Inspect the associated file.");
+    /* write something to stderr */
+    write(STDERR_FILENO, "something", strlen("something"));
+    wait_for_input("dup - redirected stderr to fd1. Written "
+                   "something to STDERR_FILE. Inspect the associated file.");
 
-	rc = close(fd1);
-	DIE(rc < 0, "close fd1");
-	wait_for_input("closed fd1");
+    rc = close(fd1);
+    DIE(rc < 0, "close fd1");
+    wait_for_input("closed fd1");
 
-	/* redirect stderr to fd2 */
-	rc = dup2(fd2, STDERR_FILENO);
-	DIE(rc < 0, "dup2 fd2");
-	wait_for_input("dup2 - redirected stderr to fd2");
+    /* redirect stderr to fd2 */
+    rc = dup2(fd2, STDERR_FILENO);
+    DIE(rc < 0, "dup2 fd2");
+    wait_for_input("dup2 - redirected stderr to fd2");
 
-	rc = close(fd2);
-	DIE(rc < 0, "close fd2");
-	wait_for_input("closed fd2");
+    rc = close(fd2);
+    DIE(rc < 0, "close fd2");
+    wait_for_input("closed fd2");
 
-	return 0;
+    return 0;
 }
