@@ -6,7 +6,7 @@
  *
  * Implementing "ls" tool with options
      -a - print attributes of the file
-     -r - recursive
+     -R - recursive
  */
 
 /* do not use UNICODE */
