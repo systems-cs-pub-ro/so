@@ -1,25 +1,27 @@
 /**
- * SO, 2017
- * Windows
+ * SO
+ * Windows, Simple I/O operations
  *
  * Useful structures/macros
  */
 
 #ifndef WIN_UTILS_H_
-#define WIN_UTILS_H_	1
+#define WIN_UTILS_H_ 1
 
 #include <windows.h>
 #include <stdio.h>
 
-/* useful macro for handling error codes */
-#define DIE(assertion, call_description) \
-	do {				 \
-		if (assertion) {	 \
-			fprintf(stderr, "(%s, %s, %d): ", \
+/* Useful macro for handling error codes */
+#define DIE(assertion, call_description)               \
+	do                                                 \
+	{                                                  \
+		if (assertion)                                 \
+		{                                              \
+			fprintf(stderr, "(%s, %s, %d): ",          \
 					__FILE__, __FUNCTION__, __LINE__); \
-			PrintLastError(call_description); \
-			exit(EXIT_FAILURE); \
-		} \
+			PrintLastError(call_description);          \
+			exit(EXIT_FAILURE);                        \
+		}                                              \
 	} while (0)
 
 static VOID PrintLastError(const PCHAR message)

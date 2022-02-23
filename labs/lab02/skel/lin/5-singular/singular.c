@@ -6,7 +6,6 @@
  *
  * Locking a file
  */
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -24,40 +23,41 @@ static int fdlock = -1;
 
 static void do_stuff(void)
 {
-    sleep(10);
+	sleep(10);
 }
 
 static void check_lock(void)
 {
-    int rc;
+	int rc;
 
-    /* TODO - open LOCK_FILE file */
-    /* fdlock = open(...) */
+	/* TODO - Open LOCK_FILE file */
+	/* fdlock = open(...) */
 
-    /* TODO - lock the file using flock
-     * - flock must not block in any case !
-     *
-     * - in case of error - print a message showing
-     *   there is another instance running and exit
-     */
+	/**
+	 * TODO - Lock the file using flock
+	 * - flock must not block in any case !
+	 *
+	 * - in case of error - print a message showing
+	 *   there is another instance running and exit
+	 */
 
-    printf("\nGot Lock\n\n");
+	printf("\nGot Lock\n\n");
 }
 
 static void clean_up(void)
 {
-    int rc;
+	int rc;
 
-    /* TODO - unlock file, close file and delete it */
+	/* TODO - Unlock file, close file and delete it */
 }
 
 int main(void)
 {
-    check_lock();
+	check_lock();
 
-    do_stuff();
+	do_stuff();
 
-    clean_up();
+	clean_up();
 
-    return 0;
+	return 0;
 }

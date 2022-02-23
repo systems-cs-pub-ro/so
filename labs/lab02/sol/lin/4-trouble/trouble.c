@@ -6,7 +6,6 @@
  *
  * Troubleshooting open and write functions
  */
-
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -19,28 +18,27 @@
 
 int main(void)
 {
-    int fd, rc;
-    size_t bytes_written = 0, count;
-    char *msg = "Ana are mere!\n";
+	int fd, rc;
+	size_t bytes_written = 0, count;
+	char *msg = "Ana are mere!\n";
 
-    /* opening files */
-    fd = open("tmp1.txt", O_CREAT | O_RDWR, 0644);
-    DIE(fd < 0, "open tmp1.txt");
+	/* Open files */
+	fd = open("tmp1.txt", O_CREAT | O_RDWR, 0644);
+	DIE(fd < 0, "open tmp1.txt");
 
-    count = strlen(msg);
-    while (bytes_written < count)
-    {
-        ssize_t bytes_written_now = write(fd, msg + bytes_written,
-                                          count - bytes_written);
+	count = strlen(msg);
+	while (bytes_written < count) {
+		ssize_t bytes_written_now = write(fd, msg + bytes_written,
+										  count - bytes_written);
 
-        if (bytes_written_now <= 0) /* I/O error */
-            return -1;
+		if (bytes_written_now <= 0) /* I/O error */
+			return -1;
 
-        bytes_written += bytes_written_now;
-    }
+		bytes_written += bytes_written_now;
+	}
 
-    rc = close(fd);
-    DIE(rc < 0, "close fd2");
+	rc = close(fd);
+	DIE(rc < 0, "close fd2");
 
-    return 0;
+	return 0;
 }

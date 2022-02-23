@@ -7,7 +7,7 @@
  * Implementing cat
  */
 
-/* do not use UNICODE */
+/* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
 
@@ -20,56 +20,53 @@
 
 int main(int argc, char *argv[])
 {
-    HANDLE hFile;
-    CHAR buf[BUFSIZE];
-    BOOL bRet;
-    DWORD bytesRead, bytesWritten, totalWritten = 0;
+	HANDLE hFile;
+	CHAR buf[BUFSIZE];
+	BOOL bRet;
+	DWORD bytesRead, bytesWritten, totalWritten = 0;
 
-    if (argc != 2)
-    {
-        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s <file>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
-    /* open file with name pointed by argv[1] */
-    hFile = CreateFile(argv[1],
-                       GENERIC_READ,
-                       0,
-                       NULL,
-                       OPEN_EXISTING,
-                       FILE_ATTRIBUTE_NORMAL,
-                       NULL);
-    DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile argv[0]");
+	/* Open file with name pointed by argv[1] */
+	hFile = CreateFile(argv[1],
+					   GENERIC_READ,
+					   0,
+					   NULL,
+					   OPEN_EXISTING,
+					   FILE_ATTRIBUTE_NORMAL,
+					   NULL);
+	DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile argv[0]");
 
-    /* read file pointed by argv[1] and send it to standadard output */
-    while (1)
-    {
-        bRet = ReadFile(hFile,
-                        buf,
-                        BUFSIZE,
-                        &bytesRead,
-                        NULL);
-        DIE(bRet == FALSE, "ReadFile");
+	/* Read file pointed by argv[1] and send it to standadard output */
+	while (1) {
+		bRet = ReadFile(hFile,
+						buf,
+						BUFSIZE,
+						&bytesRead,
+						NULL);
+		DIE(bRet == FALSE, "ReadFile");
 
-        if (bytesRead == 0)
-            break;
+		if (bytesRead == 0)
+			break;
 
-        /* how much we've actually written */
-        totalWritten = 0;
-        do
-        {
-            bRet = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),
-                             buf + totalWritten,
-                             bytesRead - totalWritten,
-                             &bytesWritten,
-                             NULL);
-            DIE(bRet == FALSE, "WriteFile");
-            totalWritten += bytesWritten;
-        } while (totalWritten < bytesRead);
-    }
+		/* How much we've actually written */
+		totalWritten = 0;
+		do {
+			bRet = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),
+							 buf + totalWritten,
+							 bytesRead - totalWritten,
+							 &bytesWritten,
+							 NULL);
+			DIE(bRet == FALSE, "WriteFile");
+			totalWritten += bytesWritten;
+		} while (totalWritten < bytesRead);
+	}
 
-    bRet = CloseHandle(hFile);
-    DIE(bRet == FALSE, "CloseHandle");
+	bRet = CloseHandle(hFile);
+	DIE(bRet == FALSE, "CloseHandle");
 
-    return 0;
+	return 0;
 }

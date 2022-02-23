@@ -6,7 +6,6 @@
  *
  * cat/cp applications
  */
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -17,7 +16,7 @@
 #include "utils.h"
 #include "xfile.h"
 
-#define BUFSIZE		32
+#define BUFSIZE 32
 
 int main(int argc, char **argv)
 {
@@ -29,13 +28,12 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	/* TODO 1 - open source file for reading */
+	/* TODO 1 - Open source file for reading */
 	fd = open(argv[1], O_RDONLY);
 	DIE(fd < 0, "open source");
 
-
 	if (argc == 3) {
-		/* TODO 2 - redirect stdout to destination file */
+		/* TODO 2 - Redirect stdout to destination file */
 
 		fd2 = open(argv[2], O_CREAT | O_TRUNC | O_RDWR, 0644);
 		DIE(fd2 < 0, "open destination");
@@ -47,7 +45,7 @@ int main(int argc, char **argv)
 		DIE(rc < 0, "close fd2");
 	}
 
-	/* TODO 1 - read from file and print to stdout
+	/* TODO 1 - Read from file and print to stdout
 	 * use _only_ read and write functions
 	 */
 	while ((bytesRead = xread(fd, buffer, BUFSIZE)) != 0) {
@@ -61,7 +59,7 @@ int main(int argc, char **argv)
 		DIE(rc < 0, "write failed");
 	}
 
-	/* TODO 1 - close file */
+	/* TODO 1 - Close file */
 	rc = close(fd);
 	DIE(rc < 0, "close fd");
 

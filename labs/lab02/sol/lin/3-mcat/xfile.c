@@ -6,7 +6,6 @@
  *
  * Full length read/write
  */
-
 #include "xfile.h"
 
 #include <stdio.h>

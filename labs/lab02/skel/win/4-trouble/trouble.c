@@ -7,7 +7,7 @@
  * Troubleshoot
  */
 
-/* do not use UNICODE */
+/* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
 
@@ -20,29 +20,29 @@
 
 int main(int argc, char *argv[])
 {
-    HANDLE hFile;
-    CHAR buf[BUFSIZE];
-    BOOL bRet;
-    DWORD bytesWritten;
+	HANDLE hFile;
+	CHAR buf[BUFSIZE];
+	BOOL bRet;
+	DWORD bytesWritten;
 
-    hFile = CreateFile("so*rulz.txt",
-                       GENERIC_READ,
-                       FILE_SHARE_WRITE,
-                       NULL,
-                       OPEN_ALWAYS,
-                       FILE_ATTRIBUTE_NORMAL,
-                       NULL);
+	hFile = CreateFile("so*rulz.txt",
+					   GENERIC_READ,
+					   FILE_SHARE_WRITE,
+					   NULL,
+					   OPEN_ALWAYS,
+					   FILE_ATTRIBUTE_NORMAL,
+					   NULL);
 
-    ZeroMemory(buf, BUFSIZE);
-    memcpy(buf, "Testing 123", strlen("Testing 123"));
+	ZeroMemory(buf, BUFSIZE);
+	memcpy(buf, "Testing 123", strlen("Testing 123"));
 
-    bRet = WriteFile(hFile,
-                     buf,
-                     strlen(buf),
-                     &bytesWritten,
-                     NULL);
+	bRet = WriteFile(hFile,
+					 buf,
+					 strlen(buf),
+					 &bytesWritten,
+					 NULL);
 
-    bRet = CloseHandle(hFile);
+	bRet = CloseHandle(hFile);
 
-    return 0;
+	return 0;
 }

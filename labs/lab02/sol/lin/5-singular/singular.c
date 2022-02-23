@@ -6,7 +6,6 @@
  *
  * Locking a file
  */
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -24,65 +23,61 @@ static int fdlock = -1;
 
 static void do_stuff(void)
 {
-    sleep(10);
+	sleep(10);
 }
 
 static void check_lock(void)
 {
-    int rc;
+	int rc;
 
-    /* TODO - open file */
-    /* O alta solutie, pentru a limita apelurile de sistem, este
-     * deschiderea unui fisier cu flag-urile O_EXCL si O_CREAT
-     */
-    fdlock = open(LOCK_FILE, O_CREAT | O_RDWR, 0644);
-    DIE(fdlock < 0, "open fdlock");
+	/**
+	 * TODO - Open file
+	 * Another solution that would limit the number of system calls
+	 * would be using the flags O_EXCL and O_CREAT when opening the file
+	 */
+	fdlock = open(LOCK_FILE, O_CREAT | O_RDWR, 0644);
+	DIE(fdlock < 0, "open fdlock");
 
-    /* TODO - lock the file using flock
-     * flock must not block in any case !
-     */
-    rc = flock(fdlock, LOCK_EX | LOCK_NB);
-    if (rc < 0)
-    {
-        if (errno == EWOULDBLOCK)
-        {
-            perror("Process already running");
-            exit(EXIT_SUCCESS);
-        }
-        else
-        {
-        }
-    }
-    else
-    {
-        DIE(rc, "flock failed");
-    }
+	/**
+	 * TODO - Lock the file using flock
+	 * flock must not block in any case !
+	 */
+	rc = flock(fdlock, LOCK_EX | LOCK_NB);
+	if (rc < 0) {
+		if (errno == EWOULDBLOCK) {
+			perror("Process already running");
+			exit(EXIT_SUCCESS);
+		} else {
+		}
+	} else {
+		DIE(rc, "flock failed");
+	}
 
-    printf("\nGot Lock\n\n");
+	printf("\nGot Lock\n\n");
 }
 
 static void clean_up(void)
 {
-    /* TODO - unlock file, close file and delete it */
-    int rc;
+	/* TODO - Unlock file, close file and delete it */
+	int rc;
 
-    rc = flock(fdlock, LOCK_UN);
-    DIE(rc < 0, "flock failed");
+	rc = flock(fdlock, LOCK_UN);
+	DIE(rc < 0, "flock failed");
 
-    rc = close(fdlock);
-    DIE(rc < 0, "close");
+	rc = close(fdlock);
+	DIE(rc < 0, "close");
 
-    rc = unlink(LOCK_FILE);
-    DIE(rc < 0, "unlink");
+	rc = unlink(LOCK_FILE);
+	DIE(rc < 0, "unlink");
 }
 
 int main(void)
 {
-    check_lock();
+	check_lock();
 
-    do_stuff();
+	do_stuff();
 
-    clean_up();
+	clean_up();
 
-    return 0;
+	return 0;
 }

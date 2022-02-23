@@ -6,9 +6,7 @@
  * Helper driver, providing a '/dev/nasty' device file. Reading
  * this file returns a random number betwen 1 and MAX_CHUNK_SIZE
  * characters from a given text.
- *
  */
-
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
