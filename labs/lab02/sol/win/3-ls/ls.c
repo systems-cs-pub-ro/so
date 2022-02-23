@@ -34,9 +34,9 @@ static void PrintUsage(char *program);
 
 /*
  * List files from directory reprezented by path
- * @path		- path to dir we want to list
- * @bRecursive	- if "ls -r" was issued
- * @bAll		- if "ls -a" was issued
+ * @path	- path to dir we want to list
+ * @bRecursive	- if "ls -R" was issued
+ * @bAll	- if "ls -a" was issued
  */
 static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 {
