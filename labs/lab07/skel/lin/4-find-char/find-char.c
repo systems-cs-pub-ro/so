@@ -1,7 +1,7 @@
 /**
  * SO
  * Lab #07
- * 
+ *
  * Task #4, Linux
  *
  * Operations on strings

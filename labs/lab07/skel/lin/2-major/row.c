@@ -15,7 +15,7 @@ char x[SIZE][SIZE];
 int main(void)
 {
 	int i;
-        int j;
+	int j;
 
 	for (i = 0; i < SIZE; ++i) {
 		for (j = 0; j < SIZE; ++j) {
