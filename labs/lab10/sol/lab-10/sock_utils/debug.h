@@ -109,7 +109,7 @@
 #define LOG_LEVEL (WARN + 1024)
 #endif
 
-#ifdef __GNUC__  // Linux
+#ifdef __GNUC__  /* Linux */
 
 #include <errno.h>
 #include <string.h>
