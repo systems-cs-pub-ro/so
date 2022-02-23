@@ -18,67 +18,67 @@
 
 static void wait_for_input(const char *msg)
 {
-    char buf[32];
+	char buf[32];
 
-    printf(" * %s\n", msg);
-    printf(" -- Press ENTER to continue ...");
-    fflush(stdout);
-    fgets(buf, 32, stdin);
+	printf(" * %s\n", msg);
+	printf(" -- Press ENTER to continue ...");
+	fflush(stdout);
+	fgets(buf, 32, stdin);
 }
 
-/* lock memory interval [addr, addr + size - 1] */
+/* Lock memory interval [addr, addr + size - 1] */
 static void lock_memory(char *addr, size_t size)
 {
-    unsigned long page_offset, pagesize;
-    int rc;
+	unsigned long page_offset, pagesize;
+	int rc;
 
-    pagesize = getpagesize();
-    page_offset = (unsigned long)addr % pagesize;
+	pagesize = getpagesize();
+	page_offset = (unsigned long)addr % pagesize;
 
-    /* TODO - align addr to page offset and adjust size */
-    addr -= page_offset;
-    size += page_offset;
+	/* TODO - Align addr to page offset and adjust size */
+	addr -= page_offset;
+	size += page_offset;
 
-    /* TODO - lock memory */
-    rc = mlock(addr, size);
-    DIE(rc == -1, "mlock");
+	/* TODO - Lock memory */
+	rc = mlock(addr, size);
+	DIE(rc == -1, "mlock");
 }
 
-/* unlock memory interval [addr, addr + size - 1] */
+/* Unlock memory interval [addr, addr + size - 1] */
 static void unlock_memory(char *addr, size_t size)
 {
-    unsigned long page_offset, pagesize;
-    int rc;
+	unsigned long page_offset, pagesize;
+	int rc;
 
-    pagesize = getpagesize();
-    page_offset = (unsigned long)addr % pagesize;
+	pagesize = getpagesize();
+	page_offset = (unsigned long)addr % pagesize;
 
-    /* TODO - align addr to page offset and adjust size */
-    addr -= page_offset;
-    size += page_offset;
+	/* TODO - Align addr to page offset and adjust size */
+	addr -= page_offset;
+	size += page_offset;
 
-    /* TODO - unlock memory */
-    rc = munlock(addr, size);
-    DIE(rc == -1, "munlock");
+	/* TODO - Unlock memory */
+	rc = munlock(addr, size);
+	DIE(rc == -1, "munlock");
 }
 
 int main(void)
 {
-    char data[DATA_SIZE];
-    char text[] = "azur";
+	char data[DATA_SIZE];
+	char text[] = "azur";
 
-    wait_for_input("beginning");
+	wait_for_input("beginning");
 
-    lock_memory(data, DATA_SIZE);
-    wait_for_input("memory locked ");
+	lock_memory(data, DATA_SIZE);
+	wait_for_input("memory locked ");
 
-    /*  perform real-time data changes */
-    memcpy(data, text, sizeof(text));
-    printf("data=%s\n", data);
-    wait_for_input("accessed memory");
+	/* Perform real-time data changes */
+	memcpy(data, text, sizeof(text));
+	printf("data=%s\n", data);
+	wait_for_input("accessed memory");
 
-    unlock_memory(data, DATA_SIZE);
-    wait_for_input("memory unlocked");
+	unlock_memory(data, DATA_SIZE);
+	wait_for_input("memory unlocked");
 
-    return 0;
+	return 0;
 }

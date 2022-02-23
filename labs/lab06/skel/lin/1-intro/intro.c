@@ -22,58 +22,58 @@
 
 static void wait_for_input(const char *msg)
 {
-    char buf[32];
+	char buf[32];
 
-    printf(" * %s\n", msg);
-    printf(" -- Press ENTER to continue ...\n");
-    fflush(stdout);
-    fgets(buf, 32, stdin);
+	printf(" * %s\n", msg);
+	printf(" -- Press ENTER to continue ...\n");
+	fflush(stdout);
+	fgets(buf, 32, stdin);
 }
 
 int main(void)
 {
-    int rc;
-    int page_size = getpagesize();
-    char *p;
-    int fd;
+	int rc;
+	int page_size = getpagesize();
+	char *p;
+	int fd;
 
-    wait_for_input("before mmap file use pmap to see file mapping");
+	wait_for_input("before mmap file use pmap to see file mapping");
 
-    /** First we map a file */
-    fd = open("Makefile", O_RDWR);
-    DIE(fd == -1, "open");
+	/* First we map a file */
+	fd = open("Makefile", O_RDWR);
+	DIE(fd == -1, "open");
 
-    p = mmap(NULL, page_size,
-             PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-    DIE(p == MAP_FAILED, "mmap");
-    wait_for_input("after mapping the file");
+	p = mmap(NULL, page_size,
+			 PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+	DIE(p == MAP_FAILED, "mmap");
+	wait_for_input("after mapping the file");
 
-    rc = munmap(p, page_size);
-    DIE(rc == -1, "munmap");
-    wait_for_input("after unmapping the file");
+	rc = munmap(p, page_size);
+	DIE(rc == -1, "munmap");
+	wait_for_input("after unmapping the file");
 
-    rc = close(fd);
-    DIE(rc == -1, "close");
+	rc = close(fd);
+	DIE(rc == -1, "close");
 
-    /** Second we map SHARED memory */
-    p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-             MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-    DIE(p == MAP_FAILED, "mmap");
-    wait_for_input("after mapping SHARED memory");
+	/* Second we map SHARED memory */
+	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
+			 MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+	DIE(p == MAP_FAILED, "mmap");
+	wait_for_input("after mapping SHARED memory");
 
-    rc = munmap(p, page_size);
-    DIE(rc == -1, "munmap");
-    wait_for_input("after unmapping SHARED memory");
+	rc = munmap(p, page_size);
+	DIE(rc == -1, "munmap");
+	wait_for_input("after unmapping SHARED memory");
 
-    /** Thrid we map PRIVATE memory */
-    p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-             MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    DIE(p == MAP_FAILED, "mmap");
-    wait_for_input("after mapping PRIVATE memory");
+	/* Third we map PRIVATE memory */
+	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
+			 MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+	DIE(p == MAP_FAILED, "mmap");
+	wait_for_input("after mapping PRIVATE memory");
 
-    rc = munmap(p, page_size);
-    DIE(rc == -1, "munmap");
-    wait_for_input("after unmapping PRIVATE memory");
+	rc = munmap(p, page_size);
+	DIE(rc == -1, "munmap");
+	wait_for_input("after unmapping PRIVATE memory");
 
-    return 0;
+	return 0;
 }

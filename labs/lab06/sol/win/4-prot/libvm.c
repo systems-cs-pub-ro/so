@@ -7,7 +7,7 @@
  * Changing access right to pages
  */
 
-/* do not use UNICODE */
+/* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
 
@@ -25,107 +25,101 @@ static int pageSize = 0x1000;
 static LPBYTE p;
 static int how[3] = {PAGE_NOACCESS, PAGE_READONLY, PAGE_READWRITE};
 
-/*
+/**
  * SIGSEGV handler
  */
 static LONG CALLBACK access_violation(PEXCEPTION_POINTERS ExceptionInfo)
 {
-    DWORD old, rc;
-    LPBYTE addr;
-    int pageNo;
+	DWORD old, rc;
+	LPBYTE addr;
+	int pageNo;
 
-    /* TODO - get the memory location which caused the page fault */
-    addr = (LPBYTE)ExceptionInfo->ExceptionRecord->ExceptionInformation[1];
+	/* TODO 2 - Get the memory location which caused the page fault */
+	addr = (LPBYTE)ExceptionInfo->ExceptionRecord->ExceptionInformation[1];
 
-    /* TODO - get the page number which caused the page fault */
-    pageNo = (int)(addr - p) / pageSize;
+	/* TODO 2 - Get the page number which caused the page fault */
+	pageNo = (int)(addr - p) / pageSize;
 
-    printf("Exception on page %d\n", pageNo);
+	printf("Exception on page %d\n", pageNo);
 
-    /* TODO - test if page is one of our own */
-    if (!(pageNo >= 0 && pageNo < 3))
-    {
-        printf("wrong page number %d\n", pageNo);
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
+	/* TODO 2 - Test if page is one of our own */
+	if (!(pageNo >= 0 && pageNo < 3)) {
+		printf("wrong page number %d\n", pageNo);
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
 
-    /* TODO - increase protection for that page */
-    if (how[pageNo] == PAGE_NOACCESS)
-    {
+	/* TODO 2 - Increase protection for that page */
+	if (how[pageNo] == PAGE_NOACCESS) {
+		how[pageNo] = PAGE_READONLY;
 
-        how[pageNo] = PAGE_READONLY;
+		rc = VirtualProtect(p + pageNo * pageSize, pageSize,
+							PAGE_READONLY, &old);
+		DIE(rc == FALSE, "VirtualProtect");
 
-        rc = VirtualProtect(p + pageNo * pageSize, pageSize,
-                            PAGE_READONLY, &old);
-        DIE(rc == FALSE, "VirtualProtect");
+		printf("giving PAGE_READONLY to page %d\n", pageNo);
+	} else {
+		how[pageNo] = PAGE_READWRITE;
 
-        printf("giving PAGE_READONLY to page %d\n", pageNo);
-    }
-    else
-    {
+		rc = VirtualProtect(p + pageNo * pageSize, pageSize,
+							PAGE_READWRITE, &old);
+		DIE(rc == FALSE, "VirtualProtect");
 
-        how[pageNo] = PAGE_READWRITE;
+		printf("giving PAGE_READWRITE to page %d\n", pageNo);
+	}
 
-        rc = VirtualProtect(p + pageNo * pageSize, pageSize,
-                            PAGE_READWRITE, &old);
-        DIE(rc == FALSE, "VirtualProtect");
-
-        printf("giving PAGE_READWRITE to page %d\n", pageNo);
-    }
-
-    return EXCEPTION_CONTINUE_EXECUTION;
+	return EXCEPTION_CONTINUE_EXECUTION;
 }
 
-/*
- * sets SIGSEGV handler
+/**
+ * Sets SIGSEGV handler
  */
 static void set_signal(void)
 {
-    access_violation_handler = AddVectoredExceptionHandler(1,
-                                                           access_violation);
-    DIE(access_violation_handler == NULL, "AddVctoredExceptionHandler");
+	access_violation_handler = AddVectoredExceptionHandler(1,
+														   access_violation);
+	DIE(access_violation_handler == NULL, "AddVctoredExceptionHandler");
 }
 
-/*
- * restores SIGSEGV handler
+/**
+ * Restores SIGSEGV handler
  */
 static void restore_signal(void)
 {
-    int rc = RemoveVectoredExceptionHandler(access_violation_handler);
+	int rc = RemoveVectoredExceptionHandler(access_violation_handler);
 
-    DIE(rc == FALSE, "RemoveVectoredExceptionHandler");
+	DIE(rc == FALSE, "RemoveVectoredExceptionHandler");
 }
 
 int main(void)
 {
-    BYTE ch;
-    DWORD old, rc;
+	BYTE ch;
+	DWORD old, rc;
 
-    p = VirtualAlloc(NULL, 3 * pageSize, MEM_COMMIT, PAGE_NOACCESS);
-    DIE(p == NULL, "VirtualAlloc");
+	p = VirtualAlloc(NULL, 3 * pageSize, MEM_COMMIT, PAGE_NOACCESS);
+	DIE(p == NULL, "VirtualAlloc");
 
-    rc = VirtualProtect(p + 0 * pageSize, pageSize, PAGE_NOACCESS, &old);
-    DIE(rc == FALSE, "VirtualProtect");
+	rc = VirtualProtect(p + 0 * pageSize, pageSize, PAGE_NOACCESS, &old);
+	DIE(rc == FALSE, "VirtualProtect");
 
-    rc = VirtualProtect(p + 1 * pageSize, pageSize, PAGE_READONLY, &old);
-    DIE(rc == FALSE, "VirtualProtect");
+	rc = VirtualProtect(p + 1 * pageSize, pageSize, PAGE_READONLY, &old);
+	DIE(rc == FALSE, "VirtualProtect");
 
-    rc = VirtualProtect(p + 2 * pageSize, pageSize, PAGE_READWRITE, &old);
-    DIE(rc == FALSE, "VirtualProtect");
+	rc = VirtualProtect(p + 2 * pageSize, pageSize, PAGE_READWRITE, &old);
+	DIE(rc == FALSE, "VirtualProtect");
 
-    set_signal();
+	set_signal();
 
-    ch = p[0 * pageSize];
-    p[0 * pageSize] = 'a';
-    ch = p[1 * pageSize];
-    p[1 * pageSize] = 'a';
-    ch = p[2 * pageSize];
-    p[2 * pageSize] = 'a';
+	ch = p[0 * pageSize];
+	p[0 * pageSize] = 'a';
+	ch = p[1 * pageSize];
+	p[1 * pageSize] = 'a';
+	ch = p[2 * pageSize];
+	p[2 * pageSize] = 'a';
 
-    restore_signal();
+	restore_signal();
 
-    rc = VirtualFree(p, 3 * pageSize, MEM_DECOMMIT);
-    DIE(rc == FALSE, "VirtualFree");
+	rc = VirtualFree(p, 3 * pageSize, MEM_DECOMMIT);
+	DIE(rc == FALSE, "VirtualFree");
 
-    return 0;
+	return 0;
 }
