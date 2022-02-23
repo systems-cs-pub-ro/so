@@ -17,7 +17,7 @@
 #define CLIENT_COUNT	10
 #define MSG_SIZE	32
 
-#define	ANY		-1
+#define	ANY		(-1)
 #define PIPE_READ	0
 #define PIPE_WRITE	1
 
