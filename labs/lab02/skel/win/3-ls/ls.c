@@ -129,7 +129,8 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        /* save path */
+        /* Save path */
+
         strcpy_s(path, MAXPATH, argv[i]);
     }
 
