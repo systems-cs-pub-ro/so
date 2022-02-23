@@ -1,7 +1,7 @@
 /**
  * SO
  * Lab #07
- * 
+ *
  * Task #2, Linux
  *
  * Column major
@@ -14,7 +14,8 @@ char x[SIZE][SIZE];
 
 int main(void)
 {
-	int i, j;
+	int i;
+        int j;
 
 	for (i = 0; i < SIZE; ++i) {
 		for (j = 0; j < SIZE; ++j) {

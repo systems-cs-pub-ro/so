@@ -1,7 +1,7 @@
 /**
  * SO
  * Lab #07
- * 
+ *
  * Task #1, Linux
  *
  * Hash function
