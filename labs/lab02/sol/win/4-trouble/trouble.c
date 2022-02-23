@@ -7,7 +7,7 @@
  * Troubleshoot
  */
 
-/* do not use UNICODE */
+/* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
 
