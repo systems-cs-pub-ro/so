@@ -138,8 +138,7 @@
 
 #endif
 
-enum LogType
-{
+enum LogType {
     NONE,
     FATAL,
     WARN,
