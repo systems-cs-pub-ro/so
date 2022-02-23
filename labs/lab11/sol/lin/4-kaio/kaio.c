@@ -1,9 +1,9 @@
 /**
  * SO
  * Lab #11
- * 
+ *
  * Task #4,
- * 
+ *
  * Asyncronous I/O - KAIO
  */
 #include <stdio.h>

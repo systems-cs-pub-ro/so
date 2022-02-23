@@ -100,7 +100,7 @@ static void wait_aio(io_context_t ctx, int nops)
 #ifndef USE_EVENTFD
 	/**
 	 * TODO 1 - wait for async operations to finish
-	 * 
+	 *
 	 * Use only io_getevents()
 	 */
 
