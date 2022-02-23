@@ -41,7 +41,7 @@ static int parse_line(char *line);
 static void alloc_mem(void);
 static void free_mem(void);
 
-/*
+/**
  * @filedes  - file descriptor to be redirected
  * @filename - filename used for redirection
  */
@@ -63,8 +63,8 @@ static char *expand(const char *name)
 	/* TODO 2 - Return the value of environment variables */
 }
 
-/*
- *  @args - array that contains a simple command with parrameters
+/**
+ *  @args - array that contains a simple command with parameters
  */
 static void simple_cmd(char **args)
 {

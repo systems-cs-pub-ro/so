@@ -2,7 +2,7 @@
  * SO
  * Lab #3
  *
- * Task #2, lin
+ * Task #2, Linux 
  *
  * What happens if a parent process does not wait for its child process?
  */

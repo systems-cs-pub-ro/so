@@ -2,7 +2,7 @@
  * SO
  * Lab #3
  *
- * Task #3, Linux 
+ * Task #3, Linux
  *
  * Implementing a minimal shell
  */
@@ -79,7 +79,7 @@ static char *expand(const char *key)
 }
 
 /**
- *  @args - array that contains a simple command with parrameters
+ *  @args - array that contains a simple command with parameters
  */
 static void simple_cmd(char **args)
 {

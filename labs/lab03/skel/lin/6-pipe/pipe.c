@@ -85,7 +85,7 @@ int main(void)
 
 	/**
 	 * Sometimes I wish I could do a fork() in real life. No more
-	 * hard choices to think about. Endless possibillites to explore. MH.
+	 * hard choices to think about. Endless possibilities to explore. MH.
 	 */
 	pid = fork();
 	switch (pid) {
