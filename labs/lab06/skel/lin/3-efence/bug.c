@@ -15,8 +15,8 @@
 int main(void)
 {
     int i;
-    int *v = calloc(10, sizeof(int));
-    int *w = calloc(10, sizeof(int));
+    int *v = calloc(10, sizeof(*v));
+    int *w = calloc(10, sizeof(*w));
 
     for (i = 0; i < 10; i++)
         v[i] = i;
