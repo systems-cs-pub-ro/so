@@ -64,7 +64,7 @@ int main(void)
     lock_memory(data, DATA_SIZE);
     wait_for_input("memory locked ");
 
-    /*  perform real-time data changes */
+    /* Perform real-time data changes */
     memcpy(data, text, sizeof(text));
     printf("data=%s\n", data);
     wait_for_input("accessed memory");
