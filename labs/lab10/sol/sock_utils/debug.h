@@ -160,10 +160,10 @@ enum LogType
 		}																		\
 	} while (0)
 
-#define LOG_ERROR(...)									\
-	do {												\
-		LOG_GET_ERROR_MESSAGE							\
-		LOG(NONE, __VA_ARGS__);							\
+#define LOG_ERROR(...)						\
+	do {							\
+		LOG_GET_ERROR_MESSAGE				\
+		LOG(NONE, __VA_ARGS__);				\
 		LOG(FATAL, "Last error: %s.", error_buffer);	\
 	} while (0)
 
