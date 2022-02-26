@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
 	/* TODO - Truncate the output file to the input file size */
 
-	/* TODO - Mmap the input and output file */
+	/* TODO - mmap the input and output file */
 
 	/* TODO - Copy the input file to the output file */
 
