@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	DWORD dwRet;
 	DWORD dwErr;
 	DWORD dwBytesRead;
-	char *buffer = malloc(BUF_SIZE * sizeof(char));
+	char *buffer = malloc(BUF_SIZE * sizeof(*buffer));
 	int doWork = 1024;
 
 	if (argc != 2)
