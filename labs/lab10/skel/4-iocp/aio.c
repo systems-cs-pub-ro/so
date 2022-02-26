@@ -18,9 +18,9 @@
 #undef BUFSIZ
 #define BUFSIZ 4096
 
-#define IO_SYNC 1
-#define IO_ASYNC 2
-#define IO_OP_TYPE IO_ASYNC
+#define IO_SYNC		1
+#define IO_ASYNC	2
+#define IO_OP_TYPE	IO_ASYNC
 
 /* File names */
 static char *files[] = {
