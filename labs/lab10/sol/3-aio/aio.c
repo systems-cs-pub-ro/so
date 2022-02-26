@@ -80,7 +80,8 @@ static void init_buffer(void)
 static void xwrite(HANDLE fd, const char *buf, DWORD len)
 {
 	DWORD bytes_so_far = 0;
-	DWORD bytes_written, dwRet;
+	DWORD bytes_written;
+	DWORD dwRet;
 
 	while (len > bytes_so_far) {
 		dwRet = WriteFile(
