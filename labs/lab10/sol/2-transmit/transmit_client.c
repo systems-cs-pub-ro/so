@@ -3,7 +3,6 @@
  * Lab 10 - Advanced I/O Windows
  * Task #2 - Client
  */
-
 /* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
