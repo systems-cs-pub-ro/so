@@ -23,7 +23,9 @@ int main(int argc, char *argv[])
 	HANDLE hFile;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
-	DWORD bytesRead, bytesWritten, totalWritten;
+	DWORD bytesRead;
+	DWORD bytesWritten;
+	DWORD totalWritten;
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s <file>\n", argv[0]);
