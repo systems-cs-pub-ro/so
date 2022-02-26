@@ -81,7 +81,7 @@ int main(void)
 	hFile = open_file();
 
 	hListen = tcp_listen_connections(SERVER_LISTEN_PORT,
-									 SERVER_BACKLOG);
+		SERVER_BACKLOG);
 	DIE(hListen < 0, "tcp_listen_connections");
 
 	hSocket = accept(hListen, (SSA *)&addr, &addrlen);
