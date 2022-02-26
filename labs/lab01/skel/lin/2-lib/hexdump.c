@@ -1,5 +1,5 @@
 /**
- * SO, 2016
+ * SO
  * Lab #1, Introduction
  *
  * Task #2, Linux
@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-const char hex_asc[] = "0123456789abcdef";
+static const char hex_asc[] = "0123456789abcdef";
 
 #define hex_asc_lo(x)   hex_asc[((x) & 0x0f)]
 #define hex_asc_hi(x)   hex_asc[((x) & 0xf0) >> 4]

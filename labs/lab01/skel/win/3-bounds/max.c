@@ -1,12 +1,11 @@
 /**
- * SO, 2016
- * Lab #1, Introducere
+ * SO
+ * Lab #1, Introduction
  *
  * Task #3, Windows
  *
  * Building libraries
  */
-
 
 __declspec(dllexport) int get_max(int a, int b);
 
@@ -17,4 +16,3 @@ int get_max(int a, int b)
 	else
 		return b;
 }
-

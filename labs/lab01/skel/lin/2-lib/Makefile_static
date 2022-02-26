@@ -15,6 +15,7 @@ main.o: main.c
 hexdump.o: hexdump.c
 sample.o: sample.c
 
-.PHONY:
 clean:
 	rm -f *.o main_static libhexdump_static.a
+
+.PHONY: all clean

@@ -6,5 +6,3 @@ all: fault
 .PHONY:
 clean:
 	rm fault
-
-
