@@ -1,16 +1,15 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #10, lin
-  *
-  * Dump malloc implementation that only allocates space
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #9, Linux
+ *
+ * Dump malloc implementation that only allocates space
+ */
 #include <unistd.h>
 #include <sys/types.h>
 
 #include "my_malloc.h"
-
 
 void *my_malloc(size_t size)
 {

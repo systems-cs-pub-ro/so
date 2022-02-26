@@ -20,7 +20,10 @@
  */
 int inc(void)
 {
+	static int counter = 1;
 
+	counter++;
+	return counter;
 }
 
 int main(void)
@@ -32,4 +35,3 @@ int main(void)
 
 	return 0;
 }
-

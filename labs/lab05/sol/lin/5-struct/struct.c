@@ -4,7 +4,7 @@
  *
  * Task #5, Linux
  *
- * Use of malloc, realloc on structures
+ * malloc, realloc usage on structures
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +12,7 @@
 #include "utils.h"
 
 #define NO_FLOWERS 5
+
 #define NAME_LEN 16
 
 struct flower_info {
@@ -29,16 +30,18 @@ static struct flower_info *allocate_flowers(int no)
 	int i;
 	struct flower_info *f_info;
 
-	/* TODO: allocate space for 'no' elements of type flower_info */
+	/* TODO: allocate space for no elements of type flower_info */
+	f_info = malloc(no * sizeof(struct flower_info));
+	DIE(f_info == NULL, "malloc");
 
 	/* initialization */
 	for (i = 0; i < no; i++) {
-		/* TODO: pay attention to the struct fields and
-		 * allocate them accordingly
-		 */
+		f_info[i].name = malloc(NAME_LEN * sizeof(char));
+		DIE(f_info[i].name == NULL, "malloc");
+
 		sprintf(f_info[i].name, "flower__%d__", i);
-		f_info[i].price = 1 + i*2;
-		f_info[i].class = 2 + i*3;
+		f_info[i].price = 1 + i * 2;
+		f_info[i].class = 2 + i * 3;
 	}
 
 	return f_info;
@@ -50,7 +53,15 @@ static struct flower_info *allocate_flowers(int no)
  */
 static void free_flowers(struct flower_info *f_info, int no)
 {
+	int i;
 
+	for (i = 0; i < no; i++) {
+		free(f_info[i].name);
+		f_info[i].name = NULL;
+	}
+
+	free(f_info);
+	f_info = NULL;
 }
 
 static void print_flowers(struct flower_info *f_info, int no)
@@ -58,15 +69,15 @@ static void print_flowers(struct flower_info *f_info, int no)
 	int i;
 
 	for (i = 0; i < no; i++)
-		printf("=%d=:Name: %s, price: %d, class: %d\n",
-			i, f_info[i].name, f_info[i].price, f_info[i].class);
+		printf("=%d=:Name: %s, price: %d, class: %d\n", i,
+		       f_info[i].name, f_info[i].price, f_info[i].class);
 }
 
 int main(void)
 {
 	struct flower_info *flowers;
 
-	flowers  = allocate_flowers(NO_FLOWERS);
+	flowers = allocate_flowers(NO_FLOWERS);
 
 	print_flowers(flowers, NO_FLOWERS);
 

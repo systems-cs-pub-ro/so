@@ -4,13 +4,13 @@
  *
  * Task #3, Linux
  *
- * Use of valgrind
+ * Valgrind usage
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
 
-#define	MAX		100
+#define MAX		100
 #define CHUNK		10
 #define SEED		23
 #define STOP		17
@@ -26,7 +26,7 @@ int main(void)
 
 	srand(SEED);
 	do {
-		nr = 1 + rand()%MAX;
+		nr = 1 + rand() % MAX;
 		buffer[count] = nr;
 		count++;
 
@@ -39,7 +39,10 @@ int main(void)
 		}
 
 		printf("buffer[%d]=%d\n", count - 1, buffer[count-1]);
-	} while (buffer[count-1] != STOP);
+	} while (buffer[count - 1] != STOP);
+
+	/* free memory */
+	free(buffer);
 
 	return 0;
 }

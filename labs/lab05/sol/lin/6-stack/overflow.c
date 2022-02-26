@@ -16,12 +16,14 @@
 #define get_ebp(ebp) __asm__("movl %%ebp, %0;":"=&r"(ebp))
 
 typedef int mytype;
+int pos = 7;
 
 #elif defined(__x86_64)
 #define get_esp(esp) __asm__("mov %%rsp, %0;":"=&r"(esp))
 #define get_ebp(ebp) __asm__("mov %%rbp, %0;":"=&r"(ebp))
 
 typedef long mytype;
+int pos = 5;
 
 #else
   #error "Unknown architecture"
@@ -51,8 +53,7 @@ struct stack_element stack[128];
 void show_snapshot(void)
 {
 	for (i = 0; i < size; i++)
-		/* TODO1 - fill in the correct parameters to be printed */
-		printf("[%p]:0x%lx\n", /* TODO1 */);
+		printf("[%p]:0x%lx\n", stack[i].address, stack[i].value);
 }
 
 /**
@@ -61,8 +62,8 @@ void show_snapshot(void)
 void take_snapshot(void)
 {
 	for (p = ebp; p >= esp; p--) {
-		stack[size].address = /* TODO1: set the current address */
-		stack[size].value   = /* TODO1: set the value at address */
+		stack[size].address = p;
+		stack[size].value = *p;
 		size++;
 	}
 }
@@ -84,6 +85,7 @@ void f2(mytype a)
 	/* TODO2: use v so that when function 'f2' returns,
 	 * the 'show_message' function executes
 	 */
+	v[pos] = (mytype)show_message;
 
 	/* save current stack pointer */
 	get_esp(esp);

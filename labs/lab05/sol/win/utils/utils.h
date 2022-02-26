@@ -4,7 +4,6 @@
  *
  * Useful structures/macros
  */
-
 #ifndef WIN_UTILS_H_
 #define WIN_UTILS_H_	1
 
@@ -20,7 +19,7 @@
 			PrintLastError(call_description);	\
 			exit(EXIT_FAILURE);			\
 		}						\
-	} while (0)
+	} while(0)
 
 static VOID PrintLastError(const PCHAR message)
 {

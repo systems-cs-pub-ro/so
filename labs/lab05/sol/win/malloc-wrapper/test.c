@@ -21,7 +21,13 @@ static int ***tensor_alloc(int l, int m, int n)
 {
 	int i, j;
 	int ***t;
-	/* TODO */
+
+	t = xmalloc(l * sizeof(*t));
+	for (i = 0; i < l; i++) {
+		t[i] = xmalloc(m * sizeof(**t));
+		for (j = 0; j < m; j++)
+			t[i][j] = xmalloc(n * sizeof(***t));
+	}
 
 	return t;
 }
@@ -30,8 +36,13 @@ static void tensor_free(int ***t, int l, int m)
 {
 	int i, j;
 
-	/* TODO */
+	for (i = 0; i < l; i++) {
+		for (j = 0; j < m; j++)
+			xfree(t[i][j]);
+		xfree(t[i]);
+	}
 
+	xfree(t);
 }
 
 static void tensor_init(int ***t, int l, int m, int n)

@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #2, lin
-  *
-  * Variables in process address space viewed with objdump
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #2, Linux
+ *
+ * Variables in process address space viewed with objdump
+ */
 #include <stdlib.h>
 
 int var_a;

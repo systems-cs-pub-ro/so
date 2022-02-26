@@ -1,10 +1,9 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #10, lin
-  *
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #9, Linux
+ */
 #ifndef MY_MALLOC__
 #define MY_MALLOC__
 

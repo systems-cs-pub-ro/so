@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #5
-  *
-  * Task #10, lin
-  *
-  * Test for custom malloc implementation
-  */
+ * SO
+ * Lab #5, Memory Management
+ *
+ * Task #9, Linux
+ *
+ * Test for custom malloc implementation
+ */
 #include <stdlib.h>
 #include <stdio.h>
 

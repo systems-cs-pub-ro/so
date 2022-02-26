@@ -15,10 +15,13 @@ int main(void)
 {
 	int i;
 	unsigned int n = 0xDEADBEEF;
-	unsigned char *w;
+	unsigned char *w = (unsigned char *)&n;
 
 	/* TODO - use w to show all bytes of n in order */
+	for (i = 0; i < 4; i++)
+		printf("%x ", w[i]);
 
+	printf("\n");
 
 	return 0;
 }

@@ -10,9 +10,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "utils.h"
+
 char *read_message(void)
 {
-	char buf[BUFSIZ];
+	char *buf;
+
+	buf = malloc(BUFSIZ * sizeof(char));
+	DIE(!buf, "malloc");
 
 	printf("Give input string: ");
 	fgets(buf, 1024, stdin);
@@ -39,7 +44,9 @@ int main(void)
 
 	upper_string(message);
 
-	printf("\n\nString is %s\n", message);
+	printf("Upper string is: %s\n", message);
+
+	free(message);
 
 	return 0;
 }

@@ -1,6 +1,6 @@
 /**
- * SO, 2016
- * Lab #5, Gestiunea Memoriei
+ * SO
+ * Lab #5, Memory Management
  *
  * Task #1, Windows
  *
@@ -17,10 +17,10 @@ void *xmalloc(size_t size);
 
 /* TODO */
 
-#define xfree(ptr) \
-	do { \
-		BOOL bRet; \
-		HANDLE hProcessHeap; \
+#define xfree(ptr)			\
+	do {				\
+		BOOL bRet;		\
+		HANDLE hProcessHeap;	\
 	} while (0)
 
 #endif
