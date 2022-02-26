@@ -1,5 +1,5 @@
 /**
- * Filename: log.h
+ * Filename: debug.h
  * Author: Alexandru Mosoi (brtzsnr@gmail.com)
  * Last modified: 07 March 2008
  *
