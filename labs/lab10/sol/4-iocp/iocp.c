@@ -5,7 +5,6 @@
  * I/O completion ports wrapper functions
  * Task #4 (I/O completion ports)
  */
-
 #include <windows.h>
 
 #include "iocp.h"
