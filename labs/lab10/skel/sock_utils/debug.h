@@ -103,7 +103,7 @@
 #define LOG_LEVEL (WARN + 1024)
 #endif
 
-#ifdef __GNUC__ /* Linux */
+#ifdef __GNUC__ // Linux
 
 #include <errno.h>
 #include <string.h>
@@ -142,10 +142,8 @@ enum LogType
 };
 
 #define LOG(type, ...)															\
-	do																			\
-	{																			\
-		if (type <= LOG_LEVEL)													\
-		{																		\
+	do {																		\
+		if (type <= LOG_LEVEL) {												\
 			if (type <= DEBUG)													\
 				fprintf(stderr, " %c", " FWID"[type]);							\
 			else																\
@@ -163,8 +161,7 @@ enum LogType
 	} while (0)
 
 #define LOG_ERROR(...)									\
-	do													\
-	{													\
+	do {												\
 		LOG_GET_ERROR_MESSAGE							\
 		LOG(NONE, __VA_ARGS__);							\
 		LOG(FATAL, "Last error: %s.", error_buffer);	\
@@ -173,10 +170,8 @@ enum LogType
 #define DLOG(level, ...) LOG(DEBUG + (level), __VA_ARGS__)
 
 #define ASSERT(condition)									\
-	do														\
-	{														\
-		if (!(condition))									\
-		{													\
+	do {													\
+		if (!(condition)) {									\
 			LOG_GET_ERROR_MESSAGE							\
 			LOG(NONE, "ASSERT failed: %s.", #condition);	\
 			LOG(FATAL, "Last error: %s.", error_buffer);	\
@@ -184,10 +179,8 @@ enum LogType
 	} while (0)
 
 #define CHECK(left, operation, right)											\
-	do																			\
-	{																			\
-		if (!((left)operation(right)))											\
-		{																		\
+	do {																		\
+		if (!((left)operation(right))) {										\
 			LOG_GET_ERROR_MESSAGE												\
 			LOG(NONE, "CHECK failed: %s %s %s.", #left, #operation, #right);	\
 			LOG(FATAL, "Last error: %s.", error_buffer);						\

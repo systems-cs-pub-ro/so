@@ -3,7 +3,6 @@
  * @param1: file size
  * @param2: file name
  */
-
 #include "utils.h"
 #include <windows.h>
 #include <stdio.h>

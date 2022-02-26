@@ -105,8 +105,7 @@ static void do_io_sync(void)
 }
 
 /* Init OVERLAPPED structure */
-static void init_overlapped(OVERLAPPED *lpo, DWORD offset,
-							HANDLE hEvent)
+static void init_overlapped(OVERLAPPED *lpo, DWORD offset, HANDLE hEvent)
 {
 	memset(lpo, 0, sizeof(*lpo));
 	lpo->Offset = offset;
