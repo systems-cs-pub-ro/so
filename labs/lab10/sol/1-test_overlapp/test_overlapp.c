@@ -20,8 +20,7 @@ int main(int argc, char **argv)
 	char *buffer = malloc(BUF_SIZE * sizeof(*buffer));
 	int doWork = 1024;
 
-	if (argc != 2)
-	{
+	if (argc != 2) {
 		fprintf(stderr, "Usage: %s input_file\n", argv[0]);
 		return -1;
 	}
