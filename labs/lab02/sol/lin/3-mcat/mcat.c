@@ -20,7 +20,10 @@
 
 int main(int argc, char **argv)
 {
-	int fd, fd2, rc, bytesRead;
+	int fd; 
+	int fd2;
+	int rc;
+	int bytesRead;
 	char buffer[BUFSIZE];
 
 	if (argc < 1 || argc > 3) {
