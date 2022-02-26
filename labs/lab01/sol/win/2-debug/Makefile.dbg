@@ -1,0 +1,13 @@
+CFLAGS = /nologo /W3 /DDEBUG__
+
+all: main.exe
+
+main.exe: main.obj add.obj
+	link /nologo /out:$@ $**
+
+main.obj: main.c
+
+add.obj: add.c
+
+clean:
+	del /Q /F *.obj main.exe

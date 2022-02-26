@@ -1,0 +1,15 @@
+# SO, 2016 - Lab #1, Introduction
+# Task #1, Linux
+#
+# Simple Makefile to compile hello.c
+
+CC = gcc
+CFLAGS = -Wall
+
+all: hello
+
+hello: hello.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+clean:
+	rm -f hello
