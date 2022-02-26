@@ -12,16 +12,16 @@
 #include <stdio.h>
 
 /* Useful macro for handling error codes */
-#define DIE(assertion, call_description)               \
-	do                                                 \
-	{                                                  \
-		if (assertion)                                 \
-		{                                              \
-			fprintf(stderr, "(%s, %s, %d): ",          \
-					__FILE__, __FUNCTION__, __LINE__); \
-			PrintLastError(call_description);          \
-			exit(EXIT_FAILURE);                        \
-		}                                              \
+#define DIE(assertion, call_description)				\
+	do													\
+	{													\
+		if (assertion)									\
+		{												\
+			fprintf(stderr, "(%s, %s, %d): ",			\
+					__FILE__, __FUNCTION__, __LINE__);	\
+			PrintLastError(call_description);			\
+			exit(EXIT_FAILURE);							\
+		}												\
 	} while (0)
 
 static VOID PrintLastError(const PCHAR message)

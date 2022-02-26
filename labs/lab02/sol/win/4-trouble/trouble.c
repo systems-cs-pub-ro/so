@@ -25,8 +25,10 @@ int main(int argc, char *argv[])
 	BOOL bRet;
 	DWORD bytesWritten;
 
-	/* File name should not contain * */
-	/* File attributes should be GENERIC_WRITE */
+	/**
+	 * File name should not contain *
+	 * File attributes should be GENERIC_WRITE
+	 */
 	hFile = CreateFile("so_rulz.txt",
 					   GENERIC_WRITE,
 					   FILE_SHARE_WRITE,

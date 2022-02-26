@@ -18,7 +18,8 @@
 
 int main(void)
 {
-	int fd, rc;
+	int fd;
+	int rc;
 	char *msg = "Ana are mere!\n";
 
 	/* Open files */

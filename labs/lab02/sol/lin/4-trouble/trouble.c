@@ -20,7 +20,8 @@ int main(void)
 {
 	int fd;
 	int rc;
-	size_t bytes_written = 0, count;
+	size_t bytes_written = 0;
+	size_t count;
 	char *msg = "Ana are mere!\n";
 
 	/* Open files */

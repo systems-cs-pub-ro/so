@@ -42,7 +42,8 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 	LARGE_INTEGER filesize;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwRet;
-	TCHAR extendedPath[MAXPATH], newPath[MAXPATH];
+	TCHAR extendedPath[MAXPATH];
+	TCHAR newPath[MAXPATH];
 	int i = 0;
 
 	printf("\n=== %s ===\n\n", path);
@@ -67,7 +68,12 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 			 */
 
 			if (bRecursive == TRUE) {
-				/* TODO 3 - Recursive */
+				/**
+				 * TODO 3 - Recursive
+				 * Remember that . and .. are also members of the current
+				 * directory. Do not include them in your recursion, or you
+				 * might loop infinitely
+				 */
 			}
 		} else {
 			/**
@@ -86,7 +92,7 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 			}
 			printf("\n");
 		}
-	} while (/* TODO 1 - Interate if there are still files in list */ 0);
+	} while (/* TODO 1 - Iterate if there are still files in list */ 0);
 
 	/* TODO 1 - Cleanup */
 }

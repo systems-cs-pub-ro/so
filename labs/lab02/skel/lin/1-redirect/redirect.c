@@ -29,7 +29,9 @@ static void wait_for_input(const char *msg)
 
 int main(void)
 {
-	int fd1, fd2, rc;
+	int fd1
+	int fd2;
+	int rc;
 
 	wait_for_input("beginning");
 

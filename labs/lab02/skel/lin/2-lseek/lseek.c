@@ -17,7 +17,10 @@
 
 int main(void)
 {
-	int fd1, fd2, rc, pos;
+	int fd1;
+	int fd2;
+	int rc;
+	int pos;
 
 	fd1 = open("Makefile", O_RDWR);
 	DIE(fd1 < 0, "open file.txt");

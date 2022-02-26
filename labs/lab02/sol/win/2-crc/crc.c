@@ -42,7 +42,8 @@ static void WriteCrc(int crc, HANDLE hWrite)
 
 static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 {
-	HANDLE hRead, hWrite;
+	HANDLE hRead;
+	HANDLE hWrite;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
 	DWORD bytesRead;
@@ -101,7 +102,8 @@ static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 
 static DWORD GetSize(HANDLE file)
 {
-	DWORD dwSize, dwRet;
+	DWORD dwSize;
+	DWORD dwRet;
 
 	/* TODO 2 - Calculate and return file size using SetFilePointer */
 	dwSize = SetFilePointer(file, 0, NULL, FILE_END);
@@ -116,7 +118,9 @@ static DWORD GetSize(HANDLE file)
 static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
 {
 	BOOL bRet;
-	DWORD dwBytesRead, dwBytesToRead = CHUNKSIZE, dwTotalRead = 0;
+	DWORD dwBytesRead;
+	DWORD dwBytesToRead = CHUNKSIZE;
+	DWORD dwTotalRead = 0;
 
 	/**
 	 * TODO 3
@@ -143,10 +147,14 @@ static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
 
 static BOOL CompareFiles(CHAR *file1, CHAR *file2)
 {
-	DWORD bytesRead1, bytesRead2;
-	HANDLE hFile1, hFile2;
-	CHAR chunk1[CHUNKSIZE], chunk2[CHUNKSIZE];
-	BOOL result = FALSE, bRet;
+	DWORD bytesRead1;
+	DWORD bytesRead2;
+	HANDLE hFile1;
+	HANDLE hFile2;
+	CHAR chunk1[CHUNKSIZE];
+	CHAR chunk2[CHUNKSIZE];
+	BOOL result = FALSE;
+	BOOL bRet;
 
 	/* TODO 4 - Open file handles */
 	hFile1 = CreateFile(file1,

@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * nasty.c - Helper driver implementation
  * Helper driver, providing a '/dev/nasty' device file. Reading
@@ -38,7 +38,7 @@ char content[FILE_MAX_SIZE] = "\n"
 	"because my dog\n"
 	"was raised by cats.\n";
 
-int crt_size = FILE_MAX_SIZE; /* file's current size */
+int crt_size = FILE_MAX_SIZE; /* File's current size */
 
 static int nasty_open(struct inode *inode, struct file *file)
 {
@@ -58,13 +58,13 @@ static int nasty_close(struct inode *inode, struct file *file)
 static ssize_t nasty_read(struct file *file, char __user *buf, size_t count,
 		loff_t *ppos)
 {
-	int rcount, ret; /* random bytes to read */
+	int rcount, ret; /* Random bytes to read */
 
-	/* end of file */
+	/* End of file */
 	if (*ppos >= crt_size)
 		return 0;
 
-	/*  make sure that we read at least 1 character */
+	/*  Make sure that we read at least 1 character */
 	rcount = 1 + prandom_u32() % MAX_CHUNK_SIZE;
 
 	/* ... and don't cross the borders */
@@ -88,17 +88,17 @@ static ssize_t nasty_read(struct file *file, char __user *buf, size_t count,
 static ssize_t nasty_write(struct file *file, const char __user *buf,
 		size_t count, loff_t *ppos)
 {
-	int rcount, ret; /* random bytes to write */
+	int rcount, ret; /* Random bytes to write */
 
 	/* 0 in -> 0 out, no strings attached  */
 	if (count == 0)
 		return 0;
 
-	/* end of story */
+	/* End of story */
 	if (*ppos >= FILE_MAX_SIZE)
 		return -ENOSPC;
 
-	/*  make sure that we write at least 1 character */
+	/*  Make sure that we write at least 1 character */
 	rcount = 1 + prandom_u32() % MAX_CHUNK_SIZE;
 
 	/* ... and don't cross the borders */
@@ -164,5 +164,3 @@ MODULE_AUTHOR("OS course team, <elf.cs.pub.ro/so>");
 MODULE_DESCRIPTION("Simple char driver creating a nasty read/write device file");
 MODULE_VERSION(NASTY_DRIVER_VERSION);
 MODULE_LICENSE("GPL");
-
-
