@@ -45,7 +45,9 @@ static void ListFiles(TCHAR *path, BOOL bRecursive, BOOL bAll)
 	LARGE_INTEGER filesize;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwRet;
-	TCHAR extendedPath[MAXPATH], newPath[MAXPATH];
+	TCHAR extendedPath[MAXPATH];
+	TCHAR newPath[MAXPATH];
+
 	int i = 0;
 
 	printf("\n === %s ===\n\n", path);
