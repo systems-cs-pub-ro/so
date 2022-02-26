@@ -27,7 +27,7 @@ static void segv_handler(int signum, siginfo_t *info, void *context)
 
 	/**
 	 * Calling the old signal handler by default for TODO 1
-	 * Comment this line when solving TODO 2
+	 * Comment the line below when solving TODO 2
 	 */
 	old_action.sa_sigaction(signum, info, context);
 
