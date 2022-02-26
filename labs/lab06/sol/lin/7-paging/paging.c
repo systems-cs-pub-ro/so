@@ -29,7 +29,8 @@ static void wait_for_input(const char *msg)
 /* Lock memory interval [addr, addr + size - 1] */
 static void lock_memory(char *addr, size_t size)
 {
-	unsigned long page_offset, pagesize;
+	unsigned long page_offset;
+	unsigned long pagesize;
 	int rc;
 
 	pagesize = getpagesize();
