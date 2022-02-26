@@ -25,7 +25,7 @@
 		if (assertion) {					\
 			fprintf(stderr, "(%s, %d): ",			\
 					__FILE__, __LINE__);		\
-			perror(call_description);			\
+			PrintLastError(call_description);		\
 			exit(EXIT_FAILURE);				\
 		}							\
 	} while (0)
