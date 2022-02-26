@@ -22,8 +22,8 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	sscanf_s(argv[1], "%i", &noBytes, sizeof(int));
-	buffer = calloc(noBytes + 1, sizeof(char));
+	sscanf_s(argv[1], "%i", &noBytes, sizeof(noBytes));
+	buffer = calloc(noBytes + 1, sizeof(*buffer ));
 	DIE(buffer == NULL, "calloc");
 
 	srand((int)time(NULL) + noBytes);
