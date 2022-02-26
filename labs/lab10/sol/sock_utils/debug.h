@@ -178,13 +178,14 @@ enum LogType
 		}													\
 	} while (0)
 
-#define CHECK(left, operation, right)											\
-	do {																		\
-		if (!((left)operation(right))) {										\
-			LOG_GET_ERROR_MESSAGE												\
-			LOG(NONE, "CHECK failed: %s %s %s.", #left, #operation, #right);	\
-			LOG(FATAL, "Last error: %s.", error_buffer);						\
-		}																		\
+#define CHECK(left, operation, right)					\
+	do {								\
+		if (!((left)operation(right))) {			\
+			LOG_GET_ERROR_MESSAGE				\
+			LOG(NONE, "CHECK failed: %s %s %s.", #left,	\
+				#operation, #right);			\
+			LOG(FATAL, "Last error: %s.", error_buffer);	\
+		}							\
 	} while (0)
 
 #define CHECK_EQ(left, right) CHECK(left, ==, right)
