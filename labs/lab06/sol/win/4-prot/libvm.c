@@ -93,7 +93,8 @@ static void restore_signal(void)
 int main(void)
 {
 	BYTE ch;
-	DWORD old, rc;
+	DWORD old;
+	DWORD rc;
 
 	p = VirtualAlloc(NULL, 3 * pageSize, MEM_COMMIT, PAGE_NOACCESS);
 	DIE(p == NULL, "VirtualAlloc");
