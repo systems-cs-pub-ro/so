@@ -14,7 +14,9 @@ int main(int argc, char **argv)
 	OVERLAPPED ov;
 	HANDLE hFile;
 	HANDLE hEvent;
-	DWORD dwRet, dwErr, dwBytesRead;
+	DWORD dwRet;
+	DWORD dwErr;
+	DWORD dwBytesRead;
 	char *buffer = malloc(BUF_SIZE * sizeof(char));
 	int doWork = 1024;
 
