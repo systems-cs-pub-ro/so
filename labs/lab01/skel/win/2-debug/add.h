@@ -1,6 +1,6 @@
 /**
- * SO, 2016
- * Lab #1, Introducere
+ * SO
+ * Lab #1, Introduction
  *
  * Task #2, Windows
  *
@@ -16,7 +16,7 @@
 #ifdef DEBUG__
 #define Dprintf(format, ...)                                \
 	fprintf(stderr, "[%s]:%s:%d: " format, __FILE__,     \
-			__FUNCTION__, __LINE__, ##__VA_ARGS__)
+			__func__, __LINE__, ##__VA_ARGS__)
 #else
 #define Dprintf(format, ...)
 #endif  /* DEBUG__ */
@@ -24,4 +24,4 @@
 
 int add(int a, int b);
 
-#endif
+#endif  /* _ADD_H */

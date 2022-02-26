@@ -1,8 +1,8 @@
 /**
- * SO, 2016
- * Lab #1, Introducere
+ * SO
+ * Lab #1, Introduction
  *
- * Task #1, Linux
+ * Task #1, Windows
  *
  * Welcome to SO, simple greeting program.
  */
@@ -15,5 +15,3 @@ int main(void)
 
 	return 0;
 }
-
-

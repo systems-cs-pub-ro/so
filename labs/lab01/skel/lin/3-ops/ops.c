@@ -1,5 +1,5 @@
 /**
- * SO, 2016
+ * SO
  * Lab #1, Introduction
  *
  * Task #3, Linux
@@ -24,7 +24,6 @@ int main(void)
 	printf(" ** Ops using predefined operators **\n");
 	printf("%d + %d = %d\n", A_NUMBER, B_NUMBER, A_NUMBER + B_NUMBER);
 	printf("%d * %d = %d\n", A_NUMBER, B_NUMBER, A_NUMBER * B_NUMBER);
-
 
 #ifdef HAVE_MATH
 	int x = 2, y = 3;

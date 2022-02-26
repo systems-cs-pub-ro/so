@@ -1,5 +1,5 @@
 /**
- * SO, 2016
+ * SO
  * Lab #1, Introduction
  *
  * Task #3, Linux

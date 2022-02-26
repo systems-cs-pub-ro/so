@@ -1,6 +1,6 @@
 /**
- * SO, 2016
- * Lab #1, Introducere
+ * SO
+ * Lab #1, Introduction
  *
  * Task #1, Linux
  *

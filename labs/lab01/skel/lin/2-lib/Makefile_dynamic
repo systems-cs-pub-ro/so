@@ -3,7 +3,7 @@ CFLAGS = -Wall -fPIC
 
 LDFLAGS = -L.
 
-all:  main_dynamic
+all: main_dynamic
 
 main_dynamic:
 
@@ -15,3 +15,5 @@ sample.o: sample.c
 
 clean:
 	rm -f *.o  main_dynamic libhexdump_dynamic.so
+
+.PHONY: all clean

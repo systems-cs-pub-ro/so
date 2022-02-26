@@ -1,12 +1,11 @@
 /**
- * SO, 2016
- * Lab #1, Introducere
+ * SO
+ * Lab #1, Introduction
  *
  * Task #2, Windows
  *
  * Multiple source files compiling
  */
-
 
 /**
  * add - adds to integers
