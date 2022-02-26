@@ -17,7 +17,9 @@
 
 int main(int argc, char *argv[])
 {
-	int fdin, fdout, rc;
+	int fdin;
+	int fdout;
+	int rc;
 	char *src, *dst;
 	struct stat statbuf;
 
