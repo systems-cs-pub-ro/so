@@ -109,10 +109,10 @@
 #include <string.h>
 
 #define __FUNCTION__ __func__
-#define LOG_GET_ERROR_MESSAGE		\
-	char *error_buffer;				\
-	char error_buffer2[512];		\
-	error_buffer = error_buffer2;	\
+#define LOG_GET_ERROR_MESSAGE							\
+	char *error_buffer;							\
+	char error_buffer2[512];						\
+	error_buffer = error_buffer2;						\
 	error_buffer = strerror_r(errno, error_buffer, sizeof(error_buffer));
 
 #else // Windows
