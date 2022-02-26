@@ -48,7 +48,8 @@ static void lock_memory(char *addr, size_t size)
 /* Unlock memory interval [addr, addr + size - 1] */
 static void unlock_memory(char *addr, size_t size)
 {
-	unsigned long page_offset, pagesize;
+	unsigned long page_offset;
+	unsigned long pagesize;
 	int rc;
 
 	pagesize = getpagesize();
