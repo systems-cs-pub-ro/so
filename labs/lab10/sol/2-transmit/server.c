@@ -48,7 +48,8 @@ static HANDLE open_file(void)
 static void receive_file(SOCKET hSocket, HANDLE hFile)
 {
 	int n;
-	DWORD bytesWritten, dwRet;
+	DWORD bytesWritten;
+	DWROD dwRet;
 
 	while (1)
 	{
