@@ -35,7 +35,7 @@ static void open_files(void)
 	size_t n_files = sizeof(files) / sizeof(files[0]);
 	size_t i;
 
-	fds = (HANDLE *)malloc(n_files * sizeof(HANDLE));
+	fds = malloc(n_files * sizeof(*fds));
 	DIE(fds == NULL, "malloc");
 
 	for (i = 0; i < n_files; i++) {
