@@ -52,7 +52,6 @@ void wsa_cleanup(void)
  * Connect to a TCP server identified by name (DNS name or dotted decimal
  * string) and port
  */
-
 SOCKET tcp_connect_to_server(const char *name, unsigned short port)
 {
 	struct hostent *hent;
