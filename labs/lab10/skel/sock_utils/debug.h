@@ -169,13 +169,13 @@ enum LogType {
 
 #define DLOG(level, ...) LOG(DEBUG + (level), __VA_ARGS__)
 
-#define ASSERT(condition)									\
-	do {													\
-		if (!(condition)) {									\
-			LOG_GET_ERROR_MESSAGE							\
+#define ASSERT(condition)						\
+	do {								\
+		if (!(condition)) {					\
+			LOG_GET_ERROR_MESSAGE				\
 			LOG(NONE, "ASSERT failed: %s.", #condition);	\
 			LOG(FATAL, "Last error: %s.", error_buffer);	\
-		}													\
+		}							\
 	} while (0)
 
 #define CHECK(left, operation, right)											\
