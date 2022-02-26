@@ -24,7 +24,8 @@
 static void WriteCrc(int crc, HANDLE hWrite)
 {
 	BOOL bRet;
-	DWORD dwBytesWritten, dwBytesToWrite = sizeof(crc);
+	DWORD dwBytesWritten;
+	DWORD dwBytesToWrite = sizeof(crc);
 
 	/* TODO 1 - Write the CRC to the file. Use a loop! */
 	do {
