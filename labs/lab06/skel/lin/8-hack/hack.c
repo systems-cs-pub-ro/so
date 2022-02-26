@@ -34,7 +34,9 @@ int foo(void)
 
 int main(void)
 {
-	void *addr, *addr_aligned, *page_end;
+	void *addr;
+	void *addr_aligned;
+	void *page_end;
 	int (*f)();
 	char *crt;
 

@@ -17,8 +17,11 @@
 
 int main(int argc, char *argv[])
 {
-	int fdin, fdout, rc;
-	char *src, *dst;
+	int fdin;
+	int fdout;
+	int rc;
+	char *src;
+	char *dst;
 	struct stat statbuf;
 
 	DIE(argc != 3, "Usage: ./mycp <from_file> <to_file>");

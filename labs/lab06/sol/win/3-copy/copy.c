@@ -64,10 +64,13 @@ LPVOID map(HANDLE fd, DWORD size)
 
 int main(int argc, char **argv)
 {
-	HANDLE hSrc, hDst;
-	void *pin, *pout;
+	HANDLE hSrc;
+	HANDLE hDst;
+	void *pin;
+	void *pout;
 	WIN32_FILE_ATTRIBUTE_DATA fileAttr;
-	DWORD size, rc;
+	DWORD size;
+	DWORD rc;
 
 	DIE(argc != 3, "Usage:\n\tcopy <from_file> <to_file>");
 	rc = GetFileAttributesEx(argv[1], GetFileExInfoStandard, &fileAttr);

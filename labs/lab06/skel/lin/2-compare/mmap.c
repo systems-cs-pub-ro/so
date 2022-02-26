@@ -22,7 +22,8 @@
 int main(void)
 {
 	char msg[] = "Testing testing 123...\n";
-	int rc, i;
+	int rc;
+	int i;
 	int fd;
 	char *mem;
 

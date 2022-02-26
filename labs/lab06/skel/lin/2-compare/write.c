@@ -19,7 +19,8 @@
 int main(void)
 {
 	char msg[] = "Testing testing 123...\n";
-	int rc, i;
+	int rc;
+	int i;
 	int fd;
 
 	fd = open("test_write", O_CREAT | O_TRUNC | O_RDWR, 0644);

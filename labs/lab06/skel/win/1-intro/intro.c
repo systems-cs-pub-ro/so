@@ -69,7 +69,8 @@ LPVOID map(HANDLE fd, DWORD size)
 
 int main(void)
 {
-	DWORD rc, dwPageSize;
+	DWORD rc;
+	DWORD dwPageSize;
 	HANDLE hFile;
 	char *mem;
 	SYSTEM_INFO siSysInfo;

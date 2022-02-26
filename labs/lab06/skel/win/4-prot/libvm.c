@@ -30,7 +30,8 @@ static int how[3] = {PAGE_NOACCESS, PAGE_READONLY, PAGE_READWRITE};
  */
 static LONG CALLBACK access_violation(PEXCEPTION_POINTERS ExceptionInfo)
 {
-	DWORD old, rc;
+	DWORD old;
+	DWORD rc;
 	LPBYTE addr;
 	int pageNo;
 
@@ -64,7 +65,8 @@ static void restore_signal(void)
 int main(void)
 {
 	BYTE ch;
-	DWORD old, rc;
+	DWORD old;
+	DWORD rc;
 
 	/**
 	 * TODO 1 - Map 3 pages with the desired memory protection

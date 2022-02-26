@@ -21,7 +21,11 @@
 static LPVOID MyMalloc(DWORD dwSize)
 {
 	SYSTEM_INFO siSysInfo;
-	DWORD dwPageSize, dwNoPages, dwOffest, rc, oldProt;
+	DWORD dwPageSize;
+	DWORD dwNoPages;
+	DWORD dwOffest;
+	DWORD rc;
+	DWORD oldProt;
 	char *lpMem = NULL;
 
 	GetSystemInfo(&siSysInfo);
@@ -55,7 +59,6 @@ int main(void)
 {
 	int i;
 
-	/* int *v = malloc(10 * sizeof(int)); */
 	int *v = MyMalloc(10 * sizeof(int));
 
 	for (i = 0; i <= 10; i++) {
