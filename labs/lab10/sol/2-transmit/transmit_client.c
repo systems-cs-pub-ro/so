@@ -62,8 +62,7 @@ int main(int argc, char **argv)
 	SOCKET connectfd;
 	HANDLE hFile;
 
-	if (argc != 2)
-	{
+	if (argc != 2) {
 		fprintf(stderr, "Usage: %s input_file\n", argv[0]);
 		return -1;
 	}
