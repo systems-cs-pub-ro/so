@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	fdout = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	DIE(fdout == -1, "open fdout");
 
-	/* TODO - truncate the output file to the input file size */
+	/* TODO - Truncate the output file to the input file size */
 
 	/* TODO - Mmap the input and output file */
 
