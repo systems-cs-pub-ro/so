@@ -3,7 +3,6 @@
  * Lab 10 - Advanced I/O Windows
  * Task #3
  */
-
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
