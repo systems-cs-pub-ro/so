@@ -115,7 +115,7 @@
 	error_buffer = error_buffer2;						\
 	error_buffer = strerror_r(errno, error_buffer, sizeof(error_buffer));
 
-#else // Windows
+#else  /* Windows */
 
 #include <windows.h>
 
