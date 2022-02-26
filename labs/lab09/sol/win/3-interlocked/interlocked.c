@@ -34,10 +34,14 @@ DWORD WINAPI thread_function(LPVOID arg)
 		 * If the counter hits LIMIT, reset counter
 		 * Use Interlocked operations
 		 */
+		InterlockedIncrement(&count);
 
 		/* TODO 3:
 		 * Call SwitchToThread() between the Interlocked operations
 		 */
+		SwitchToThread();
+
+		InterlockedCompareExchange(&count, 0, LIMIT);
 	}
 
 	return 0;
@@ -51,10 +55,11 @@ DWORD WINAPI thread_function_mutex(LPVOID arg)
 		/* TODO 2:
 		 * Protect operations with a mutex
 		 */
-
-		count++;
-		if (count == LIMIT)
-			count = 0;
+		WaitForSingleObject(hMutex, INFINITE);
+			count++;
+			if (count == LIMIT)
+				count = 0;
+		ReleaseMutex(hMutex);
 	}
 
 	return 0;
@@ -67,7 +72,7 @@ int main(void)
 
 	setbuf(stdout, NULL);
 
-	hMutex = CreateMutex(
+	hMutex = CreateMutex( 
 		NULL,  /* default security attributes */
 		FALSE, /* initially not owned */
 		NULL  /* unnamed mutex */
@@ -79,11 +84,14 @@ int main(void)
 	for (i = 0; i < NO_THREADS; i++) {
 		hThread[i] = CreateThread(NULL, 0,
 				thread_function, NULL, 0, NULL);
+		/* hThread[i] = CreateThread(NULL, 0,
+			* thread_function_mutex, NULL, 0, NULL);
+			*/
 		DIE(hThread[i] == NULL, "CreateThread");
 	}
 
-	dwRet = WaitForMultipleObjects(NO_THREADS,
-			hThread, TRUE, INFINITE);
+	dwRet = WaitForMultipleObjects(NO_THREADS, hThread,
+			TRUE, INFINITE);
 	DIE(dwRet == WAIT_FAILED, "WaitForMultipleObjects");
 
 	end_time = GetTickCount();

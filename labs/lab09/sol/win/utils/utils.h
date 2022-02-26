@@ -11,9 +11,9 @@
 #include <stdio.h>
 
 /* useful macro for handling error codes */
-#define DIE(assertion, call_description)	\
-	do {					\
-		if (assertion) {		\
+#define DIE(assertion, call_description)			\
+	do {							\
+		if (assertion) {				\
 			fprintf(stderr, "(%s, %s, %d): ",	\
 			__FILE__, __FUNCTION__, __LINE__);	\
 			PrintLastError(call_description);	\

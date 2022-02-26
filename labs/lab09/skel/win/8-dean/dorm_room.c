@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #8, Windows
+ *
+ * Dorm Room Problem
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
@@ -8,15 +17,13 @@
 #include "utils.h"
 
 #define MAX_STUDENTS	15
-#define wild_party		7
-
+#define wild_party	7
 
 int students_at_party;
 int dean_in_room;
 
 HANDLE stud_mutex;
 HANDLE dean_mutex;
-
 
 void dbg_student(LPSTR message)
 {
@@ -95,12 +102,12 @@ void start_student(DWORD idx)
 	DWORD IdThread;
 
 	/* create student threads */
-	hStudent[idx] = CreateThread(NULL, /* default security attributes */
-			0,                 /* default stack size */
+	hStudent[idx] = CreateThread(NULL,	/* default security attrs */
+			0,			/* default stack size */
 			(LPTHREAD_START_ROUTINE) StudentThread,
 			NULL,
-			0,                 /* immediately run the thread */
-			&IdThread);        /* thread id */
+			0,			/* immediately run the thread */
+			&IdThread);		/* thread id */
 	DIE(hStudent[idx] == NULL, "CreateStudent");
 }
 
@@ -108,12 +115,12 @@ void start_dean(void)
 {
 	DWORD IdThread;
 
-	hDean = CreateThread(NULL,      /* default security attributes */
-			0,		/* default stack size */
+	hDean = CreateThread(NULL,		/* default security attrs */
+			0,			/* default stack size */
 			(LPTHREAD_START_ROUTINE) DeanThread,
-			NULL,           /* no thread parameter */
-			0,		/* immediately run the thread */
-			&IdThread);     /* thread id */
+			NULL,			/* no thread parameter */
+			0,			/* immediately run the thread */
+			&IdThread);		/* thread id */
 	DIE(hDean == NULL, "CreateDean");
 }
 
@@ -131,7 +138,6 @@ void wait_all(void)
 	WaitForSingleObject(hDean, INFINITE);
 	DIE(dwReturn == WAIT_FAILED, "WaitForSingleObject");
 }
-
 
 void test1(void)
 {

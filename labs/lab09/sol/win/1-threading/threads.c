@@ -26,7 +26,7 @@ DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 	/* do some work */
 	while (1) {
 		/* do some work */
-		Sleep(1000);
+		;
 	}
 
 	return 0;
@@ -42,12 +42,12 @@ DWORD main(VOID)
 
 	/* create threads */
 	for (i = 0; i < NO_THREADS; i++) {
-		hThread[i] = CreateThread(NULL,	/* default security attributes */
-				0,		/* default stack size */
+		hThread[i] = CreateThread(NULL, /* default security attr */
+				0,      /* default stack size */
 				(LPTHREAD_START_ROUTINE) ThreadFunc,
-				(LPVOID) i,	/* no thread parameter */
-				0,		/* immediately run the thread */
-				&IdThread);	/* thread id */
+				(LPVOID) i,     /* no thread parameter */
+				0,      /* immediately run the thread */
+				&IdThread);     /* thread id */
 		DIE(hThread[i] == NULL, "CreateThread");
 	}
 

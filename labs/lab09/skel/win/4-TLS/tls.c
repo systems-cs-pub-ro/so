@@ -1,3 +1,12 @@
+/**
+ * SO
+ * Lab #9
+ *
+ * Task #4, Windows
+ *
+ * Thread Local Storage
+ */
+
 /* do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
@@ -83,14 +92,13 @@ DWORD main(VOID)
 
 	/* create threads */
 	for (i = 0; i < NO_THREADS; i++) {
-		hThread[i] = CreateThread(
-				NULL, /* default security attributes */
-				0,    /* default stack size */
+		hThread[i] = CreateThread(NULL,	/* default security attrs */
+				0,    		/* default stack size */
 				(LPTHREAD_START_ROUTINE) ThreadFunc,
-				NULL, /* no thread parameter */
-				0,    /* immediately run the thread */
-				&IDThread); /* thread id */
-			DIE(hThread[i] == NULL, "CreateThread");
+				NULL,		/* no thread parameter */
+				0,		/* immediately run the thread */
+				&IDThread);	/* thread id */
+		DIE(hThread[i] == NULL, "CreateThread");
 	}
 
 	/* wait for threads completion */
@@ -103,7 +111,6 @@ DWORD main(VOID)
 
 	return 0;
 }
-
 
 BOOL function_A(VOID)
 {

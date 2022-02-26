@@ -40,12 +40,12 @@ typedef struct _thread_data {
 THREAD_DATA thData[NO_THREADS];
 
 static int CompareFunc(const void *a, const void *b)
-{
+{	
 	if (*(DWORD *)a < *(DWORD *)b)
 		return -1;
 	if (*(DWORD *)a > *(DWORD *)b)
 		return 1;
-	return 0;	
+	return 0;
 }
 
 static void print_mem(LPDWORD mem, DWORD size)
@@ -82,12 +82,13 @@ LPCHUNK MergeChunks(LPCHUNK lpSrc, LPCHUNK lpDst)
 		}
 	}
 
-	if (i1 < lenSrc)
+	if (i1 < lenSrc) {
 		memcpy(&(mergeArray[im]), &(srcArray[i1]),
 				(lenSrc - i1) * sizeof(DWORD));
-	else if (i2 < lenDst)
+	} else if (i2 < lenDst) {
 		memcpy(&(mergeArray[im]), &(dstArray[i2]),
 				(lenDst - i2) * sizeof(DWORD));
+	}
 
 	merged->lpMem = mergeArray; /* srcArray; */
 	merged->dwLen = lenSrc + lenDst;
@@ -112,7 +113,16 @@ DWORD WINAPI ThreadFunc(LPVOID lpParameter)
 	while ((td.threadId % (2 * pow2) == 0) &&
 			(td.threadId + pow2 < NO_THREADS)) {
 		/* TODO - merge chunks */
+		printf("->thread %d waits for %d\n",
+				td.threadId, td.threadId + pow2);
+		dwRet = WaitForSingleObject(threads[td.threadId + pow2],
+				INFINITE);
+		DIE(dwRet == WAIT_FAILED, "WaitForSingleObject");
 
+		thData[td.threadId].lpChunk = MergeChunks(
+				thData[td.threadId].lpChunk,
+				thData[td.threadId + pow2].lpChunk);
+		pow2 = pow2 * 2;
 	}
 
 	printf("thread %d done\n", td.threadId);
@@ -153,9 +163,28 @@ HANDLE init_setup(LPSTR filename)
 		chunk = malloc(sizeof(CHUNK));
 
 		/* TODO - init chunk */
+		chunk->dwLen = ((i+1) * chunkSize > N ?
+				N - (i * chunkSize) : chunkSize);
+		chunk->lpMem = (LPDWORD)pmap + i * chunkSize;
 
 		/* TODO - create thread */
+		thData[i].threadId = i;
+		thData[i].lpChunk = chunk;
 
+		threads[i] = CreateThread(NULL,
+				0,
+				ThreadFunc,
+				&thData[i],
+				CREATE_SUSPENDED, /*wait for threads to start*/
+				NULL
+				);
+		DIE(threads[i] == INVALID_HANDLE_VALUE, "CreateThread");
+	}
+
+	/* resume threads to avoid posible race */
+	for (i = 0; i < NO_THREADS; i++) {
+		dwRet = ResumeThread(threads[i]);
+		DIE(dwRet == FALSE, "ResumeThread");
 	}
 
 	return hFile;
@@ -212,7 +241,8 @@ LPVOID MapFile(HANDLE hFile, DWORD size)
 	HANDLE hFileMap;
 	LPVOID p;
 
-	hFileMap = CreateFileMapping(hFile,
+	hFileMap = CreateFileMapping(
+			hFile,
 			NULL,
 			PAGE_READWRITE,
 			0,
@@ -220,7 +250,8 @@ LPVOID MapFile(HANDLE hFile, DWORD size)
 			NULL);
 	DIE(hFileMap == NULL, "CreateFileMapping");
 
-	p = MapViewOfFile(hFileMap,
+	p = MapViewOfFile(
+			hFileMap,
 			FILE_MAP_ALL_ACCESS,
 			0,
 			0,

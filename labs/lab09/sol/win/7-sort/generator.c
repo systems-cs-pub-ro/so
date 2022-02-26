@@ -51,7 +51,7 @@ int main(int argc, LPSTR argv[])
 		printf("Usage: %s filename N_numbers\n", argv[0]);
 		return 0;
 	}
-	
+
 	filename = argv[1];
 	N = atoi(argv[2]);
 
