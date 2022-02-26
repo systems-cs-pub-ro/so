@@ -141,23 +141,24 @@ enum LogType
 	DEBUG
 };
 
-#define LOG(type, ...)															\
-	do {																		\
-		if (type <= LOG_LEVEL) {												\
-			if (type <= DEBUG)													\
-				fprintf(stderr, " %c", " FWID"[type]);							\
-			else																\
-				fprintf(stderr, "%02d", type - DEBUG);							\
-																				\
-			fprintf(stderr, " %s (%s) %d: ", __FILE__, __FUNCTION__, __LINE__);	\
-			fprintf(stderr, __VA_ARGS__);										\
-			fprintf(stderr, "\n");												\
-			fflush(stderr);														\
-																				\
-			/* Abort() is C89 compliant. */										\
-			if (type == FATAL)													\
-				abort();														\
-		}																		\
+#define LOG(type, ...)							\
+	do {								\
+		if (type <= LOG_LEVEL) {				\
+			if (type <= DEBUG)				\
+				fprintf(stderr, " %c", " FWID"[type]);	\
+			else						\
+				fprintf(stderr, "%02d", type - DEBUG);	\
+									\
+			fprintf(stderr, " %s (%s) %d: ", __FILE__,	\
+				__FUNCTION__, __LINE__);		\
+			fprintf(stderr, __VA_ARGS__);			\
+			fprintf(stderr, "\n");				\
+			fflush(stderr);					\
+									\
+			/* Abort() is C89 compliant. */			\
+			if (type == FATAL)				\
+				abort();				\
+		}							\
 	} while (0)
 
 #define LOG_ERROR(...)									\
