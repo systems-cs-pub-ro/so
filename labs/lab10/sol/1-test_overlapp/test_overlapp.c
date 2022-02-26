@@ -37,12 +37,12 @@ int main(int argc, char **argv)
 	ov.hEvent = hEvent;
 
 	hFile = CreateFile(argv[1],
-						GENERIC_READ,			/* Access mode */
-						FILE_SHARE_READ,		/* Sharing option */
-						NULL,					/* Security attributes */
-						OPEN_EXISTING,			/* Open only if it exists */
-						FILE_FLAG_OVERLAPPED,	/* File attributes */
-						NULL);					/* No template */
+		GENERIC_READ,		/* Access mode */
+		FILE_SHARE_READ,	/* Sharing option */
+		NULL,			/* Security attributes */
+		OPEN_EXISTING,		/* Open only if it exists */
+		FILE_FLAG_OVERLAPPED,	/* File attributes */
+		NULL);			/* No template */
 	DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile");
 
 	dwRet = ReadFile(hFile, buffer, BUF_SIZE, &dwBytesRead, &ov);
