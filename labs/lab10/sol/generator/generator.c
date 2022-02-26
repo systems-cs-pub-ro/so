@@ -30,12 +30,12 @@ int main(int argc, char **argv)
 		buffer[i] = rand() % 256;
 
 	hFile = CreateFile(argv[2],
-					   GENERIC_WRITE,
-					   0,
-					   NULL,
-					   CREATE_ALWAYS,
-					   FILE_ATTRIBUTE_NORMAL,
-					   NULL);
+				GENERIC_WRITE,
+				0,
+				NULL,
+				CREATE_ALWAYS,
+				FILE_ATTRIBUTE_NORMAL,
+				NULL);
 	DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile");
 
 	dwRet = WriteFile(hFile, buffer, noBytes, &dwBytesWritten, NULL);
