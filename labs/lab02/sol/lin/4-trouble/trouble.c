@@ -18,7 +18,8 @@
 
 int main(void)
 {
-	int fd, rc;
+	int fd;
+	int rc;
 	size_t bytes_written = 0, count;
 	char *msg = "Ana are mere!\n";
 
