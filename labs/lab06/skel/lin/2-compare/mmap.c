@@ -34,7 +34,7 @@ int main(void)
 	DIE(rc == -1, "ftruncate");
 
 	mem = mmap(0, N * sizeof(msg), PROT_READ | PROT_WRITE,
-			   MAP_SHARED, fd, 0);
+			MAP_SHARED, fd, 0);
 	DIE(mem == MAP_FAILED, "mmap");
 
 	for (i = 0; i < N; i++)
