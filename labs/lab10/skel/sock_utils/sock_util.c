@@ -74,7 +74,7 @@ SOCKET tcp_connect_to_server(const char *name, unsigned short port)
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port);
 	memcpy(&server_addr.sin_addr.s_addr, hent->h_addr,
-		   sizeof(server_addr.sin_addr.s_addr));
+		sizeof(server_addr.sin_addr.s_addr));
 
 	if (connect(s, (struct sockaddr *)&server_addr,
 		sizeof(server_addr)) < 0) {
