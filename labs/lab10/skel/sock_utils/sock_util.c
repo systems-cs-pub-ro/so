@@ -137,7 +137,7 @@ SOCKET tcp_listen_connections(unsigned short port, int backlog)
 void print_connection(struct sockaddr_in *address)
 {
 	printf("Connected with %s:%d\n", inet_ntoa(address->sin_addr),
-		   ntohs(address->sin_port));
+		ntohs(address->sin_port));
 }
 
 int xsend(SOCKET sock, void *buffer, int len)
