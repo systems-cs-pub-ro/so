@@ -119,7 +119,8 @@
 
 #include <windows.h>
 
-#define LOG_GET_ERROR_MESSAGE										char error_buffer[512];							\
+#define LOG_GET_ERROR_MESSAGE
+	char error_buffer[512];							\
 	FormatMessage(								\
 		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_MAX_WIDTH_MASK,	\
 		NULL,								\
