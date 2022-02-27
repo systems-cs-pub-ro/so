@@ -109,7 +109,7 @@ SOCKET tcp_listen_connections(unsigned short port, int backlog)
 
 	sock_opt = 1;
 	if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR,
-				   (const char *)&sock_opt, sizeof(int)) < 0) {
+		(const char *)&sock_opt, sizeof(int)) < 0) {
 		LOG_ERROR("setsockopt");
 		exit(EXIT_FAILURE);
 	}
