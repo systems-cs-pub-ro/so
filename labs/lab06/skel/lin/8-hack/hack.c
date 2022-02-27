@@ -59,7 +59,8 @@ int main(void)
 	printf("primul apel: foo intoarce %d\n", foo());
 
 	/* Increase page protection */
-	if (mprotect(addr_aligned, pagesize, PROT_READ | PROT_WRITE | PROT_EXEC))
+	if (mprotect(addr_aligned, pagesize,
+		PROT_READ | PROT_WRITE | PROT_EXEC))
 	{
 		perror("mprotect");
 		return 1;
@@ -69,7 +70,7 @@ int main(void)
 	f = (int (*)())foo;
 
 	while ((int)f < (int)page_end &&
-		   ((int)*f != 0xb8 && (char)*((char *)f + 1) != 0x0c))
+		((int)*f != 0xb8 && (char)*((char *)f + 1) != 0x0c))
 		f++;
 
 	crt = (char *)(++f);

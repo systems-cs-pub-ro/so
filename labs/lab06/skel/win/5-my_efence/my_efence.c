@@ -59,7 +59,9 @@ int main(void)
 			/* Write to memory. */
 			v[i] = i;
 		}
-		__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {
+		__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ?
+			EXCEPTION_EXECUTE_HANDLER :
+			EXCEPTION_CONTINUE_SEARCH) {
 			printf("i = %d - Exiting process\n", i);
 			ExitProcess(GetLastError());
 		}

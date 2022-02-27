@@ -36,7 +36,7 @@ int main(void)
 	wait_for_input("beginning");
 
 	p = mmap(NULL, NUM_PAGES * page_size, PROT_READ | PROT_WRITE,
-			 MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (p == MAP_FAILED) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
