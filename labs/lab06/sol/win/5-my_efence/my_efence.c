@@ -36,7 +36,7 @@ static LPVOID MyMalloc(DWORD dwSize)
 
 	/* TODO - Alocate dwNoPages + 1 pages*/
 	lpMem = VirtualAlloc(NULL, dwPageSize * (dwNoPages + 1),
-						 MEM_COMMIT, PAGE_READWRITE);
+		MEM_COMMIT, PAGE_READWRITE);
 	DIE(lpMem == NULL, "VirtualAlloc");
 
 	/**
