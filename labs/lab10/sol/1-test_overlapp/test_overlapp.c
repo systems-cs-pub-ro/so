@@ -49,30 +49,30 @@ int main(int argc, char **argv)
 		dwErr = GetLastError();
 
 		switch (dwErr) {
-			case ERROR_HANDLE_EOF:
-				/* Reached end of file */
-				printf("End of File Reached\n");
-				break;
+		case ERROR_HANDLE_EOF:
+			/* Reached end of file */
+			printf("End of File Reached\n");
+			break;
 
-			case ERROR_IO_PENDING:
-				/* Async io not ready */
-				printf("Async IO did not finished immediately\n");
+		case ERROR_IO_PENDING:
+			/* Async io not ready */
+			printf("Async IO did not finished immediately\n");
 
-				/* Do some other work  in the meantime*/
-				printf("Waiting for IO to finish\n");
-				while (doWork--)
-					;
+			/* Do some other work  in the meantime*/
+			printf("Waiting for IO to finish\n");
+			while (doWork--)
+				;
 
-				/* Wait for it to finish */
-				dwRet = GetOverlappedResult(ov.hEvent, &ov,
-					&dwBytesRead, TRUE);
-				printf("nRead = %d\n", dwBytesRead);
-				break;
+			/* Wait for it to finish */
+			dwRet = GetOverlappedResult(ov.hEvent, &ov,
+				&dwBytesRead, TRUE);
+			printf("nRead = %d\n", dwBytesRead);
+			break;
 
-			default:
-				/* ReadFile failed */
-				PrintLastError("ReadFile");
-				break;
+		default:
+			/* ReadFile failed */
+			PrintLastError("ReadFile");
+			break;
 		}
 	} else {
 		/**
