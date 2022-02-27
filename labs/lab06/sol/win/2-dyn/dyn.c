@@ -44,7 +44,7 @@ int main(void)
 	 */
 
 	dyncode = (int (*)(int))VirtualAlloc(NULL, pageSize,
-										 MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+			MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	DIE(dyncode == NULL, "VirtualAlloc");
 
 	memcpy(dyncode, code, sizeof(code));
