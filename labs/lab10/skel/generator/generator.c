@@ -16,8 +16,7 @@ int main(int argc, char **argv)
 	char *buffer;
 	HANDLE hFile;
 
-	if (argc != 3)
-	{
+	if (argc != 3) {
 		fprintf(stdout, "Usage: ./%s no_bytes file_name\n", argv[0]);
 		return -1;
 	}
