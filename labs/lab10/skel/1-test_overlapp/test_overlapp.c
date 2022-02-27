@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 
 				/* Wait for it to finish */
 				dwRet = GetOverlappedResult(ov.hEvent, &ov,
-											&dwBytesRead, TRUE);
+					&dwBytesRead, TRUE);
 				printf("nRead = %d\n", dwBytesRead);
 				break;
 
