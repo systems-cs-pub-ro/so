@@ -44,7 +44,7 @@ static LPVOID MyMalloc(DWORD dwSize)
 	 * to PAGE_NOACCESS
 	 */
 	rc = VirtualProtect(lpMem + dwNoPages * dwPageSize, dwPageSize,
-						PAGE_NOACCESS, &oldProt);
+		PAGE_NOACCESS, &oldProt);
 	DIE(rc == FALSE, "VirtualProtect");
 
 	/**
