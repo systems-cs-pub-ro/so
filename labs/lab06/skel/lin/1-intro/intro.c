@@ -67,7 +67,7 @@ int main(void)
 
 	/* Third we map PRIVATE memory */
 	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-			 MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	DIE(p == MAP_FAILED, "mmap");
 	wait_for_input("after mapping PRIVATE memory");
 
