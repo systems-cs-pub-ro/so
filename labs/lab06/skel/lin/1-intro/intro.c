@@ -44,7 +44,7 @@ int main(void)
 	DIE(fd == -1, "open");
 
 	p = mmap(NULL, page_size,
-			 PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+			PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
 	DIE(p == MAP_FAILED, "mmap");
 	wait_for_input("after mapping the file");
 
