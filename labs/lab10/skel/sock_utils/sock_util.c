@@ -77,7 +77,7 @@ SOCKET tcp_connect_to_server(const char *name, unsigned short port)
 		   sizeof(server_addr.sin_addr.s_addr));
 
 	if (connect(s, (struct sockaddr *)&server_addr,
-				sizeof(server_addr)) < 0) {
+		sizeof(server_addr)) < 0) {
 		LOG_ERROR("connect");
 		return -1;
 	}
