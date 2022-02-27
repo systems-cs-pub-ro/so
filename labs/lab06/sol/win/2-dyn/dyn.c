@@ -31,8 +31,9 @@ int (*dyncode)(int);
  */
 unsigned char code[] = {
 	0x8B, 0x44, 0x24, 0x04,	/* mov eax, [esp+4]	(1) */
-	0x40,					/* inc eax			(2) */
-	0xC3					/* ret				(3) */
+	0x40,			/* inc eax		(2) */
+	0xC3			/* ret			(3) */
+
 };
 
 int main(void)
