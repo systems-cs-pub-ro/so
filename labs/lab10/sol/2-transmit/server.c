@@ -51,8 +51,7 @@ static void receive_file(SOCKET hSocket, HANDLE hFile)
 	DWORD bytesWritten;
 	DWROD dwRet;
 
-	while (1)
-	{
+	while (1) {
 		n = recv(hSocket, gBuffer, BUFSIZ, 0);
 		DIE(n == SOCKET_ERROR, "recv");
 
