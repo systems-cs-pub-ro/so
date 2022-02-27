@@ -57,7 +57,7 @@ int main(void)
 
 	/* Second we map SHARED memory */
 	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-			 MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+			MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 	DIE(p == MAP_FAILED, "mmap");
 	wait_for_input("after mapping SHARED memory");
 
