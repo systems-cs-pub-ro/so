@@ -1,8 +1,8 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
- * Task #9, lin
+ * Task #9, Linux
  *
  * Thread Specific Data
  */
@@ -27,7 +27,7 @@
 #define MAX_THREADS 5
 
 /* cheia folosita pentru a asocia pointerul fisierului de log cu threadul */
-static pthread_key_t  thread_log_key;
+static pthread_key_t thread_log_key;
 
 /* scrie message in fisierul de log al threadului curent */
 void write_to_thread_log(const char *message)

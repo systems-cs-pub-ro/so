@@ -15,7 +15,7 @@
 
 /* *******************************
  * API to mark a critical region
- */
+ * */
 #ifdef USE_SPINLOCK
 static bool lock;
 #else
@@ -34,11 +34,13 @@ void acquire_lock(void)
 		 * HINT 2: Use the most restrictive memory order for the
 		 * second parameter of __atomic_test_and_set. See the
 		 * https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
-		 * link and search for "__ATOMIC_SEQ_CST".
+		 * link and search for "__ATOMIC_SEQ_CST"
 		 */
 
-		/*
-		 * Short explanation: High-level language code is translated into
+		if(__atomic_test_and_set(&lock, __ATOMIC_SEQ_CST) == false)
+			return;
+
+		/* Short explanation: High-level language code is translated into
 		 * low-level code. The low level code is not guaranteed to follow
 		 * the same code flow as the high-level code. Some instructions may be
 		 * skipped or reordered for the sake of optimization!
@@ -51,7 +53,7 @@ void acquire_lock(void)
 		 * If you're interested in knowing more, see this link:
 		 * https://www.internalpointers.com/post/understanding-memory-ordering.
 		 */
-    }
+	}
 #else
 	pthread_mutex_lock(&lock);
 #endif
@@ -60,7 +62,16 @@ void acquire_lock(void)
 void release_lock(void)
 {
 #ifdef USE_SPINLOCK
-
+		/* TODO2: Implement spinlock release method
+		 *
+		 * HINT: Use atomic intrutions. ex: __atomic_clear
+		 *
+		 * HINT 2: Use the most restrictive memory order for the
+		 * second parameter of __atomic_test_and_set. See the
+		 * https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+		 * link and search for "__ATOMIC_SEQ_CST"
+		 */
+		__atomic_clear(&lock, __ATOMIC_SEQ_CST);
 #else
 	pthread_mutex_unlock(&lock);
 #endif

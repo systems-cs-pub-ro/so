@@ -1,8 +1,8 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
- * Task #8, lin
+ * Task #8, Linux
  *
  * fork() vs pthread_create()
  */

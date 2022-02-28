@@ -42,6 +42,7 @@ static void print_stats(int origin,
 	char buf[PRINT_BUF_SZ] = { 0 };
 
 	/* TODO1: Enter critical section using acquire_lock */
+	acquire_lock();
 
 	if (origin == MAIN_PRINT)
 		sprintf(hdr, "Final report:\n");
@@ -60,6 +61,8 @@ static void print_stats(int origin,
 	printf("%s", buf);
 
 	/* TODO1: Leave critical section using release_lock */
+
+	release_lock();
 }
 
 void *thread_function(void *args)
@@ -71,14 +74,15 @@ void *thread_function(void *args)
 	char **a;
 
 	for (int i = 0; i < NUM_ROUNDS; i++) {
-
 		/* TODO1: Enter critical section using acquire_lock */
+		acquire_lock();
 
 		increase_numbers(&global_storage,
 						 &function_global_storage,
 						 &function_specific_storage);
 
 		/* TODO1: Leave critical section using release_lock */
+		release_lock();
 	}
 
 	print_stats((long)args,
@@ -125,12 +129,14 @@ int main(void)
 
 	for (i = 0; i < NUM_ROUNDS; i++) {
 		/* TODO1: Enter critical section using acquire_lock */
+		acquire_lock();
 
 		increase_numbers(&global_storage,
-				 &function_global_storage,
-				 &function_specific_storage);
+						 &function_global_storage,
+						 &function_specific_storage);
 
 		/* TODO1: Leave critical section using release_lock */
+		release_lock();
 	}
 
 	for (i = 0; i < NUM_THREADS; i++) {

@@ -1,6 +1,6 @@
 /**
- * SO, 2019
- * Lab #8, Thread-uri
+ * SO
+ * Lab #8
  *
  * Useful structures/macros
  */

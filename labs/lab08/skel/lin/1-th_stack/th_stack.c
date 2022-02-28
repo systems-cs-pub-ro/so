@@ -1,8 +1,8 @@
 /**
- * SO, 2019
+ * SO
  * Lab #8
  *
- * Task #1, lin
+ * Task #1, Linux
  *
  * Process address space when creating threads
  */
@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include <utils.h>
+
 #define N	8
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -45,7 +46,9 @@ int main(void)
 {
 
 	pthread_t th[N];
-	int rc = 1, i, th_id[N];
+	int rc = 1;
+	int i;
+	int th_id[N];
 
 	for (i = 0; i < N; i++) {
 		wait_for_input("creating new thread");

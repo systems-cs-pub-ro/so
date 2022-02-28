@@ -42,7 +42,6 @@ static void init_func(void)
 
 static void deinit_func(void)
 {
-
 	time_t ts = time(NULL);
 
 	/*
@@ -73,7 +72,17 @@ static int one_time_init(struct once_struct *once_control, void (*f)(void))
 	/* TODO - Each time a thread gets here, increment once_control->refcount.
 	 * Call the f() function only if this is the first thread that got here.
 	 */
-	(*f)();
+
+	rc = pthread_mutex_lock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_lock");
+
+	if (!once_control->refcount)
+		(*f)();
+
+	once_control->refcount++;
+
+	rc = pthread_mutex_unlock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_unlock");
 
 	return 0;
 }
@@ -85,7 +94,17 @@ static int one_time_deinit(struct once_struct *once_control, void (*f)(void))
 	/* TODO - Each time a thread gets here, decrement once_control->refcount.
 	 * Call the f() function only if this is the last thread that got here.
 	 */
-	(*f)();
+
+	rc = pthread_mutex_lock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_lock");
+
+	once_control->refcount--;
+
+	if (!once_control->refcount)
+		(*f)();
+
+	rc = pthread_mutex_unlock(&(once_control->mutex));
+	DIE(rc == -1, "pthread_mutex_unlock");
 
 	return 0;
 }
