@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #4
-  *
-  * Task #5, lin
-  *
-  * Creating zombies
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #5, Linux
+ *
+ * Creating zombies
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,7 +17,6 @@
 #include "utils.h"
 
 #define TIMEOUT		20
-
 
 int main(void)
 {

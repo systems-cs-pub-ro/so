@@ -1,0 +1,1 @@
+../../../skel/lin/1-hitme/Makefile

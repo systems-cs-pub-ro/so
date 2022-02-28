@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #4
-  *
-  * Task #2, lin
-  *
-  * Catching signals
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #2, Linux
+ *
+ * Catching signals
+ */
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
@@ -56,7 +56,6 @@ int main(void)
 
 	rc = sigaction(SIGRTMIN, &signals, NULL);
 	DIE(rc == -1, "sigaction");
-
 
 	while (!done)
 		sleep(1);

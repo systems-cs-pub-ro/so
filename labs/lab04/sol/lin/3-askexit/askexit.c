@@ -1,11 +1,11 @@
 /**
- * SO
- * Lab #4
- *
- * Task #3, Linux
- *
- * Signal handling by asking questions
- */
+  * SO
+  * Lab #4
+  *
+  * Task #3, lin
+  *
+  * Signal handling by asking questions
+  */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -51,8 +51,18 @@ static void set_signals(void)
 	int rc;
 
 	/* TODO - set handler in struct sigaction sa */
+	memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = ask_handler;
 
 	/* TODO - handle SIGINT, SIGQUIT and SIGUSR1 signals */
+	rc = sigaction(SIGINT, &sa, NULL);
+	DIE(rc < 0, "sigaction");
+
+	rc = sigaction(SIGUSR1, &sa, NULL);
+	DIE(rc < 0, "sigaction");
+
+	rc = sigaction(SIGQUIT, &sa, NULL);
+	DIE(rc < 0, "sigaction");
 }
 
 int main(void)

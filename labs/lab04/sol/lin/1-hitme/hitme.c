@@ -1,11 +1,11 @@
 /**
- * SO
- * Lab #4
- *
- * Task #1, Linux
- *
- * Catching signals
- */
+  * SO
+  * Lab #4
+  *
+  * Task #1, lin
+  *
+  * Catching signals
+  */
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
@@ -72,13 +72,14 @@ int main(void)
 		DIE(rc == -1, "sigaction");
 	}
 
-	/**
-	 * TODO 2: This is a very rare opportunity to get creative! What's
+	/* TODO 2: This is a very rare opportunity to get creative! What's
 	 * even more rare: it's something you're usually advised against
 	 * doing. Below, implement a means to access an invalid memory area
 	 * and cause a "Segmentation fault". When choosing your approach,
 	 * choose the most elegant.
 	 */
+
+	i = *(int *)mem;
 
 	while (!must_leave)
 		sleep(1);

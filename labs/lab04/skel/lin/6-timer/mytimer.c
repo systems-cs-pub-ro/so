@@ -1,11 +1,11 @@
 /**
-  * SO, 2016
-  * Lab #4
-  *
-  * Task #6, lin
-  *
-  * Timers usage
-  */
+ * SO
+ * Lab #4
+ *
+ * Task #6, Linux
+ *
+ * Timers usage
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -18,7 +18,6 @@
 #include "utils.h"
 
 #define TIMEOUT		2
-
 
 /*
  * SIGALRM handler - called when the timer expires
