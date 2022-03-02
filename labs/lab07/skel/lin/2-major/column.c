@@ -1,8 +1,10 @@
 /**
- * SO, 2017 - Lab #07, Profiling
+ * SO
+ * Lab #07
+ *
  * Task #2, Linux
  *
- * Row major
+ * Column major
  */
 #include <stdio.h>
 
@@ -10,10 +12,10 @@
 
 char x[SIZE][SIZE];
 
-int
-main(void)
+int main(void)
 {
-	int i, j;
+	int i;
+	int j;
 
 	for (i = 0; i < SIZE; ++i) {
 		for (j = 0; j < SIZE; ++j) {

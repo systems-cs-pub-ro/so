@@ -1,5 +1,7 @@
 /**
- * SO, 2017 - Lab #07, Profiling
+ * SO
+ * Lab #07
+ *
  * Task #1, Linux
  *
  * Hash function

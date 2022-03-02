@@ -1,5 +1,7 @@
 /**
- * SO, 2017 - Lab #07, Profiling
+ * SO
+ * Lab #07
+ *
  * Task #4, Linux
  *
  * Operations on strings
@@ -13,8 +15,6 @@
 #include <stdlib.h>
 #include <errno.h>
 
-
-
 /**
  * Read the content of a file into a string
  */
@@ -23,7 +23,8 @@ char *readstring(const char *fname)
 	int fd;
 	off_t size;
 	ssize_t readb;
-	char *s, *ret;
+	char *s;
+	char *ret;
 
 	fd = open(fname, O_RDONLY);
 	if (-1 == fd)

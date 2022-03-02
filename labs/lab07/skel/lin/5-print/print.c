@@ -1,10 +1,11 @@
 /**
- * SO, 2017 - Lab #07, Profiling & Debugging
+ * SO
+ * Lab #07
+ *
  * Task #5, Linux
  *
  * Printing order
  */
-
 #include <stdio.h>
 
 int main(void)
