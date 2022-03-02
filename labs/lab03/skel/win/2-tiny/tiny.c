@@ -1,6 +1,6 @@
 /**
- * SO, 2017
- * Lab #3, Procese
+ * SO
+ * Lab #3
  *
  * Task #2, Windows
  *
@@ -26,7 +26,7 @@
 #define SIMPLE			1
 #define PIPE			2
 #define SET_VAR			3
-#define EXIT_OK			4
+#define EXIT_CMD		4
 
 static PCHAR command1, command2;
 static PCSTR stdinFilename, stdoutFilename, stderrFilename;
@@ -41,7 +41,7 @@ static VOID Cleanup(VOID);
 static HANDLE MyOpenFile(PCSTR filename);
 
 
-/*
+/**
  * @psi		- STATRTUPINFO of the child process
  * @hFile	- file handle for redirect
  * @opt		- redirect option is one of the following
@@ -52,7 +52,8 @@ static VOID RedirectHandle(STARTUPINFO *psi, HANDLE hFile, INT opt)
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
-	/* TODO 1 - set handles from psi to
+	/**
+	 * TODO 1 - set handles from psi to
 	 * current STDIN,STDOUT, STDERR handles
 	 */
 
@@ -110,7 +111,7 @@ static VOID RunSimpleCommand(PCHAR command)
 			 command,       /* Command line */
 			 NULL,          /* Process handle not inheritable */
 			 NULL,          /* Thread handle not inheritable */
-			 TRUE,         /* Set handle inheritance */
+			 TRUE,          /* Set handle inheritance */
 			 0,             /* No creation flags */
 			 NULL,          /* Use parent's environment block */
 			 NULL,          /* Use parent's starting directory */
@@ -130,8 +131,8 @@ static VOID RunSimpleCommand(PCHAR command)
 	}
 }
 
-/*
- * Purpouse: launch a command like' command1 | command2 '
+/**
+ * Purpose: launch a command like' command1 | command2 '
  *   @command1 - first command string
  *   @command2 - second command string
  */
@@ -145,21 +146,27 @@ static VOID PipeCommands(PCHAR command1, PCHAR command2)
 	DWORD dwRet;
 	BOOL bRet;
 
-	/* TODO 2 - Init security attributes and process info */
+	/**
+	 * TODO 2 - Init security attributes and process info
+	 */
 
-	/* TODO 2 - Create pipe */
+	/**
+	 *  TODO 2 - Create pipe
+	 */
 
-	/*
+	/**
 	 * TODO 2 - Launch command1 with stdout redirected using CreateProcess
 	 *        - This child process should write to pipe
 	 */
 
-	/*
+	/**
 	 * TODO 2 - Launch command2 with stdin redirected using CreateProcess
 	 *        - This child process should read from the pipe
 	 */
 
-	/* TODO 2 - Wait for processes to finish */
+	/**
+	 *  TODO 2 - Wait for processes to finish
+	 */
 }
 
 int main(int argc, char **argv)
@@ -180,7 +187,7 @@ int main(int argc, char **argv)
 		type = ParseLine(line);
 
 		switch (type) {
-		case EXIT_OK:
+		case EXIT_CMD:
 			exit(EXIT_SUCCESS);
 
 		case SET_VAR:
@@ -242,13 +249,13 @@ static INT ParseLine(PCHAR line)
 	ZeroMemory(command1, MAX_CMD_SIZE);
 	ZeroMemory(command2, MAX_CMD_SIZE);
 
-	/* comanda vida */
+	/* Empty command */
 	if (strcmp(line, "\n") == 0)
 		return ERROR;
 
-	/* comanda exit */
+	/* Exit command */
 	if (strncmp("exit", line, strlen("exit")) == 0)
-		return EXIT_OK;
+		return EXIT_CMD;
 
 	/* var = value */
 	if (strchr(line, '=') != 0) {
@@ -269,13 +276,13 @@ static INT ParseLine(PCHAR line)
 		return SET_VAR;
 	}
 
-	/* verificare de comanda pipe */
+	/* Verify | */
 	pos = strchr(line, '|');
 	if (pos != 0) {
 		strncat_s(command1, MAX_CMD_SIZE, line,
 				strlen(line) - strlen(pos));
 
-		/* scapam de | */
+		/* Skip | */
 		pos++;
 		ParseSimpleCommand(pos, &command2);
 
@@ -296,7 +303,7 @@ static INT ParseSimpleCommand(PCHAR line, PCHAR *command)
 	if (token == NULL)
 		return ERROR;
 
-	/* parcurgere argumente + expandare + verificare de redirectari */
+	/* Go through args + expand them + check for redirection */
 	while (token != NULL) {
 		if (token[0] == '$') {
 			token = ExpandVariable(token+1);

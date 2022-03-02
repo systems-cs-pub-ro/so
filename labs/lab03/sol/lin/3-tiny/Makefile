@@ -1,0 +1,1 @@
+../../../skel/lin/3-tiny/Makefile

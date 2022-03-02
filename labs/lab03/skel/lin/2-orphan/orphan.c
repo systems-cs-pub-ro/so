@@ -1,11 +1,11 @@
 /**
-  * SO, 2017
-  * Lab #3
-  *
-  * Task #2, lin
-  *
-  * What happens if a parent process does not wait for its child process?
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #2, Linux 
+ *
+ * What happens if a parent process does not wait for its child process?
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>	/* fork */
@@ -20,6 +20,7 @@ int main(void)
 	switch (child_pid) {
 	case -1:
 		DIE(child_pid, "fork");
+		break;
 	case 0:
 		/* child process */
 		sleep(20);

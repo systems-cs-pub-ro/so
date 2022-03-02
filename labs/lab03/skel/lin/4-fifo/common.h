@@ -1,11 +1,11 @@
 /**
-  * SO, 2017
-  * Lab #3
-  *
-  * Task #4, lin
-  *
-  * Common defines
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #4, Linux
+ *
+ * Common defines
+ */
 #ifndef LIN_LAB03_COMMON_H_
 #define LIN_LAB03_COMMON_H_	1
 
@@ -13,4 +13,3 @@
 #define BUFSIZE		256
 
 #endif
-

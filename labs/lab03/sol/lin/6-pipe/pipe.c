@@ -43,7 +43,7 @@ static void child_loop(int readfd)
 		rc = read(readfd, output, BUFSIZE);
 		DIE(rc < 0, "read() failed");
 		if (rc == 0) {
-			/* TODO - Close pipe head used for reading */
+			close(readfd);
 			break;
 		}
 		
@@ -64,7 +64,7 @@ static void parent_loop(int writefd)
 		scanf("%s",  input);
 
 		if (check_for_exit(input)) {
-			/* TODO - Close pipe head used for writing */
+			close(writefd);
 			break;
 		}
 
@@ -81,7 +81,8 @@ int main(void)
 	int rc;
 	int fds[2];
 
-	/* TODO - Create anonymous pipe */
+	rc = pipe(fds);
+	DIE(rc != 0, "pipe() failed");
 
 	/**
 	 * Sometimes I wish I could do a fork() in real life. No more
@@ -91,25 +92,21 @@ int main(void)
 	switch (pid) {
 	case -1:
 		/* Fork failed, cleaning up... */
-		/* TODO - Close both heads of the pipe */
+		close(fds[PIPE_READ]);
+		close(fds[PIPE_WRITE]);
 		DIE(pid, "fork() failed");
 		return EXIT_FAILURE;
 	case 0:
 		/* Child process */
-		/* TODO - Close unused pipe head by child */
-
-		/* TODO - Call child loop and pass pipe head used for reading */
-
+		close(fds[PIPE_WRITE]);
+		child_loop(fds[PIPE_READ]);
 		break;
 	default:
 		/* Parent process */
-		/* TODO - Close unused pipe head by parent */
-
-		/* TODO - Call parent loop and pass pipe head used for writing */
-
+		close(fds[PIPE_READ]);
+		parent_loop(fds[PIPE_WRITE]);
 		/* Wait for child process to finish */
 		wait(NULL);
-
 		break;
 	}
 

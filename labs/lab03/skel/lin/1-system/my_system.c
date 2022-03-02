@@ -1,11 +1,11 @@
 /**
-  * SO, 2017
-  * Lab #3
-  *
-  * Task #1, lin
-  *
-  * Use of "system" library call and of "strace"
-  */
+ * SO
+ * Lab #3
+ *
+ * Task #1, Linux
+ *
+ * Use of "system" library call and use of "strace"
+ */
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
 	if (argc != 2) {
 		printf("Usage: ./system cmd\n");
-		return 0;
+		exit(1);
 	}
 
 	ret = system(argv[1]);
