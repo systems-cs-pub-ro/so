@@ -35,12 +35,12 @@ static int server(void)
 	int status;
 	int rc;
 
-	printf("server: started\n");
+	printf("[SERVER] Started\n");
 
 	/* Close write pipe head and init poll */
 	for (i = 0; i < CLIENT_COUNT; i++) {
 		rc = close(pipes[i][PIPE_WRITE]);
-		DIE(rc < 0, "server: close pipe failed");
+		DIE(rc < 0, "[SERVER] Close pipe failed");
 		pdf[i].fd = pipes[i][PIPE_READ];
 		pdf[i].events = POLLIN;
 	}
@@ -49,35 +49,35 @@ static int server(void)
 	recv_msgs = 0;
 
 	while (recv_msgs < CLIENT_COUNT) {
-		printf("server: waiting for messages (recv_msgs = %i)\n",
+		printf("[SERVER] Waiting for messages (recv_msgs = %i)\n",
 				recv_msgs);
 		rc = poll(pdf, CLIENT_COUNT, -1);
-		DIE(rc < 0, "poll failed");
+		DIE(rc < 0, "Poll failed");
 
 		for (i = 0; i < CLIENT_COUNT; i++) {
 			if ((pdf[i].revents & POLLIN) != 0) {
 				recv_msgs++;
 				recv_count = read(pipes[i][PIPE_READ], msg,
 						MSG_SIZE);
-				DIE(recv_count < 0, "read");
+				DIE(recv_count < 0, "Read");
 
 				msg[recv_count] = '\0';
-				printf("received:%s\n", msg);
+				printf("Received:%s\n", msg);
 			}
 		}
 	}
 
-	printf("server: going to wait for clients to end\n");
+	printf("[SERVER] Going to wait for clients to end\n");
 
 	for (i = 0; i < CLIENT_COUNT; ++i) {
 		rc = close(pipes[i][PIPE_READ]);
-		DIE(rc < 0, "close failed");
+		DIE(rc < 0, "Close failed");
 
 		rc = waitpid(ANY, &status, 0);
-		DIE(rc < 0, "waitpid failed");
+		DIE(rc < 0, "Waitpid failed");
 	}
 
-	printf("server: exiting\n");
+	printf("[SERVER] Exiting\n");
 	return 0;
 }
 
@@ -88,26 +88,26 @@ static int client(unsigned int index)
 	int rc;
 
 	/* Close read pipe head, wait random time and send a message */
-	printf("client %i: started\n", index);
+	printf("[CLIENT] %i: Started\n", index);
 
 	rc = close(pipes[index][PIPE_READ]);
-	DIE(rc < 0, "close failed");
+	DIE(rc < 0, "Close failed");
 
 	srandom(index);
 
 	sleep(random()%10);
 
-	printf("client %i: writing message\n", index);
+	printf("[CLIENT] %i: Writing message\n", index);
 
 	rand_no = (char)(random()%30);
 	sprintf(msg, "<%i>:<%c>", getpid(), 'a'+rand_no);
 	rc = write(pipes[index][PIPE_WRITE], msg, strlen(msg));
-	DIE(rc < 0, "write failed");
+	DIE(rc < 0, "Write failed");
 
 	rc = close(pipes[index][PIPE_WRITE]);
-	DIE(rc < 0, "close failed");
+	DIE(rc < 0, "Close failed");
 
-	printf("client %i: exiting\n", index);
+	printf("[CLIENT] %i: Exiting\n", index);
 
 	return 0;
 }
