@@ -16,7 +16,7 @@
 #ifdef DEBUG__
 #define Dprintf(format, ...)                                \
 	fprintf(stderr, "[%s]:%s:%d: " format, __FILE__,     \
-			__func__, __LINE__, ##__VA_ARGS__)
+			__FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define Dprintf(format, ...)
 #endif  /* DEBUG__ */
