@@ -29,7 +29,7 @@ static void wait_for_input(const char *msg)
 /* Lock memory interval [addr, addr + size - 1] */
 static void lock_memory(char *addr, size_t size)
 {
-	unsigned long page_offset
+	unsigned long page_offset;
 	unsigned long pagesize;
 	int rc;
 
@@ -37,8 +37,12 @@ static void lock_memory(char *addr, size_t size)
 	page_offset = (unsigned long)addr % pagesize;
 
 	/* TODO - Align addr to page offset and adjust size */
+	addr -= page_offset;
+	size += page_offset;
 
 	/* TODO - Lock memory */
+	rc = mlock(addr, size);
+	DIE(rc == -1, "mlock");
 }
 
 /* Unlock memory interval [addr, addr + size - 1] */
@@ -52,8 +56,12 @@ static void unlock_memory(char *addr, size_t size)
 	page_offset = (unsigned long)addr % pagesize;
 
 	/* TODO - Align addr to page offset and adjust size */
+	addr -= page_offset;
+	size += page_offset;
 
 	/* TODO - Unlock memory */
+	rc = munlock(addr, size);
+	DIE(rc == -1, "munlock");
 }
 
 int main(void)

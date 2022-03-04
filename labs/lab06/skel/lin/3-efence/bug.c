@@ -1,8 +1,8 @@
 /**
- * SO, 2017
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #3, lin
+ * Task #3, Linux
  *
  * Debugging with 'ElectricFence'
  */
@@ -15,8 +15,8 @@
 int main(void)
 {
 	int i;
-	int *v = calloc(10, sizeof(int));
-	int *w = calloc(10, sizeof(int));
+	int *v = calloc(10, sizeof(*v));
+	int *w = calloc(10, sizeof(*w));
 
 	for (i = 0; i < 10; i++)
 		v[i] = i;

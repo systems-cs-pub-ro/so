@@ -1,8 +1,8 @@
 /**
- * SO, 2017
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #1, lin
+ * Task #1, Linux
  *
  * Use of pmap for showing different behavior of mmap calls
  */
@@ -25,7 +25,8 @@ static void wait_for_input(const char *msg)
 	char buf[32];
 
 	printf(" * %s\n", msg);
-	printf(" -- Press ENTER to continue ...\n"); fflush(stdout);
+	printf(" -- Press ENTER to continue ...\n");
+	fflush(stdout);
 	fgets(buf, 32, stdin);
 }
 
@@ -38,7 +39,7 @@ int main(void)
 
 	wait_for_input("before mmap file use pmap to see file mapping");
 
-	/** First we map a file */
+	/* First we map a file */
 	fd = open("Makefile", O_RDWR);
 	DIE(fd == -1, "open");
 
@@ -54,9 +55,9 @@ int main(void)
 	rc = close(fd);
 	DIE(rc == -1, "close");
 
-	/** Second we map SHARED memory */
+	/* Second we map SHARED memory */
 	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-				 MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+			MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 	DIE(p == MAP_FAILED, "mmap");
 	wait_for_input("after mapping SHARED memory");
 
@@ -64,9 +65,9 @@ int main(void)
 	DIE(rc == -1, "munmap");
 	wait_for_input("after unmapping SHARED memory");
 
-	/** Thrid we map PRIVATE memory */
+	/* Third we map PRIVATE memory */
 	p = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-				 MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	DIE(p == MAP_FAILED, "mmap");
 	wait_for_input("after mapping PRIVATE memory");
 

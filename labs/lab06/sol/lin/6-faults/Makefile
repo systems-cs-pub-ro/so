@@ -1,0 +1,1 @@
+../../../skel/lin/6-faults/Makefile

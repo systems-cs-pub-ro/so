@@ -1,6 +1,6 @@
 /**
  * SO
- * Lab #6, Virtual Memory
+ * Lab #7, Virtual Memory
  *
  * Task #4, Linux
  *
@@ -26,28 +26,44 @@ int main(int argc, char *argv[])
 
 	DIE(argc != 3, "Usage: ./mycp <from_file> <to_file>");
 
-	/* Open input and output files */
+	/* TODO - Open the input file */
 	fdin = open(argv[1], O_RDONLY);
 	DIE(fdin == -1, "open fdin");
 
-	/* Open/create the output file */
+	/* TODO - Open/create the output file */
 	fdout = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	DIE(fdout == -1, "open fdout");
 
 	/* TODO - Truncate the output file to the input file size */
+	rc = fstat(fdin, &statbuf);
+	DIE(rc == -1, "fstat");
 
-	/* TODO - mmap the input and output file */
+	rc = ftruncate(fdout, statbuf.st_size);
+	DIE(rc == -1, "ftruncate");
+
+	/* TODO - Mmap the input and output file */
+	src = mmap(0, statbuf.st_size, PROT_READ, MAP_SHARED, fdin, 0);
+	DIE(src == MAP_FAILED, "mmap src");
+
+	dst = mmap(0, statbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED,
+			   fdout, 0);
+	DIE(dst == MAP_FAILED, "mmap dst");
 
 	/* TODO - Copy the input file to the output file */
+	memcpy(dst, src, statbuf.st_size);
 
 	/* TODO - Clean up */
+	rc = munmap(src, statbuf.st_size);
+	DIE(rc == -1, "munmap source");
 
-	/* Close files */
+	rc = munmap(dst, statbuf.st_size);
+	DIE(rc == -1, "munmap dest");
+
 	rc = close(fdin);
 	DIE(rc == -1, "close source");
 
 	rc = close(fdout);
-	DIE(rc == -1, "close destination");
+	DIE(rc == -1, "close dest");
 
 	return 0;
 }

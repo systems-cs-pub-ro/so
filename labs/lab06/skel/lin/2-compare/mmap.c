@@ -1,8 +1,8 @@
 /**
- * SO, 2017
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #2, lin
+ * Task #2, Linux
  *
  * write vs mmap
  */
@@ -22,7 +22,8 @@
 int main(void)
 {
 	char msg[] = "Testing testing 123...\n";
-	int rc, i;
+	int rc;
+	int i;
 	int fd;
 	char *mem;
 
@@ -33,7 +34,7 @@ int main(void)
 	DIE(rc == -1, "ftruncate");
 
 	mem = mmap(0, N * sizeof(msg), PROT_READ | PROT_WRITE,
-		   MAP_SHARED, fd, 0);
+			MAP_SHARED, fd, 0);
 	DIE(mem == MAP_FAILED, "mmap");
 
 	for (i = 0; i < N; i++)
@@ -47,5 +48,3 @@ int main(void)
 
 	return 0;
 }
-
-

@@ -1,8 +1,8 @@
 /**
- * SO, 2017
- * Lab #6
+ * SO
+ * Lab #6, Virtual Memory
  *
- * Task #2, lin
+ * Task #2, Linux
  *
  * write vs mmap
  */
@@ -19,7 +19,8 @@
 int main(void)
 {
 	char msg[] = "Testing testing 123...\n";
-	int rc, i;
+	int rc;
+	int i;
 	int fd;
 
 	fd = open("test_write", O_CREAT | O_TRUNC | O_RDWR, 0644);
