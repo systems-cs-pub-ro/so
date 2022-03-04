@@ -7,15 +7,14 @@
  * Implementing simple crc method
  */
 
-/* do not use UNICODE */
+/* Do not use UNICODE */
 #undef _UNICODE
 #undef UNICODE
 
-#include <windows.h>
-#include <stdio.h>
-
-#include <utils.h>
 #include <crc32.h>
+#include <stdio.h>
+#include <utils.h>
+#include <windows.h>
 
 #define BUFSIZE 512
 #define CHUNKSIZE 32
@@ -23,13 +22,16 @@
 static void WriteCrc(int crc, HANDLE hWrite)
 {
 	BOOL bRet;
-	DWORD dwBytesWritten, dwBytesToWrite, dwTotalWritten;
+	DWORD dwBytesWritten;
+	DWORD dwBytesToWrite;
+	DWORD dwTotalWritten;
 	/* TODO 1 - Write the CRC to the file. Use a loop! */
 }
 
 static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 {
-	HANDLE hRead, hWrite;
+	HANDLE hRead;
+	DWORD hWrite;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
 	DWORD bytesRead;
@@ -48,7 +50,7 @@ static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 		/* TODO 1 - Test for end of file */
 
 		/* Calculate crc for buf */
-		crc = update_crc(crc, (unsigned char *) buf, bytesRead);
+		crc = update_crc(crc, (unsigned char *)buf, bytesRead);
 	}
 
 	/* Write crc to destination file */
@@ -56,7 +58,6 @@ static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 
 	/* TODO 1 - Close files */
 }
-
 
 static DWORD GetSize(HANDLE file)
 {
@@ -70,9 +71,11 @@ static DWORD GetSize(HANDLE file)
 static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
 {
 	BOOL bRet;
-	DWORD dwBytesRead, dwBytesToRead, dwTotalRead = 0;
+	DWORD dwBytesRead;
+	DWORD dwBytesToRead;
+	DWORD dwTotalRead = 0;
 
-	/*
+	/**
 	 * TODO 3
 	 * Read at most CHUNKSIZE bytes from file into the buffer. Use a loop!
 	 * Return the number of read bytes.
@@ -83,10 +86,14 @@ static DWORD ReadChunk(CHAR *chunk, HANDLE hFile)
 
 static BOOL CompareFiles(CHAR *file1, CHAR *file2)
 {
-	DWORD bytesRead1, bytesRead2;
-	HANDLE hFile1, hFile2;
-	CHAR chunk1[CHUNKSIZE], chunk2[CHUNKSIZE];
-	BOOL result = FALSE, bRet;
+	DWORD bytesRead1;
+	DWORD bytesRead2;
+	HANDLE hFile1;
+	HANDLE hFile2;
+	CHAR chunk1[CHUNKSIZE];
+	CHAR chunk2[CHUNKSIZE];
+	BOOL result = FALSE;
+	BOOL bRet;
 
 	/* TODO 4 - Open file handles */
 
@@ -95,13 +102,13 @@ static BOOL CompareFiles(CHAR *file1, CHAR *file2)
 	/* TODO 4 - Compare the files, chunk by chunk */
 	while (1) {
 		ZeroMemory(chunk1, sizeof(chunk1));
-	 	ZeroMemory(chunk2, sizeof(chunk2));
+		ZeroMemory(chunk2, sizeof(chunk2));
 
 		bytesRead1 = ReadChunk(chunk1, hFile1);
 		bytesRead2 = ReadChunk(chunk2, hFile2);
 
 		/* TODO 4 - Test for the end of the files */
-		
+
 		/* TODO 4 - Compare the previously read chunks */
 	}
 
@@ -116,7 +123,8 @@ int main(int argc, char *argv[])
 	BOOL equal;
 
 	if (argc != 4) {
-		fprintf(stderr, "Usage:\n"
+		fprintf(stderr,
+				"Usage:\n"
 				"\tcrc.exe -g <input_file> <output_file> - generate crc\n"
 				"\tcrc.exe -c <file1> <file2>            - compare files\n");
 		exit(EXIT_FAILURE);

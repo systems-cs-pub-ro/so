@@ -1,43 +1,40 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #5, Linux
  *
  * Locking a file
  */
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/file.h>	/* flock */
+#include <sys/file.h> /* flock */
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>	/* errno */
+#include <errno.h> /* errno */
 
 #include "utils.h"
 
-#define LOCK_FILE	"/tmp/my_lock_file"
+#define LOCK_FILE "/tmp/my_lock_file"
 
 static int fdlock = -1;
-
 
 static void do_stuff(void)
 {
 	sleep(10);
 }
 
-
 static void check_lock(void)
 {
 	int rc;
 
-	/* TODO - open LOCK_FILE file */
+	/* TODO - Open LOCK_FILE file */
 	/* fdlock = open(...) */
 
-
-	/* TODO - lock the file using flock
+	/**
+	 * TODO - Lock the file using flock
 	 * - flock must not block in any case !
 	 *
 	 * - in case of error - print a message showing
@@ -51,9 +48,8 @@ static void clean_up(void)
 {
 	int rc;
 
-	/* TODO - unlock file, close file and delete it */
+	/* TODO - Unlock file, close file and delete it */
 }
-
 
 int main(void)
 {
@@ -65,5 +61,3 @@ int main(void)
 
 	return 0;
 }
-
-

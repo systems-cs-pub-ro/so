@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	BOOL bRet;
 	DWORD bytesRead;
 	DWORD bytesWritten;
-	DWORD totalWritten = 0;
+	DWORD totalWritten;
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s <file>\n", argv[0]);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 					   NULL);
 	DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile argv[0]");
 
-	/* Read file pointed by argv[1] and send it to standadard output */
+	/* Read file pointed by argv[1] and send it to standard output */
 	while (1) {
 		bRet = ReadFile(hFile,
 						buf,
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 		do {
 			bRet = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),
 							 buf + totalWritten,
-							 bytesRead - totalWritten,
+							 bytesRead,
 							 &bytesWritten,
 							 NULL);
 			DIE(bRet == FALSE, "WriteFile");

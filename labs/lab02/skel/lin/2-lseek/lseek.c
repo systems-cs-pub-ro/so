@@ -1,12 +1,11 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #2, Linux
  *
  * Relation between file pointers and file descriptors
  */
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -18,8 +17,10 @@
 
 int main(void)
 {
-
-	int fd1, fd2, rc, pos;
+	int fd1;
+	int fd2;
+	int rc;
+	int pos;
 
 	fd1 = open("Makefile", O_RDWR);
 	DIE(fd1 < 0, "open file.txt");

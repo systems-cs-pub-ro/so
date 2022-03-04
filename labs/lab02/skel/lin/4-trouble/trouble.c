@@ -1,12 +1,11 @@
 /**
- * SO, 2017
- * Lab #2, Operatii I/O simple
+ * SO
+ * Lab #2, Simple I/O operations
  *
  * Task #4, Linux
  *
  * Troubleshooting open and write functions
  */
-
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -19,10 +18,11 @@
 
 int main(void)
 {
-	int fd, rc;
+	int fd;
+	int rc;
 	char *msg = "Ana are mere!\n";
 
-	/* opening files */
+	/* Open files */
 	fd = open("tmp1.txt", O_CREAT | O_WRONLY);
 	DIE(fd < 0, "open failed");
 
@@ -34,4 +34,3 @@ int main(void)
 
 	return 0;
 }
-

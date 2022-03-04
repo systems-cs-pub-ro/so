@@ -1,10 +1,9 @@
 /**
- * SO
- * Windows, Simple I/O operations
+ * SO, 2017
+ * Windows
  *
  * Useful structures/macros
  */
-
 #ifndef WIN_UTILS_H_
 #define WIN_UTILS_H_ 1
 
