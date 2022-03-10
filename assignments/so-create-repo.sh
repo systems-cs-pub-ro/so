@@ -18,7 +18,7 @@ SSH_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
 SSH_KEY=""
 GITLAB_API_URL="https://gitlab.cs.pub.ro/api/v3"
 SO_ASSIGNMENTS_URL="https://github.com/systems-cs-pub-ro/so.git"
-SO_TEAM=(454 1336 916 948 709 2945 1956)
+SO_TEAM=(1956)
 TIMEOUT=30
 MAKE_CLONE="no"
 
@@ -319,7 +319,7 @@ add_asist_so_assignment_group()
                 res=$(curl -sS -H "PRIVATE-TOKEN: $PRIVATE_TOKEN"           \
                         "$GITLAB_API_URL/projects/$REPO_ID/members"         \
                         --data-urlencode "user_id=$member"                  \
-                        --data-urlencode "access_level=20")
+                        --data-urlencode "access_level=40")
                 if [ $? -ne 0 ]; then
                         echo -e "internal error: Could not add new member ... exiting\n"
                         exit 1
