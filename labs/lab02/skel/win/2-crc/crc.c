@@ -31,7 +31,7 @@ static void WriteCrc(int crc, HANDLE hWrite)
 static void GenerateCrc(CHAR *sourceFile, CHAR *destFile)
 {
 	HANDLE hRead;
-	DWORD hWrite;
+	HANDLE hWrite;
 	CHAR buf[BUFSIZE];
 	BOOL bRet;
 	DWORD bytesRead;
