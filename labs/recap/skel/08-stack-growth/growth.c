@@ -1,3 +1,10 @@
+/**
+ * SO
+ * Recap
+ * Task #8
+ *
+ * Find out which functions are thread safe and which are reentrant.
+ */
 #include <stdio.h>
 
 static unsigned long f1_addr, f2_addr;
@@ -22,9 +29,8 @@ int main(void)
 {
 	f1();
 
-	/*
-	 * f2 is called from f1, so f2's stack frame is 'higher' on the
-	 * stack.
+	/**
+	 * f2 is called from f1, so f2's stack frame is "higher" on the stack.
 	 */
 	if (f1_addr > f2_addr)
 		printf("Stack grows down.\n");

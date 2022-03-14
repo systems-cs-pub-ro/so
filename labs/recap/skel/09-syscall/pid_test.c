@@ -1,3 +1,10 @@
+/**
+ * SO
+ * Recap
+ * Task #9
+ *
+ * Count the syscalls.
+ */
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>

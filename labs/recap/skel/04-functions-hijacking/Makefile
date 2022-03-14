@@ -1,18 +1,12 @@
-CC=gcc
+CC = gcc
+CFLAGS = -fPIC
+LDLIBS = -lpthread
+LIB_NAME = libnative.so
 
-LIB_NAME=libnative.so
+all: $(LIB_NAME) test
 
-all: nativelib test
-
-nativelib: native.o
-	$(CC) -Wall -fPIC -ldl -shared -o $(LIB_NAME) native.o
-
-native.o: native.c
-
-test: test.o
-	gcc -lpthread test.o -o test
-
-test.o: test.c
+$(LIB_NAME): native.o
+	$(CC) -shared -o $@ $^ -ldl
 
 clean:
 	rm -f $(LIB_NAME) *~ *.o test

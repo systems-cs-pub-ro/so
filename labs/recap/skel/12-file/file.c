@@ -1,17 +1,17 @@
 /**
- * SO, 2010 - Lab #2, Simple I/O
- * Task #4, Linux
+ * SO
+ * Recap
+ * Task #12
  *
- * Standard output/error redirection
+ * File descriptor manipulation.
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include <unistd.h>
-	
-	
+#include <unistd.h>	
+
 int main(void)
 {
 	int fd;
@@ -23,5 +23,3 @@ int main(void)
 
 	return 0;
 }
-
-	

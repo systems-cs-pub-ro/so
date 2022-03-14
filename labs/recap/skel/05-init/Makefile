@@ -1,8 +1,8 @@
 CFLAGS = -g -O0
 
-all: initializari
+all: initialize
 
 .PHONY: clean
 
 clean:
-	rm -f initializari
+	rm -f initialize
