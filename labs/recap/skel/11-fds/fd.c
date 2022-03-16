@@ -14,7 +14,7 @@
 #define MAGIC 17
 
 static void do_work(int i)
-{	
+{
 	int p[2];
 	int rd;
 	int wr;
@@ -22,7 +22,7 @@ static void do_work(int i)
 	int bytes;
 	pid_t pid;
 	char buf[10];
-	
+
 	if (pipe(p) < 0) {
 		perror("pipe failed");
 		exit(1);

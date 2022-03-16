@@ -13,7 +13,7 @@
 int main(void)
 {
 	int ii = 0;
-	
+
 	if (fork() >  0)
 		ii++;
 	wait(NULL);
