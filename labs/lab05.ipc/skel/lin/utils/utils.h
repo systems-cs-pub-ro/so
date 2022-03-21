@@ -1,6 +1,6 @@
 /**
- * SO, 2011
- * Lab #3, Procese
+ * SO
+ * Lab #3
  *
  * Useful structures/macros
  */
@@ -12,14 +12,14 @@
 #include <stdlib.h>
 
 /* useful macro for handling error codes */
-#define DIE(assertion, call_description)				\
-	do {								\
+#define DIE(assertion, call_description)	\
+	do {									\
 		if (assertion) {					\
-			fprintf(stderr, "(%s, %d): ",			\
-					__FILE__, __LINE__);		\
-			perror(call_description);			\
+			fprintf(stderr, "(%s, %d): ",	\
+					__FILE__, __LINE__);	\
+			perror(call_description);		\
 			exit(EXIT_FAILURE);				\
-		}							\
+		}									\
 	} while(0)
 
 #endif

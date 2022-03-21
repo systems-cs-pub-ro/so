@@ -1,11 +1,11 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #1, lin
-  *
-  * Using named semaphores
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #1, Linux
+ *
+ * Using named semaphores
+ */
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <semaphore.h>
@@ -21,9 +21,8 @@ static int wait_for_input(const char *msg)
 	printf("-- %s --\n", msg);
 	fflush(stdout);
 	fgets(buf, 32, stdin);
-	if (strncasecmp(buf, "e", 1) == 0) {
+	if (strncasecmp(buf, "e", 1) == 0)
 		return 0;
-	}
 	return 1;
 }
 

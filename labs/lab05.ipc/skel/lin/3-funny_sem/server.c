@@ -1,11 +1,11 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #3, lin
-  *
-  * Server tring to find the magic number
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #3, Linux
+ *
+ * Server tring to find the magic number
+ */
 #include <stdio.h>
 #include <semaphore.h>
 #include <fcntl.h>
@@ -13,12 +13,13 @@
 
 #include "utils.h"
 
-#define SEM_NAME	"/my_sem"
+#define SEM_NAME "/my_sem"
 
 int main(void)
 {
 	sem_t *sem;
-	int magic_num, rc;
+	int magic_num;
+	int rc;
 
 	/* TODO - Use one semaphore to receive magic_num from client */
 
@@ -26,5 +27,3 @@ int main(void)
 
 	return 0;
 }
-
-

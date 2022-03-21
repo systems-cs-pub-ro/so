@@ -1,11 +1,11 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #2, lin
-  *
-  * Hash function implementation
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #2, Linux
+ *
+ * Hash function implementation
+ */
 #include "hash.h"
 
 /**
@@ -18,9 +18,8 @@ unsigned int hash(const char *str)
 	unsigned int hash = 5381;
 	int c;
 
-	while ( (c = *str++) != 0 )
+	while ((c = *str++) != 0)
 		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
 	return (hash % BUCKET_COUNT);
 }
-

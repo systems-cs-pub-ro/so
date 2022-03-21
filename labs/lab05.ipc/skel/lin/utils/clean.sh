@@ -1,10 +1,11 @@
 #!/bin/bash
 
-## Script to clean all shared IPC objects after improper closure
+# Script to clean all shared IPC objects after improper closure
 
-#Lists with names of ipc objects as they appear in the syscall
-#Ex: shm_open("/my_shm".. ) -> add "my_shm" to SHM_LIST
-#    sem_open("/my_sem".. ) -> add "my_sem" to SEM_LIST
+# Lists with names of ipc objects as they appear in the syscall
+# E.g: 
+#	shm_open("/my_shm".. ) -> add "my_shm" to SHM_LIST
+#	sem_open("/my_sem".. ) -> add "my_sem" to SEM_LIST
 
 SEM_LIST='my_sem sem[0-9]* '
 SHM_LIST="my_shm "
