@@ -1,28 +1,28 @@
-Suport fizic:   0       In cache:       0       Exista output:  0
+Physical support:   0       In cache:       0       Output exists:  0
 Command terminated by signal 13
 0:05.15
 
-Suport fizic:   0       In cache:       0       Exista output:  1
+Physical support:   0       In cache:       0       Output exists:  1
 Command terminated by signal 13
 0:04.81
 
-Suport fizic:   0       In cache:       1       Exista output:  0
+Physical support:   0       In cache:       1       Output exists:  0
 Command terminated by signal 13
 0:04.67
 
-Suport fizic:   0       In cache:       1       Exista output:  1
+Physical support:   0       In cache:       1       Output exists:  1
 Command terminated by signal 13
 0:04.02
 
-Generare fisier input
-Suport fizic:   1       In cache:       0       Exista output:  0
+Generate input file
+Physical support:   1       In cache:       0       Output exists:  0
 0:06.76
 
-Suport fizic:   1       In cache:       0       Exista output:  1
+Physical support:   1       In cache:       0       Output exists:  1
 0:05.11
 
-Suport fizic:   1       In cache:       1       Exista output:  0
+Physical support:   1       In cache:       1       Output exists:  0
 0:04.76
 
-Suport fizic:   1       In cache:       1       Exista output:  1
+Physical support:   1       In cache:       1       Output exists:  1
 0:04.19

@@ -19,6 +19,7 @@
 int main(void)
 {
 	printf("pid: %d\n", getpid());
+
 #if SYS_TYPE == SYS_NATIVE
 	fork();
 #endif
@@ -26,6 +27,7 @@ int main(void)
 #if SYS_TYPE == SYS_GLIBC
 	syscall(SYS_fork); 
 #endif
+
 	printf("pid: %d\n", getpid());
 
 	return 0;
