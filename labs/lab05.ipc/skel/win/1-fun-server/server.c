@@ -3,11 +3,10 @@
 
 #include <windows.h>
 #include "utils.h"
- 
-/* where to create the mailslot */
+
+/* Where to create the mailslot */
 LPSTR lpszSlotName = "\\\\.\\mailslot\\sample_mailslot";
 
- 
 int main(void)
 {
 	DWORD cbMessage, cMessage, cbRead, dwRet; 
@@ -22,14 +21,13 @@ int main(void)
 		MAILSLOT_WAIT_FOREVER, /* no expiration period */
 		NULL);                 /* no security attributes */
 	DIE(hMailslot == INVALID_HANDLE_VALUE, "CreateMailSlot");
- 
+
 	printf("Waiting for messages form clients...\n");
- 
+
 	/* Read all messages from Mailslot */
 	while (1) {
- 		
 		/* Get number of messages form Mailslot */
-		bRet = GetMailslotInfo( 
+		bRet = GetMailslotInfo(
 			hMailslot,             /* mailslot handle */
 			(LPDWORD) NULL,        /* no maximum message size */
 			&cbMessage,            /* size of next message */
@@ -46,7 +44,7 @@ int main(void)
 		/* Alocate space for the message */
  		lpszBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, cbMessage);
 		DIE(lpszBuffer == NULL, "HeapAlloc");
- 
+
 		/* Get the actual message */
  		bRet = ReadFile(
 			hMailslot,
@@ -55,15 +53,14 @@ int main(void)
  			&cbRead,
  			(LPOVERLAPPED) NULL);
 		DIE(bRet == FALSE, "ReadFile from Mailslot");
- 
+
  		printf("Received: %s\n", lpszBuffer);
- 
+
  		HeapFree(GetProcessHeap(), 0, lpszBuffer);
  	} /* end while */
- 
+
 	dwRet = CloseHandle(hMailslot);
 	DIE (dwRet == FALSE, "CloseHandle");
- 
+
 	return 0;
 }
-

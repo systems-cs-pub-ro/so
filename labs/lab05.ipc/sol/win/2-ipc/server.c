@@ -1,11 +1,11 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #2, lin
-  *
-  * Generic server implementation
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #2, Windows
+ *
+ * Generic server implementation
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -15,8 +15,6 @@
 #include "generic_shm.h"
 #include "generic_sem.h"
 #include "hashtable.h"
-
-
 
 static sema_t sems[BUCKET_COUNT];
 static shm_t shmem;
@@ -37,32 +35,31 @@ int main(void)
 
 	/* Create message queue */
 	queue = msgq_create(BASE_QUEUE_NAME);
-	
+
 	/* Create shared memory */
 	shmem = shmem_create(BASE_SHM_NAME, sizeof(*h));
 	h = shmem_attach(shmem, sizeof(*h));
 
-	/* no need for locking here */
+	/* No need for locking here */
 	htable_clear(h, NULL);
 
-	/* Staisfy client requests */
+	/* Satisfy client requests */
 	for (;;) {
+		memset(&msg, 0, sizeof(msg));
+
+		/* Receive message from client */
 		msgq_recv(queue, &msg);
 
 		if (msg.cmd == 'e')
 			break;
-		
+
 		switch (msg.cmd) {
 			case 'a': {
-				sema_wait(sems[hash(msg.val)]);
 				htable_insert(h, msg.val);
-				sema_signal(sems[hash(msg.val)]);
 				break;
 			}
 			case 'r': {
-				sema_wait(sems[hash(msg.val)]);
 				htable_delete(h, msg.val);
-				sema_signal(sems[hash(msg.val)]);
 				break;
 			}
 			case 'c': {
@@ -70,17 +67,17 @@ int main(void)
 			}
 		}
 	}
-	
+
 	/* Close shared memory */
 	shmem_detach(h, sizeof(*h));
 	shmem_destroy(shmem);
-	
+
 	/* Close queue */
 	msgq_destroy(queue);
-	
+
 	/* Close semaphores */
-	for (i=0; i<BUCKET_COUNT; i++)
+	for (i = 0; i < BUCKET_COUNT; i++)
 		sema_destroy(sems[i]);
-	
+
 	return EXIT_FAILURE;
 }

@@ -1,11 +1,11 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #2, lin
-  *
-  * Generic client implementation
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #2, Windows
+ *
+ * Generic client implementation
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -18,10 +18,10 @@
 
 #include "utils.h"
 
-static sema_t 		sems[BUCKET_COUNT];
-static shm_t 		shmem;
-static msgq_t		queue;
-static struct htable	*h;	
+static sema_t sems[BUCKET_COUNT];
+static shm_t shmem;
+static msgq_t queue;
+static struct htable *h;
 
 int main(int argc, char **argv)
 {
@@ -30,19 +30,19 @@ int main(int argc, char **argv)
 	char name[MAX_IPC_NAME];
 	message_t msg;
 
-	/* init semaphores */
+	/* Init semaphores */
 	for (i = 0; i < BUCKET_COUNT; i++) {
 		snprintf(name, MAX_IPC_NAME, "%s%d", BASE_SEMA_NAME, i);
 		sems[i] = sema_get(name);
 	}
 
-	/* init queue */
+	/* Init queue */
 	queue = msgq_get(BASE_QUEUE_NAME);
-	
-	/* init shared memory */
+
+	/* Init shared memory */
 	shmem = shmem_get(BASE_SHM_NAME);
 	h = shmem_attach(shmem, sizeof(*h));
-	
+
 	/* Execute commands */
 	for (i = 1; i < argc; i++) {
 		c = argv[i][0];
@@ -62,15 +62,15 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	
+
 	/* Detach from shared memory */
 	shmem_detach(h, sizeof(*h));
-	
+
 	/* Detach from queue */
 	msgq_detach(queue);
-	
+
 	/* Detach from semaphores */
-	for (i=0; i<BUCKET_COUNT; i++)
+	for (i = 0; i < BUCKET_COUNT; i++)
 		sema_detach(sems[i]);
 
 	return EXIT_SUCCESS;

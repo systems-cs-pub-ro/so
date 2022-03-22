@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "utils.h"
- 
+
 LPSTR lpFormat= "\\\\%s\\mailslot\\sample_mailslot";
 
 int main(void)
@@ -26,16 +26,15 @@ int main(void)
 	/* Open Mailslot */
 	hMailslot = CreateFile(
 		(LPCTSTR)lpMailslotName,
- 		GENERIC_WRITE,  
+ 		GENERIC_WRITE,
  		FILE_SHARE_READ,
- 		NULL,		
- 		OPEN_EXISTING,  
+ 		NULL,
+ 		OPEN_EXISTING,
  		FILE_ATTRIBUTE_NORMAL,
- 		NULL);		
+ 		NULL);
 	DIE(hMailslot == INVALID_HANDLE_VALUE, "CreateFile");
- 
-	while (1){
-		
+
+	while (1) {
 		printf("Message to be send:");
 		scanf_s("%s", lpBuffer, sizeof(lpBuffer));
 
@@ -48,11 +47,10 @@ int main(void)
  			NULL);
 		DIE(bRet == FALSE, "Write file to Mailslot");
 	}
- 
+
 	/* Close Mailslot */
 	dwRet = CloseHandle(hMailslot);
 	DIE (dwRet == FALSE, "CloseHandle");
- 
+
 	return 0;
 }
-

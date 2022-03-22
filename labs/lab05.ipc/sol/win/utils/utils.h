@@ -1,10 +1,9 @@
 /**
- * SO, 2011
+ * SO
  * Windows
  *
  * Useful structures/macros
  */
-
 #ifndef WIN_UTILS_H_
 #define WIN_UTILS_H_	1
 
@@ -14,7 +13,7 @@
 #include <windows.h>
 #include <stdio.h>
 
-/* useful macro for handling error codes */
+/* Useful macro for handling error codes */
 #define DIE(assertion, call_description)		\
 	do {										\
 		if (assertion) {						\

@@ -1,18 +1,19 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #2, win
-  *
-  * Unix implementation of shared memory functions
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #2, Windows
+ *
+ * Unix implementation of shared memory functions
+ */
 #include "generic_shm.h"
 #include "utils.h"
 
 /**
- * create and return a segment
+ * Create and return a segment
  */
-shm_t shmem_create(const char* name, unsigned int size) {
+shm_t shmem_create(const char *name, unsigned int size)
+{
 	char shname[255];
 	shm_t mem = INVALID_HANDLE_VALUE;
 
@@ -22,14 +23,14 @@ shm_t shmem_create(const char* name, unsigned int size) {
 
 	/* TODO 2 - Create file mapping */
 
-
 	return mem;
 }
 
 /**
- * open an existing segment
+ * Open an existing segment
  */
-shm_t shmem_get(const char* name) {
+shm_t shmem_get(const char *name)
+{
 	char shname[255];
 	shm_t mem = INVALID_HANDLE_VALUE;
 
@@ -43,27 +44,30 @@ shm_t shmem_get(const char* name) {
 }
 
 /**
- * attach a given memory segment
+ * Aattach a given memory segment
  * @return the address of the mapping
  */
-void* shmem_attach(shm_t mem, unsigned int size) {
+void *shmem_attach(shm_t mem, unsigned int size)
+{
 	void *p = NULL;
 
-	/* TODO 2 - Get memory pointer from the shared memory
+	/**
+	 * TODO 2 - Get memory pointer from the shared memory
 	 *
 	 * Hint: use MapViewOfFile
 	 */
-
 
 	return p;
 }
 
 /**
- * destroy a shared mamory segment - only called from server
+ * Destroy a shared mamory segment - only called from server
  */
-void  shmem_destroy(shm_t x) {
+void shmem_destroy(shm_t x)
+{
 
-	/* TODO 2 - close the shared memory segment 
+	/**
+	 * TODO 2 - close the shared memory segment
 	 *
 	 * Hint: what is shm_t? check common.h
 	 */
@@ -71,12 +75,9 @@ void  shmem_destroy(shm_t x) {
 }
 
 /**
- * unmap a shared memory segment
+ * Unmap a shared memory segment
  */
-void  shmem_detach(const void *p, unsigned int size) {
-
+void shmem_detach(const void *p, unsigned int size)
+{
 	/* TODO 2 - unmap the shared memory from address space */
-	
 }
-
-

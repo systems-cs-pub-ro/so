@@ -1,43 +1,43 @@
 /**
-  * SO, 2011
-  * Lab #5
-  *
-  * Task #2, win
-  *
-  * Generic queue functions
-  */
+ * SO
+ * Lab #5
+ *
+ * Task #2, Windows
+ *
+ * Generic queue functions
+ */
 #ifndef GENERIC_QUEUE_H
 #define GENERIC_QUEUE_H		1
 
 #include "common.h"
 
 /**
- * create and return a new message queue
+ * Create and return a new message queue
  */
-msgq_t msgq_create(const char* name);
+msgq_t msgq_create(const char *name);
 
 /**
- * open an existing queue
+ * Open an existing queue
  */
-msgq_t msgq_get(const char* name);
+msgq_t msgq_get(const char *name);
 
 /**
- * detach from an existing queue
+ * Detach from an existing queue
  */
-void   msgq_detach(msgq_t x);
+void msgq_detach(msgq_t x);
 
 /**
- * destroy an existing queue
+ * Destroy an existing queue
  */
-void   msgq_destroy(msgq_t x);
+void msgq_destroy(msgq_t x);
 
 /**
- * send a message through a queue
+ * Send a message through a queue
  */
-void   msgq_send(msgq_t m, message_t *x);
+void msgq_send(msgq_t m, message_t *x);
 
 /**
- * receive a message from a queue
+ * Receive a message from a queue
  */
 void   msgq_recv(msgq_t m, message_t *x);
 
