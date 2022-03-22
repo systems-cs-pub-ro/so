@@ -4,14 +4,13 @@
  *
  * Useful structures/macros
  */
-
 #ifndef WIN_UTILS_H_
-#define WIN_UTILS_H_	1
+#define WIN_UTILS_H_ 1
 
 #include <windows.h>
 #include <stdio.h>
 
-/** 
+/**
  * Useful macro for handling error codes
  */
 #define DIE(assertion, call_description)				\

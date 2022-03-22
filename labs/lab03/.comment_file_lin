@@ -1,7 +1,0 @@
-1		Use of "system" library call and of "strace"
-2		What happens if a parent process does not wait for it's child process ?
-3		Implementing a minimal shell
-4-server.c	FIFO server
-4-client.c	FIFO client
-4-common.h	Common defines
-5-magic.c	Use your magic to make this program print 'Hello World'
