@@ -1,3 +1,11 @@
+/**
+ * SO
+ * Recap
+ * Task #14
+ *
+ * Count the number of `brk` calls executed with `DO_FREE` set to 0 and 1,
+ * respectively.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

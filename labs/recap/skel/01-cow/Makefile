@@ -1,9 +1,9 @@
+CC = gcc
 CFLAGS = -Wall -g -I ../utils
-LDLIBS = -lpthread
 
 .PHONY: all clean
 
-all: counter
+all: cow
 
 clean:
-	rm -f counter *.o *~
+	rm -f cow *~

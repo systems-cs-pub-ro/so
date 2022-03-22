@@ -1,5 +1,5 @@
 CFLAGS = -Wall -g
-LDFLAGS = -lpthread
+LDLIBS = -lpthread
 
 .PHONY: all clean
 

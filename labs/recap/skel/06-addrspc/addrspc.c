@@ -1,3 +1,11 @@
+/**
+ * SO
+ * Recap
+ * Task #6
+ *
+ * Program that displays the changes to address space when switching contexts
+ * between the threads of the same process. 
+ */
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -30,7 +38,6 @@ void* thread1_code(void *args)
 		sched2 = 1;
 		pthread_cond_signal(&cond);
 		pthread_mutex_unlock(&lock);
-
 	}
 }
 
@@ -40,9 +47,8 @@ void* thread2_code(void *args)
 
 	while (1) {
 		pthread_mutex_lock(&lock);
-		while (!sched2) {
+		while (!sched2)
 			pthread_cond_wait(&cond, &lock);
-		}
 		pthread_mutex_unlock(&lock);
 
 		printf("thread 2 running\n");

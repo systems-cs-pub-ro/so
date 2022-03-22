@@ -1,3 +1,10 @@
+/**
+ * SO
+ * Recap
+ * Task #15
+ *
+ * Count the page faults triggered by the following program.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +19,8 @@ static void wait_for_input(const char *msg)
 	char buf[32];
 
 	printf(" * %s\n", msg);
-	printf(" -- Press ENTER to continue ..."); fflush(stdout);
+	printf(" -- Press ENTER to continue ...");
+	fflush(stdout);
 	fgets(buf, 32, stdin);
 }
 
@@ -34,38 +42,38 @@ int main(void)
 	}
 
 	for (i = 0; i < NUM_PAGES; i++)
-		p[i*page_size] = i;
+		p[i * page_size] = i;
 
 	wait_for_input("init p before fork");
 
 	switch (fork()) {
-		case -1:    /* handle error */
-			perror("fork");
-			exit(EXIT_FAILURE);
+	case -1:	/* Handle error */
+		perror("fork");
+		exit(EXIT_FAILURE);
 
-		case 0:     /* child process */
-			wait_for_input("child begin");
+	case 0:		/* Child process */
+		wait_for_input("child begin");
 
-			for (i = 0; i < NUM_PAGES / 2; i++)
-				value = p[i*page_size];
-			wait_for_input("child after read");
+		for (i = 0; i < NUM_PAGES / 2; i++)
+			value = p[i * page_size];
+		wait_for_input("child after read");
 
-			for (i = NUM_PAGES / 2; i < NUM_PAGES; i++)
-				p[i*page_size] = page_size-i;
-			wait_for_input("child after write");
+		for (i = NUM_PAGES / 2; i < NUM_PAGES; i++)
+			p[i * page_size] = page_size - i;
+		wait_for_input("child after write");
 
-			exit(EXIT_SUCCESS);
-			break;
+		exit(EXIT_SUCCESS);
+		break;
 
-		default:
-			break;
+	default:	/* Parent process */
+		break;
 	}
 
 	wait(&status);
 	wait_for_input("parent after wait");
 
 	for (i = 0; i < NUM_PAGES; i++)
-		p[i*page_size] = i;
+		p[i * page_size] = i;
 
 	wait_for_input("end");
 	return 0;

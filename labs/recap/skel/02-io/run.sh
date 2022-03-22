@@ -18,7 +18,7 @@ function clear_cache
 
 function print
 {
-	echo -e "Suport fizic:\t$1\tIn cache:\t$2\tExista output:\t$3"
+	echo -e "Physical support:\t$1\tIn cache:\t$2\tOutput exists:\t$3"
 }
 
 function run_ram
@@ -52,7 +52,7 @@ print 0 1 1
 run_ram
 echo
 
-echo "Generare fisier input"
+echo "Generate input file"
 cat /dev/zero | $BIN > /dev/null
 mv $OUT_FILE $IN_FILE
 

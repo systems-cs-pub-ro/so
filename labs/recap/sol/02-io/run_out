@@ -1,0 +1,28 @@
+Physical support:   0       In cache:       0       Output exists:  0
+Command terminated by signal 13
+0:05.15
+
+Physical support:   0       In cache:       0       Output exists:  1
+Command terminated by signal 13
+0:04.81
+
+Physical support:   0       In cache:       1       Output exists:  0
+Command terminated by signal 13
+0:04.67
+
+Physical support:   0       In cache:       1       Output exists:  1
+Command terminated by signal 13
+0:04.02
+
+Generate input file
+Physical support:   1       In cache:       0       Output exists:  0
+0:06.76
+
+Physical support:   1       In cache:       0       Output exists:  1
+0:05.11
+
+Physical support:   1       In cache:       1       Output exists:  0
+0:04.76
+
+Physical support:   1       In cache:       1       Output exists:  1
+0:04.19

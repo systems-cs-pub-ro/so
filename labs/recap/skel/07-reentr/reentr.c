@@ -1,3 +1,10 @@
+/**
+ * SO
+ * Recap
+ * Task #7
+ *
+ * Find out which functions are thread safe and which are reentrant.
+ */
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>

@@ -1,6 +1,7 @@
 /**
- * SO, 2010 - Lab #13, Recap
- * Task #2, Linux
+ * SO
+ * Recap
+ * Task #2
  *
  * IO operations
  * Pagecache, truncate
@@ -14,10 +15,9 @@
 #include <fcntl.h>
 
 #define MB	(1024 * 1024)
-#define SIZE	(128 * MB)
+#define SIZE	(512 * MB)
 
-int
-main(void)
+int main(void)
 {
 	int fd = open("out", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	ssize_t len;
@@ -30,14 +30,16 @@ main(void)
 
 	copied = 0;
 	while (SIZE - copied) {
-		if ((len = splice(STDIN_FILENO, NULL, fd, NULL,
-						SIZE - copied, 0)) < 0) {
+		len = splice(STDIN_FILENO, NULL, fd, NULL, SIZE - copied, 0);
+		if (len < 0) {
 			perror("splice");
 			exit(-1);
 		}
 		copied += len;
 	}
+
 	close(fd);
-	printf("%lu bytes copyed\n", copied);
+	printf("%lu bytes copied\n", copied);
+
 	return 0;
 }
