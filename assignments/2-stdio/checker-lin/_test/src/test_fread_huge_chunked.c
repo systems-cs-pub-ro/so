@@ -52,15 +52,14 @@ int main(int argc, char *argv[])
 
 	install_hooks("libso_stdio.so", hooks, 1);
 
-	if (argc == 2)
-		test_work_dir = argv[1];
-	else
-		test_work_dir = "_test";
+        test_work_dir = "_test";
+        size_member = 1;
 
-	if (argc == 3)
-		size_member = atoi(argv[2]);
-	else
-		size_member = 1;
+        if (argc >= 2)
+                test_work_dir = argv[1];
+
+        if (argc == 3)
+                size_member = atoi(argv[2]);
 
 	sprintf(fpath, "%s/huge_file", test_work_dir);
 
