@@ -48,18 +48,17 @@ int main(int argc, char **argv)
 		c = argv[i][0];
 		memset(&msg, 0, sizeof(msg));
 		switch (c) {
-		case 'p': {
+		case 'p':
 			htable_print(h, sems);
 			break;
-		}
-		default: {
+		default:
 			if (c == 'a' || c == 'r') {
 				DIE(i + 1 == argc, "invalid input");
 				strncpy(msg.val, argv[++i], MAX_WORD_SIZE);
 			}
 			msg.cmd = c;
 			msgq_send(queue, &msg);
-		}
+			break;
 		}
 	}
 

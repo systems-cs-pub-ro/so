@@ -53,17 +53,17 @@ int main(void)
 			break;
 
 		switch (msg.cmd) {
-		case 'a': {
+		case 'a':
 			htable_insert(h, msg.val);
 			break;
-		}
-		case 'r': {
+
+		case 'r':
 			htable_delete(h, msg.val);
 			break;
-		}
-		case 'c': {
+
+		case 'c':
 			htable_clear(h, sems);
-		}
+			break;
 		}
 	}
 

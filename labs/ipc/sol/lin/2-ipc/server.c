@@ -51,21 +51,21 @@ int main(void)
 			break;
 
 		switch (msg.cmd) {
-		case 'a': {
+		case 'a':
 			sema_wait(sems[hash(msg.val)]);
 			htable_insert(h, msg.val);
 			sema_signal(sems[hash(msg.val)]);
 			break;
-		}
-		case 'r': {
+
+		case 'r':
 			sema_wait(sems[hash(msg.val)]);
 			htable_delete(h, msg.val);
 			sema_signal(sems[hash(msg.val)]);
 			break;
-		}
-		case 'c': {
+
+		case 'c':
 			htable_clear(h, sems);
-		}
+			break;
 		}
 	}
 
