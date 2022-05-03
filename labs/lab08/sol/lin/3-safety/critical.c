@@ -27,7 +27,8 @@ void acquire_lock(void)
 #ifdef USE_SPINLOCK
 	/* Busy waiting */
 	while (1) {
-		/** TODO2: Implement spinlock lock method
+		/**
+		 * TODO2: Implement spinlock lock method
 		 *
 		 * HINT: Use atomic intrutions. ex: __atomic_test_and_set.
 		 *
