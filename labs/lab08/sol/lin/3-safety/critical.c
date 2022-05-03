@@ -40,7 +40,8 @@ void acquire_lock(void)
 		if(__atomic_test_and_set(&lock, __ATOMIC_SEQ_CST) == false)
 			return;
 
-		/** Short explanation: High-level language code is translated into
+		/**
+		 * Short explanation: High-level language code is translated into
 		 * low-level code. The low level code is not guaranteed to follow
 		 * the same code flow as the high-level code. Some instructions may be
 		 * skipped or reordered for the sake of optimization!
