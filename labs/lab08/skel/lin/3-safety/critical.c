@@ -27,7 +27,7 @@ void acquire_lock(void)
 #ifdef USE_SPINLOCK
 	/* Busy waiting */
 	while (1) {
-		/* TODO2: Implement spinlock lock method
+		/** TODO2: Implement spinlock lock method
 		 *
 		 * HINT: Use atomic intrutions. ex: __atomic_test_and_set.
 		 *
@@ -37,7 +37,7 @@ void acquire_lock(void)
 		 * link and search for "__ATOMIC_SEQ_CST".
 		 */
 
-		/*
+		/**
 		 * Short explanation: High-level language code is translated into
 		 * low-level code. The low level code is not guaranteed to follow
 		 * the same code flow as the high-level code. Some instructions may be
@@ -51,7 +51,7 @@ void acquire_lock(void)
 		 * If you're interested in knowing more, see this link:
 		 * https://www.internalpointers.com/post/understanding-memory-ordering.
 		 */
-    }
+	}
 #else
 	pthread_mutex_lock(&lock);
 #endif
@@ -60,7 +60,15 @@ void acquire_lock(void)
 void release_lock(void)
 {
 #ifdef USE_SPINLOCK
-
+		/** TODO2: Implement spinlock release method
+		 *
+		 * HINT: Use atomic intrutions. ex: __atomic_clear
+		 *
+		 * HINT 2: Use the most restrictive memory order for the
+		 * second parameter of __atomic_test_and_set. See the
+		 * https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+		 * link and search for "__ATOMIC_SEQ_CST"
+		 */
 #else
 	pthread_mutex_unlock(&lock);
 #endif
