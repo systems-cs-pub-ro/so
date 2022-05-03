@@ -62,7 +62,8 @@ void acquire_lock(void)
 void release_lock(void)
 {
 #ifdef USE_SPINLOCK
-		/** TODO2: Implement spinlock release method
+		/**
+		 * TODO2: Implement spinlock release method
 		 *
 		 * HINT: Use atomic intrutions. ex: __atomic_clear
 		 *
