@@ -24,122 +24,179 @@
 
 #include "include/utils.h"
 
-const struct op ops[] = {
-	{ CONNECT,	"connect",	"client connected",	0 },
-	{ SUBSCRIBE,	"subscribe",	"client subscribed",	1 },
-	{ STAT,		"stat",		"received stats",	1 },
-	{ ADD,		"add",		"log added",		1 },
-	{ FLUSH,	"flush",	"logs flushed",		1 },
-	{ DISCONNECT,	"disconnect", 	"client disconnected",	1 },
-	{ UNSUBSCRIBE,	"unsubcribe", 	"client unsubscribed",	1 },
-	{ GETLOGS,	"getlogs", 	"logs received",	1 },
-	{ UNKNOWN,	NULL,		"unknown command",	0 },
+/**
+ * List of operation descriptors. See structure declaration for details.
+ */
+const struct lmc_op lmc_ops[] = {
+	{ LMC_CONNECT,		"connect",	"client connected",	0 },
+	{ LMC_SUBSCRIBE,	"subscribe",	"client subscribed",	1 },
+	{ LMC_STAT,		"stat",		"received stats",	1 },
+	{ LMC_ADD,		"add",		"log added",		1 },
+	{ LMC_FLUSH,		"flush",	"logs flushed",		1 },
+	{ LMC_DISCONNECT,	"disconnect", 	"client disconnected",	1 },
+	{ LMC_UNSUBSCRIBE,	"unsubcribe", 	"client unsubscribed",	1 },
+	{ LMC_GETLOGS,		"getlogs", 	"logs received",	1 },
+	{ LMC_UNKNOWN,		NULL,		"unknown command",	0 },
 };
 
-const struct op *get_op(enum op_code code) {
+
+/**
+ * Get an operation from the list descriptor based on its code.
+ *
+ * @param code: Code of the operation identify. Must be a value from enum
+ *              lmc_op_code.
+ *
+ * @return: Always returns a valid pointer. If the code is not found in the list
+ *          the function returns the LMC_UNKNOWN's descriptor.
+ */
+const struct lmc_op *
+lmc_get_op(enum lmc_op_code code) {
 	int i;
 
-	for (i = 0; i < nitems(ops); i++)
-		if (ops[i].code == code)
-			return &ops[i];
+	for (i = 0; i < nitems(lmc_ops); i++)
+		if (lmc_ops[i].code == code)
+			return &lmc_ops[i];
 
-	return &ops[UNKNOWN];
+	return &lmc_ops[LMC_UNKNOWN];
 }
 
-const struct op *get_op_by_str(const char *str) {
+/**
+ * Get an operation from the list descriptor based on its name.
+ *
+ * @param str: Name of the operation to identify.
+ *
+ * @return: Always returns a valid pointer. If the name is not found in the list
+ *          the function returns the LMC_UNKNOWN's descriptor.
+ */
+const struct lmc_op *
+lmc_get_op_by_str(const char *str) {
 	int i;
-	const struct op *op;
+	const struct lmc_op *op;
 
-	for (i = 0; i < nitems(ops); i++) {
-		op = &ops[i];
+	for (i = 0; i < nitems(lmc_ops); i++) {
+		op = &lmc_ops[i];
 		if (op->op_str != NULL && strcmp(str, op->op_str) == 0)
 			return op;
 	}
 
-	return &ops[UNKNOWN];
+	return &lmc_ops[LMC_UNKNOWN];
 }
 
-static ssize_t xsend(SOCKET sockfd, const void *buf, size_t len, int flags)
+/**
+ * Wrapper function that transfers data over a socket. Makes sure that all
+ * requested data is transfered unless an error occurs.
+ *
+ * @param sock: Socket to transfer data over;
+ * @param buf: Source / destination buffer;
+ * @param len: Length of the buffer;
+ * @param flags: Transfer flags;
+ * @param dir: Direction of the transfer. 0 for send, 1 for recv.
+ *
+ * @return: The amount of data transfered, or -1 otherwise.
+ */
+static ssize_t
+lmc_xfer(SOCKET sock, const void *buf, size_t len, int flags, int dir)
 {
-	ssize_t total, sent_now, to_send;
+	ssize_t total, xfered, rc;
+	char *ptr = (char *)buf;
 
-	total = 0;
-	to_send = len;
-	while (total < to_send) {
-		sent_now = send(sockfd, (char *)buf + total,
-				to_send - total, flags);
-		if (sent_now < 0) {
-			total = -1;
+	total = (ssize_t) len;
+	xfered = 0;
+	while (xfered < total) {
+		if (dir == 0)
+			rc = send(sock, ptr + xfered, total - xfered, flags);
+		else
+			rc = recv(sock, ptr + xfered, total - xfered, flags);
+
+		if (rc == 0)
+			break;
+		if (rc < 0) {
+			xfered = -1;
 			break;
 		}
-		total += sent_now;
+
+		xfered += rc;
 	}
 
-	return total;
+	return xfered;
 }
 
-ssize_t send_data(SOCKET sockfd, const void *buf, size_t len, int flags)
+/**
+ * Send data over a socket. The transfer is performed in two steps - first send
+ * a message with the amount of data that the receipient should expect, and then
+ * send the data over the socket. Ensures all data is transfered unless an error
+ * occurs.
+ *
+ * @param sock: Socket to transfer data over;
+ * @param buf: Source buffer;
+ * @param len: Length of the buffer;
+ * @param flags: Transfer flags.
+ *
+ * @return: The amount of data sent, or -1 otherwise.
+ */
+ssize_t
+lmc_send(SOCKET sock, const void *buf, size_t len, int flags)
 {
-	ssize_t sent_now;
-	uint32_t buf_l = htonl((uint32_t)len);
-
-	sent_now = xsend(sockfd, &buf_l, sizeof(buf_l), flags);
-	if (sent_now < 0)
-		return sent_now;
-
-	return xsend(sockfd, buf, len, flags);
-}
-
-static ssize_t xrecv(SOCKET sockfd, void *buf, size_t len, int flags)
-{
-	ssize_t total, recv_now, to_recv;
-
-	total = 0;
-	to_recv = len;
-	while (total < to_recv) {
-		recv_now = recv(sockfd, (char *)buf + total,
-				to_recv - total, flags);
-		if (recv_now == 0)
-			break;
-		else if (recv_now < 0) {
-			total = -1;
-			break;
-		}
-		total += recv_now;
-	}
-
-	return total;
-}
-
-ssize_t recv_data(SOCKET sockfd, void *buf, size_t len, int flags)
-{
-	uint32_t pack_size;
-	ssize_t recv_now;
+	ssize_t rc;
 	uint32_t buf_l;
 
-	recv_now = xrecv(sockfd, &buf_l, sizeof(buf_l), MSG_WAITALL | flags);
+	buf_l = htonl((uint32_t)len);
+	rc = lmc_xfer(sock, &buf_l, sizeof(buf_l), flags, 0);
+	if (rc < 0)
+		return rc;
 
-	if (recv_now < 0)
-		return recv_now;
+	return lmc_xfer(sock, buf, len, flags, 0);
+}
+
+/**
+ * Receive data over a socket. The transfer is performed in two steps - first
+ * receive a message with the amount of data that the function should expect,
+ * and then receive the data over the socket. Ensures all data is transfered
+ * unless an error occurs.
+ *
+ * @param sock: Socket to transfer data over;
+ * @param buf: Destination buffer;
+ * @param len: Length of the buffer;
+ * @param flags: Transfer flags.
+ *
+ * @return: The amount of data received, or -1 otherwise.
+ */
+ssize_t
+lmc_recv(SOCKET sock, void *buf, size_t len, int flags)
+{
+	ssize_t rc;
+	uint32_t pack_size, buf_l;
+
+	buf_l = 0;
+	rc = lmc_xfer(sock, &buf_l, sizeof(buf_l), MSG_WAITALL | flags, 1);
+	if (rc < 0)
+		return rc;
 
 	pack_size = ntohl(buf_l);
-
 	if (pack_size > len)
 		return -1;
 
-	return xrecv(sockfd, buf, pack_size, flags);
+	return lmc_xfer(sock, buf, pack_size, flags, 1);
 }
 
 
 #ifdef __unix__
-
-int current_time_to_string(char *result, size_t len, const char *fmt)
+/**
+ * Convert the current time into a human-readable string.
+ *
+ * @param result: Buffer to write the format into;
+ * @param len: Length of the buffer;
+ * @param fmt: Time format string.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+int
+lmc_crttime_to_str(char *result, size_t len, const char *fmt)
 {
 	time_t t;
 	struct tm tm;
 
 	t = time(NULL);
-
 	if (localtime_r(&t, &tm) == NULL)
 		return -1;
 
@@ -149,26 +206,35 @@ int current_time_to_string(char *result, size_t len, const char *fmt)
 	return 0;
 }
 
-int check_old_logfile(char *filepath)
+/**
+ * Deprecate an old log file. If the file indicated by filepath already exists,
+ * move it so a new log file can be created.
+ *
+ * @param filepath: Path to the file to deprecate.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+int
+lmc_rotate_logfile(char *filepath)
 {
 	struct stat s;
 	int rc;
-	char timeap[TIME_SIZE];
-	char new_name[CLIENT_MAX_NAME * 4 + TIME_SIZE + 2];
+	char timeap[LMC_TIME_SIZE];
+	char new_name[LMC_CLIENT_MAX_NAME * 4 + LMC_TIME_SIZE + 2];
 
 	rc = stat(filepath, &s);
-	if (rc != 0) /* file does not exist */
+	/* file does not exist */
+	if (rc != 0)
 		return 0;
 
 	if (s.st_mode & S_IFREG) {
-		/* file exists and is regular file */
-		if (current_time_to_string(timeap, TIME_SIZE,
-				FTIME_FORMAT) != 0)
+		/* file exists and is a regular file */
+		if (lmc_crttime_to_str(timeap, LMC_TIME_SIZE, LMC_TIME_FORMAT))
 			return -1;
 
-		sprintf(new_name,"%s.%s", filepath, timeap);
+		sprintf(new_name, "%s.%s", filepath, timeap);
 		rename(filepath, new_name);
-		fprintf(stderr, "File %s was renamed in %s\n",
+		fprintf(stderr, "File %s was renamed to %s\n",
 				filepath, new_name);
 	} else {
 		/* file exists, but is not regular file */
@@ -178,42 +244,66 @@ int check_old_logfile(char *filepath)
 	return 0;
 }
 
-int init_logdir(char *logfile_path)
+/**
+ * Ensure a directory exists.
+ *
+ * @param logfile_path: Path to the directory.
+ *
+ * @return: 0 in case the directory already exists or could be created, -1
+ *          otherwise.
+ */
+int
+lmc_init_logdir(char *logfile_path)
 {
-	int rc;
 	struct stat s = {0};
 
 	stat(logfile_path, &s);
-
 	if (s.st_mode & S_IFDIR)
 		return 0;
 
-	rc = mkdir(logfile_path, 0777);
-
-	return rc;
+	return mkdir(logfile_path, 0777);
 }
 
 #elif defined(_WIN32)
-int current_time_to_string(char *result, size_t len, const char *fmt)
+/**
+ * Convert the current time into a human-readable string.
+ *
+ * @param result: Buffer to write the format into;
+ * @param len: Length of the buffer;
+ * @param fmt: Time format string.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+int
+lmc_crttime_to_str(char *result, size_t len, const char *fmt)
 {
 	time_t t;
 	struct tm tm;
 
 	t = time(NULL);
-
 	if (localtime_s(&tm, &t) != 0)
 		return -1;
 
 	if (strftime(result, len, fmt, &tm) == 0)
 		return -1;
+
 	return 0;
 }
 
-int check_old_logfile(char *filepath)
+/**
+ * Deprecate an old log file. If the file indicated by filepath already exists,
+ * move it so a new log file can be created.
+ *
+ * @param filepath: Path to the file to deprecate.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+int
+lmc_rotate_logfile(char *filepath)
 {
 	DWORD fileAttribute;
-	char timeap[TIME_SIZE];
-	char new_name[CLIENT_MAX_NAME * 4 + TIME_SIZE + 2];
+	char timeap[LMC_TIME_SIZE];
+	char new_name[LMC_CLIENT_MAX_NAME * 4 + LMC_TIME_SIZE + 2];
 
 	fileAttribute = GetFileAttributes(filepath);
 
@@ -223,13 +313,12 @@ int check_old_logfile(char *filepath)
 
 	if (fileAttribute & FILE_ATTRIBUTE_NORMAL) {
 		/* file exist, must be renamed */
-		if (current_time_to_string(timeap, TIME_SIZE,
-				FTIME_FORMAT) != 0)
+		if (lmc_crttime_to_str(timeap, LMC_TIME_SIZE, LMC_TIME_FORMAT))
 			return -1;
 
 		snprintf(new_name, MAX_PATH, "%s.%s", filepath, timeap);
 		MoveFile(filepath, new_name);
-		fprintf(stderr, "File %s was renamed in %s\n",
+		fprintf(stderr, "File %s was renamed to %s\n",
 				filepath, new_name);
 	} else {
 		/* file exist, but is not regular file */
@@ -239,7 +328,16 @@ int check_old_logfile(char *filepath)
 	return 0;
 }
 
-int init_logdir(char *logfile_path)
+/**
+ * Ensure a directory exists.
+ *
+ * @param logfile_path: Path to the directory.
+ *
+ * @return: 0 in case the directory already exists or could be created, -1
+ *          otherwise.
+ */
+int
+lmc_init_logdir(char *logfile_path)
 {
 	DWORD fileAttribute;
 

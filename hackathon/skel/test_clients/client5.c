@@ -2,31 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/logmemcache.h"
+#include "../include/lmc.h"
 
 int main() {
-	struct logmemcache_st *client;
-	struct client_logline **lines;
+	struct lmc_conn *conn;
+	struct lmc_client_logline **lines;
 	char *stats;
 	uint64_t logs, i;
-	char time[TIME_SIZE + 1];
-	char logline[LINE_SIZE - TIME_SIZE + 1];
 
-	client = logmemcache_create(NULL);
+	conn = lmc_connect(NULL);
 
-	logmemcache_add_log(client, "this is a log line");
-	logmemcache_add_log(client, "this is a log line");
-	logmemcache_add_log(client, "this is a log line");
-	logmemcache_add_log(client, "this is a log line");
+	lmc_send_log(conn, "this is a log line");
+	lmc_send_log(conn, "this is a log line");
+	lmc_send_log(conn, "this is a log line");
+	lmc_send_log(conn, "this is a log line");
 
-	stats = logmemcache_get_stats(client);
+	stats = lmc_get_stats(conn);
 	printf("%s\n", stats);
-	lines = logmemcache_get_logs(client, 0, 0, &logs);
+	lines = lmc_get_logs(conn, 0, 0, &logs);
 
 	for (i = 0; i < logs; i++) {
-		logmemcache_get_time(time, lines[i], sizeof(time));
-		logmemcache_get_logline(logline, lines[i], sizeof(logline));
-		printf("%s: %s\n", time, logline);
+		printf("%s: %s\n", lines[i]->time, lines[i]->logline);
 	}
 
 	return 0;

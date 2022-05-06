@@ -3,21 +3,21 @@ CC = cl
 LIBS = wsock32.lib mswsock.lib ws2_32.lib shlwapi.lib Psapi.lib
 LINK = link
 
-all: liblogmemcache.dll logmemcached.exe
+all: liblmc.dll lmcd.exe
 
-liblogmemcache.dll: logmemcache.obj logmemcache_os.obj utils.obj
-	$(LINK) /nologo /dll /out:$@ /def:liblogmemcache/logmemcache.def /implib:liblogmemcache.lib $** $(LIBS)
+liblmc.dll: lmc.obj lmc_os.obj utils.obj
+	$(LINK) /nologo /dll /out:$@ /def:liblmc/lmc.def /implib:liblmc.lib $** $(LIBS)
 
-logmemcache.obj: liblogmemcache/logmemcache.c
+lmc.obj: liblmc/lmc.c
 	$(CC) $(CFLAGS) /Fo$@ /c $**
 
-logmemcache_os.obj: liblogmemcache/win/logmemcache_os.c
+lmc_os.obj: liblmc/win/lmc_os.c
 	$(CC) $(CFLAGS) /Fo$@ /c $**
 
 utils.obj: utils.c
 	$(CC) $(CFLAGS) /Fo$@ /c $**
 
-logmemcached.exe: server.obj server_os.obj utils.obj
+lmcd.exe: server.obj server_os.obj utils.obj
 	$(LINK) /nologo /out:$@ $** $(LIBS)
 
 server.obj: server/server.c
@@ -29,5 +29,6 @@ server_os.obj: server/win/server_os.c
 .PHONY: clean
 clean:
 	del /Q /S *.obj
-	del /Q /S liblogmemcache.dll liblogmemcache.lib liblogmemcache.exp
-	del /Q /S logmemcached.exe
+	del /Q /S liblmc.dll liblmc.lib liblmc.exp
+	del /Q /S lmcd.exe
+	rmdir /Q /S logs_lmc

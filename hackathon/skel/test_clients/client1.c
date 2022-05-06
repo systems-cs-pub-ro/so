@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/logmemcache.h"
+#include "../include/lmc.h"
 
 
 int main() {
-	struct logmemcache_st *client;
+	struct lmc_conn *conn;
 
-	client = logmemcache_create(NULL);
-	logmemcache_unsubscribe(client);
+	conn = lmc_connect(NULL);
+	lmc_unsubscribe(conn);
 
-	printf("client = %p\n", client);
+	printf("conn = %p\n", conn);
 
 	return 0;
 }

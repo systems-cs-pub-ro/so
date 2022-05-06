@@ -3,27 +3,25 @@ SRCDIR= ..\skel
 !ENDIF
 CFLAGS = /nologo /W3 /EHsc /D_CRT_SECURE_NO_WARNINGS "-I$(SRCDIR)\include"
 CC = cl
-LIBS = $(SRCDIR)\liblogmemcache.lib
+LIBS = $(SRCDIR)\liblmc.lib
 LINK = link
 
 build: checker.exe
 
 checker.exe: checker.obj $(LIBS)
+	@copy $(SRCDIR)\liblmc.dll .
 	$(LINK) /nologo /out:$@ $** $(LIBS)
 
 checker.obj: checker.c
 	$(CC) $(CFLAGS) /Fo$@ /c $**
 
-$(SRCDIR)\liblogmemcache.lib: $(SRCDIR)\liblogmemcache.dll
+$(SRCDIR)\liblmc.lib: $(SRCDIR)\liblmc.dll
 
-$(SRCDIR)\liblogmemcache.dll: liblogmemcache
-
-liblogmemcache:
-	@cd $(SRCDIR) && $(MAKE) /F Makefile.win liblogmemcache.dll
-	@copy $(SRCDIR)\liblogmemcache.dll .\
+$(SRCDIR)\liblmc.dll:
+	@cd $(SRCDIR) && $(MAKE) /F Makefile.win liblmc.dll
 
 run: build
 	@.\checker.exe
 
 clean:
-	del /Q /S *.o *.dll checker.exe
+	del /Q /S *.obj *.dll checker.exe

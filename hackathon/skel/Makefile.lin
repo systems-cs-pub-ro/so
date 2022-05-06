@@ -3,18 +3,18 @@ CFLAGS = -fPIC -Wall
 LDLIBS = -lpthread -pthread
 
 .PHONY: build
-build: liblogmemcache.so logmemcached
+build: liblmc.so lmcd
 
-liblogmemcache.so: logmemcache.o logmemcache_os.o utils.o
+liblmc.so: lmc.o lmc_os.o utils.o
 	$(CC) $(LDFLAGS) -shared -o $@ $^
 
-logmemcache.o: liblogmemcache/logmemcache.c include/logmemcache.h include/utils.h
+lmc.o: liblmc/lmc.c include/lmc.h include/utils.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-logmemcache_os.o: liblogmemcache/lin/logmemcache_os.c include/logmemcache.h include/utils.h
+lmc_os.o: liblmc/lin/lmc_os.c include/lmc.h include/utils.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-logmemcached: server.o server_os.o utils.o
+lmcd: server.o server_os.o utils.o
 	$(CC) $(LDLIBS) -o $@ $^
 
 server.o: server/server.c include/server.h include/utils.h
@@ -28,4 +28,4 @@ utils.o: utils.c include/utils.h
 
 .PHONY: clean
 clean:
-	rm -f *.o *.so logmemcached
+	rm -rf *.o *.so lmcd logs_lmc

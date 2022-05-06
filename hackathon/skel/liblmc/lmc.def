@@ -1,0 +1,18 @@
+LIBRARY "LIBLMC"
+EXPORTS
+	lmc_connect
+	lmc_free
+	lmc_send_log
+	lmc_flush
+	lmc_disconnect
+	lmc_unsubscribe
+	lmc_get_logs
+	lmc_get_stats
+	lmc_free_buf
+	lmc_get_op
+	lmc_get_op_by_str
+	lmc_send
+	lmc_recv
+	lmc_crttime_to_str
+	lmc_rotate_logfile
+	lmc_init_logdir

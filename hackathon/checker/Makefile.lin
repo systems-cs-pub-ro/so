@@ -1,22 +1,21 @@
 SRCDIR ?= ../skel
 CC=gcc
 CFLAGS = -fPIC -Wall -I$(SRCDIR)/include
-LDFLAGS = -L../skel/
+LDLIBS = $(SRCDIR)/liblmc.so
 
-.PHONY: build clean liblogmemcache
+.PHONY: build
 build: checker
 
-checker: checker.o $(SRCDIR)/liblogmemcache.so
+checker: checker.o $(LDLIBS)
 
 checker.o: checker.c
 
-$(SRCDIR)/liblogmemcache.so: liblogmemcache
-
-liblogmemcache:
-	@$(MAKE) -C $(SRCDIR) -f Makefile.lin liblogmemcache.so
+$(LDLIBS):
+	@$(MAKE) -C $(SRCDIR) -f Makefile.lin $(foreach LIB,$(LDLIBS),$(notdir $(LIB)))
 
 run: build
 	@./checker
 
+.PHONY: clean
 clean:
 	rm -f *.o *.so checker

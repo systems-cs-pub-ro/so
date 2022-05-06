@@ -2,24 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/logmemcache.h"
+#include "../include/lmc.h"
 
 
 int main() {
-	struct logmemcache_st *client;
+	struct lmc_conn *conn;
 
-	client = logmemcache_create(NULL);
+	conn = lmc_connect(NULL);
 
-	printf("client = %p\n", client);
+	printf("conn = %p\n", conn);
 
-	if (client != NULL)
-		fprintf(stderr, "Client was created\n");
+	if (conn != NULL)
+		fprintf(stderr, "Connection was created\n");
 	else
-		fprintf(stderr, "Client was not created\n");
+		fprintf(stderr, "Connection was not created\n");
 
-	logmemcache_add_log(client, "this is a log line");
+	lmc_send_log(conn, "this is a log line");
 
-	logmemcache_disconnect(client);
+	lmc_disconnect(conn);
 
 	return 0;
 }

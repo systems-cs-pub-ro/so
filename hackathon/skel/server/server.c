@@ -17,30 +17,46 @@
 #include <windows.h>
 #endif
 
-static struct logmemcache_cache **caches;
-static size_t cache_count;
-static size_t max_caches;
-
-static SOCKET server_socket;
+static struct lmc_cache **lmc_caches;
+static size_t lmc_cache_count;
+static size_t lmc_max_caches;
 
 /* Server API */
-static void init_client_list(void)
-{
 
-	max_caches = DEFAULT_CLIENTS_NO;
-	caches = malloc(max_caches * sizeof(*caches));
+/**
+ * Initialize client cache list on the server.
+ */
+static void
+lmc_init_client_list(void)
+{
+	lmc_max_caches = LMC_DEFAULT_CLIENTS_NO;
+	lmc_caches = malloc(lmc_max_caches * sizeof(*lmc_caches));
 }
 
-static void init_server(void)
+/**
+ * Initialize server - allocate initial cache list and start listening on the
+ * server's socket.
+ */
+static void
+lmc_init_server(void)
 {
-
-	init_client_list();
-	logmemcache_init_server_os(&server_socket);
+	lmc_init_client_list();
+	lmc_init_server_os();
 }
 
-struct logmemcache_client_st *logmemcache_create_client(SOCKET client_sock)
+/**
+ * Create a client connection structure. Called to allocate the client
+ * connection structure by the code that handles the server loop.
+ *
+ * @param client_sock: Socket used to communicate with the client.
+ *
+ * @return: A pointer to a client connection structure on success,
+ *          or NULL otherwise.
+ */
+struct lmc_client *
+lmc_create_client(SOCKET client_sock)
 {
-	struct logmemcache_client_st *client;
+	struct lmc_client *client;
 
 	client = malloc(sizeof(*client));
 	client->client_sock = client_sock;
@@ -49,74 +65,158 @@ struct logmemcache_client_st *logmemcache_create_client(SOCKET client_sock)
 	return client;
 }
 
-static int logmemcache_add_client(struct logmemcache_client_st *client,
-	char *name)
+/**
+ * Handle client connect.
+ *
+ * Locate a cache entry for the client and allot it to the client connection
+ * (populate the cache field of the client connection structure).
+ * If the client already has an existing connection (and respective cache) use
+ * the same cache. Otherwise, locate a free cache.
+ *
+ * @param client: Client connection;
+ * @param name: The name (identifier) of the client.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Must be able to handle the case when all caches are occupied.
+ */
+static int
+lmc_add_client(struct lmc_client *client, char *name)
 {
 	int err = 0;
 	size_t i;
 
-	for (i = 0; i < cache_count; i++) {
-		if (caches[i] == NULL)
+	for (i = 0; i < lmc_cache_count; i++) {
+		if (lmc_caches[i] == NULL)
 			continue;
-		if (caches[i]->service_name == NULL)
+		if (lmc_caches[i]->service_name == NULL)
 			continue;
-		if (strcmp(caches[i]->service_name, name) == 0) {
-			client->cache = caches[i];
+		if (strcmp(lmc_caches[i]->service_name, name) == 0) {
+			client->cache = lmc_caches[i];
 			goto found;
 		}
 	}
 
-	if (cache_count == max_caches) {
+	if (lmc_cache_count == lmc_max_caches) {
 		return -1;
 	}
 
 	client->cache = malloc(sizeof(*client->cache));
 	client->cache->service_name = strdup(name);
-	caches[cache_count++] = client->cache;
+	lmc_caches[lmc_cache_count] = client->cache;
+	lmc_cache_count++;
 
-	err = logmemcache_init_client_cache(client->cache);
+	err = lmc_init_client_cache(client->cache);
 found:
 	return err;
 }
 
-static int logmemcache_disconnect_client(struct logmemcache_client_st *client)
+/**
+ * Handle client disconnect.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_disconnect_client(struct lmc_client *client)
 {
-
 	return 0;
 }
 
-static int logmemcache_unsubscribe_client(struct logmemcache_client_st *client)
+/**
+ * Handle unsubscription requests.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_unsubscribe_client(struct lmc_client *client)
 {
-
 	return 0;
 }
 
-static int logmemcache_add_log(struct logmemcache_client_st *client,
-	struct client_logline *log)
+/**
+ * Add a log line to the client's cache.
+ *
+ * @param client: Client connection;
+ * @param log: Log line to add to the cache.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_add_log(struct lmc_client *client, struct lmc_client_logline *log)
 {
-
 	return 0;
 }
 
-static int logmemcache_flush(struct logmemcache_client_st *client)
+/**
+ * Flush client logs to disk.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_flush(struct lmc_client *client)
 {
-
 	return 0;
 }
 
-static int logmemcache_send_stats(struct logmemcache_client_st *client)
+/**
+ * Send stats about the stored logs to the client. Must not send the actual
+ * logs, but a string formatted in LMC_STATS_FORMAT. Should contain the current
+ * time on the server, allocated memory in KBs and the number of log lines
+ * stored.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_send_stats(struct lmc_client *client)
 {
-
 	return 0;
 }
 
-static int logmemcache_send_loglines(struct logmemcache_client_st *client)
+/**
+ * Send the stored log lines to the client.
+ * The server must first send the number of lines, and then the log lines,
+ * one by one.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ *
+ * TODO: Implement proper handling logic.
+ */
+static int
+lmc_send_loglines(struct lmc_client *client)
 {
-
 	return 0;
 }
 
-static void parse_command(struct command *cmd, char *string, ssize_t *datalen)
+/**
+ * Parse a command from the client. The command must be in the following format:
+ * "cmd data", with a single space between the command and the associated data.
+ *
+ * @param cmd: Parsed command structure;
+ * @param string: Command string;
+ * @param datalen: The amount of data send with the command.
+ */
+static void
+lmc_parse_command(struct lmc_command *cmd, char *string, ssize_t *datalen)
 {
 	char *command, *line;
 
@@ -130,7 +230,7 @@ static void parse_command(struct command *cmd, char *string, ssize_t *datalen)
 		*datalen -= strlen(command) + 1;
 	}
 
-	cmd->op = get_op_by_str(command);
+	cmd->op = lmc_get_op_by_str(command);
 
 	printf("command = %s, line = %s\n", cmd->op->op_str,
 			cmd->data ? cmd->data : "null");
@@ -138,7 +238,17 @@ static void parse_command(struct command *cmd, char *string, ssize_t *datalen)
 	free(command);
 }
 
-static int validate_arg(const char *line, size_t len)
+/**
+ * Validate command argument. The command argument (data) can only contain
+ * printable ASCII characters.
+ *
+ * @param line: Command data;
+ * @param len: Length of the data string.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+static int
+lmc_validate_arg(const char *line, size_t len)
 {
 	size_t i;
 
@@ -149,14 +259,25 @@ static int validate_arg(const char *line, size_t len)
 	return 0;
 }
 
-int get_command(struct logmemcache_client_st *client)
+/**
+ * Wait for a command from the client and handle it when it is received.
+ * The server performs blocking receive operations in this function. When the
+ * command is received, parse it and then call the appropriate handling
+ * function, depending on the command.
+ *
+ * @param client: Client connection.
+ *
+ * @return: 0 in case of success, or -1 otherwise.
+ */
+int
+lmc_get_command(struct lmc_client *client)
 {
 	int err;
 	ssize_t recv_size;
-	char buffer[COMMAND_SIZE], response[LINE_SIZE];
+	char buffer[LMC_COMMAND_SIZE], response[LMC_LINE_SIZE];
 	char *reply_msg;
-	struct command cmd;
-	struct client_logline *log;
+	struct lmc_command cmd;
+	struct lmc_client_logline *log;
 
 	err = -1;
 
@@ -164,12 +285,12 @@ int get_command(struct logmemcache_client_st *client)
 	memset(buffer, 0, sizeof(buffer));
 	memset(response, 0, sizeof(response));
 
-	recv_size = recv_data(client->client_sock, buffer, sizeof(buffer), 0);
+	recv_size = lmc_recv(client->client_sock, buffer, sizeof(buffer), 0);
 	if (recv_size <= 0)
 		return -1;
 
-	parse_command(&cmd, buffer, &recv_size);
-	if (recv_size > LINE_SIZE) {
+	lmc_parse_command(&cmd, buffer, &recv_size);
+	if (recv_size > LMC_LINE_SIZE) {
 		reply_msg = "message too long";
 		goto end;
 	}
@@ -180,7 +301,7 @@ int get_command(struct logmemcache_client_st *client)
 	}
 
 	if (cmd.data != NULL) {
-		err = validate_arg(cmd.data, recv_size);
+		err = lmc_validate_arg(cmd.data, recv_size);
 		if (err != 0) {
 			reply_msg = "invalid argument provided";
 			goto end;
@@ -188,28 +309,29 @@ int get_command(struct logmemcache_client_st *client)
 	}
 
 	switch (cmd.op->code) {
-	case CONNECT:
-	case SUBSCRIBE:
-		err = logmemcache_add_client(client, cmd.data);
+	case LMC_CONNECT:
+	case LMC_SUBSCRIBE:
+		err = lmc_add_client(client, cmd.data);
 		break;
-	case STAT:
-		err = logmemcache_send_stats(client);
+	case LMC_STAT:
+		err = lmc_send_stats(client);
 		break;
-	case ADD:
+	case LMC_ADD:
+		/* TODO parse the client data and create a log line structure */
 		log = NULL;
-		err = logmemcache_add_log(client, log);
+		err = lmc_add_log(client, log);
 		break;
-	case FLUSH:
-		err = logmemcache_flush(client);
+	case LMC_FLUSH:
+		err = lmc_flush(client);
 		break;
-	case DISCONNECT:
-		err = logmemcache_disconnect_client(client);
+	case LMC_DISCONNECT:
+		err = lmc_disconnect_client(client);
 		break;
-	case UNSUBSCRIBE:
-		err = logmemcache_unsubscribe_client(client);
+	case LMC_UNSUBSCRIBE:
+		err = lmc_unsubscribe_client(client);
 		break;
-	case GETLOGS:
-		err = logmemcache_send_loglines(client);
+	case LMC_GETLOGS:
+		err = lmc_send_loglines(client);
 		break;
 	default:
 		/* unknown command */
@@ -228,26 +350,24 @@ end:
 	if (cmd.data != NULL)
 		free(cmd.data);
 
-	err = send_data(client->client_sock, response, LINE_SIZE, SEND_FLAGS);
-	if (err < 0)
-		return -1;
-
-	return err;
+	return lmc_send(client->client_sock, response, LMC_LINE_SIZE,
+			LMC_SEND_FLAGS);
 }
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	setbuf(stdout, NULL);
 
 	if (argc == 1)
-		logfile_path = strdup("logs_logmemcache");
+		lmc_logfile_path = strdup("logs_lmc");
 	else
-		logfile_path = strdup(argv[1]);
+		lmc_logfile_path = strdup(argv[1]);
 
-	if (init_logdir(logfile_path) < 0)
+	if (lmc_init_logdir(lmc_logfile_path) < 0)
 		exit(-1);
 
-	init_server();
+	lmc_init_server();
 
 	return 0;
 }

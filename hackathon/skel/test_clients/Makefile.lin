@@ -1,0 +1,38 @@
+CC=gcc
+CFLAGS = -fPIC -Wall
+LDLIBS = ../liblmc.so
+CLIENTS= client1 client2 client3 client4 client5 client6
+
+.PHONY: build
+build: $(CLIENTS)
+
+$(LDLIBS):
+	@$(MAKE) -C $(SRCDIR) -f Makefile.lin $(foreach LIB,$(LDLIBS),$(notdir $(LIB)))
+
+client1: client1.o $(LDLIBS)
+
+client1.o: client1.c
+
+client2: client2.o $(LDLIBS)
+
+client2.o: client2.c
+
+client3: client3.o $(LDLIBS)
+
+client3.o: client3.c
+
+client4: client4.o $(LDLIBS)
+
+client4.o: client4.c
+
+client5: client5.o $(LDLIBS)
+
+client5.o: client5.c
+
+client6: client6.o $(LDLIBS)
+
+client6.o: client6.c
+
+.PHONY: clean
+clean:
+	rm -f client*.o $(CLIENTS)
