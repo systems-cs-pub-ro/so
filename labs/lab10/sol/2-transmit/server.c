@@ -49,7 +49,7 @@ static void receive_file(SOCKET hSocket, HANDLE hFile)
 {
 	int n;
 	DWORD bytesWritten;
-	DWROD dwRet;
+	DWORD dwRet;
 
 	while (1) {
 		n = recv(hSocket, gBuffer, BUFSIZ, 0);
