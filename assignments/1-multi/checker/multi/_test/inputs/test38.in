@@ -1,7 +1,0 @@
-#include "test38.h"
-
-int main()
-{
-	debug;
-	return 0;
-}

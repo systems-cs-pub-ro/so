@@ -1,9 +1,0 @@
-#ifndef VAR0
-#define VAR0 1
-#endif
-
-int main()
-{
-	printf("VAR0 = %d\n", VAR0);
-	return 0;
-}

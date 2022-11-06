@@ -1,8 +1,0 @@
-#include "test35.h"
-
-int main()
-{
-	printf("VAR = %d\n", VAR);
-	return 0;
-}
-
