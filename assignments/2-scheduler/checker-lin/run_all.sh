@@ -1,5 +1,9 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 script=run_test
 max_points=95
 timeout=30
@@ -68,9 +72,9 @@ check_source()
         echo "$OUT"
         printf "00) Sources check..........................................." | tee check_source_result.txt
         if [ -z "$OUT" ]; then
-                printf "passed  [00/$max_points]\n" | tee check_source_result.txt
+                printf "${GREEN}passed${NC}  [00/$max_points]\n" | tee check_source_result.txt
         else
-                printf "failed  [00/$max_points]\n" | tee check_source_result.txt
+                printf "${RED}failed${NC}  [00/$max_points]\n" | tee check_source_result.txt
         fi
 }
 
@@ -90,12 +94,12 @@ print_header()
 
 test_do_fail()
 {
-    printf "failed  [ 0/%02d]\n" "$max_points"
+    printf "${RED}failed${NC}  [ 0/%02d]\n" "$max_points"
 }
 
 test_do_pass()
 {
-    printf "passed  [%02d/%02d]\n" "$1" "$max_points"
+    printf "${GREEN}passed${NC}  [%02d/%02d]\n" "$1" "$max_points"
 }
 
 init_world()
