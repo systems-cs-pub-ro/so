@@ -45,6 +45,13 @@ err() {
     echo "$@" >&2
 }
 
+gen_err_test() {
+    mkdir -p "$REF_DIR"
+
+    echo "Error: $CHECKER_DIR/libfictional.so solve all_my_problems could not be executed." > "$REF_DIR/test5"
+    echo "Error: $CHECKER_DIR/libbasic.so solve all_my_problems could not be executed." > "$REF_DIR/test6"
+}
+
 # arg: number_of_clients
 gen_big_test() {
     _NUMBER_OF_CLIENTS=$1
@@ -75,7 +82,7 @@ gen_big_test() {
         elif [ $((CLIENT_NUM%4)) -eq 2 ]; then
             echo "Reseted the counter!" >> $GEN_REF_FILE
         else
-            echo "Error: libfictional.so reset could not be executed." >> $GEN_REF_FILE
+            echo "Error: $CHECKER_DIR/libfictional.so reset could not be executed." >> $GEN_REF_FILE
         fi
     done
 }
@@ -183,7 +190,7 @@ kill_server_once() {
 test_simple_response() {
     local OUTPUT_FILE="$1"
 
-    if [ ${#OUTPUT_FILE} -eq 0 -o ! -s "${OUTPUT_FILE}" ]; then
+    if [ $(cat $OUTPUT_FILE | wc -w) -le 0 ]; then
         echo "No response"
     fi
 }
@@ -191,10 +198,10 @@ test_simple_response() {
 test_output_exists() {
     local OUTPUT_FILE="$1"
 
-    if [ ${#OUTPUT_FILE} -eq 0 -o ! -s "${OUTPUT_FILE}" ]; then
+    if [ $(cat $OUTPUT_FILE | wc -w) -le 0 ]; then
         echo "No response"
-    elif [ ! -f "${OUTPUT_FILE}" ]; then
-        echo "Output file (${OUTPUT_FILE}) does not exist"
+    elif [ ! -f "$(head -n1 ${OUTPUT_FILE})" ]; then
+        echo "Output file ($(head -n1 ${OUTPUT_FILE})) does not exist"
     fi
 }
 
@@ -202,13 +209,22 @@ test_output_with_ref() {
     local OUTPUT_FILE="$1"
     local REF_FILE="$2"
 
-    if [ ${#OUTPUT_FILE} -eq 0 -o ! -s "${OUTPUT_FILE}" ]; then
+    local AGGREGATE_OUT=$(mktemp "$OUTPUT_FILE.XXXXXX")
+
+    if [ $(cat $OUTPUT_FILE | wc -w) -le 0 ]; then
         echo "No response"
-    elif [ ! -f "${OUTPUT_FILE}" ]; then
-        echo "Output file (${OUTPUT_FILE}) does not exist"
+    elif [ ! -f "$(head -n1 ${OUTPUT_FILE})" ]; then
+        echo "Output file ($(head -n1 ${OUTPUT_FILE})) does not exist"
     else
-        if ! diff -q "${OUTPUT_FILE}" "${REF_FILE}" > /dev/null; then
-            echo "Output from server (${OUTPUT_FILE}) differs from reference (${REF_FILE})"
+        while read -r LINE;
+        do
+            cat "$LINE" >> "$AGGREGATE_OUT"
+        done < $OUTPUT_FILE;
+
+        if ! diff -q "${AGGREGATE_OUT}" "${REF_FILE}" > /dev/null; then
+            echo "Output from server (${AGGREGATE_OUT}) differs from reference (${REF_FILE})"
+        else
+            rm "$AGGREGATE_OUT"
         fi
     fi
 }
@@ -236,7 +252,7 @@ test_harness() {
     print_running_test $_TEST_NUMBER "$_TEST_NAME"
 
     THIS_TEST_SCORE=0
-    LIB_PATH=$(realpath "$_LIB_NAME")
+    # LIB_PATH=$(realpath "$_LIB_NAME")
     REF_FILE="${REF_DIR}/test$_TEST_NUMBER"
 
     unset CLIENT_PIDS
@@ -278,9 +294,7 @@ test_harness() {
 
         if grep -q "Output file:" "${CLIENT_OUTPUT}"; then
             OUTPUT_FILE=$(awk '{ print $3 }' "${CLIENT_OUTPUT}")
-            if [ -f "${OUTPUT_FILE}" ]; then
-                cat "${OUTPUT_FILE}" >> "${CLIENT_AGGREGATE_OUT}"
-            fi
+            echo "${OUTPUT_FILE}" >> "${CLIENT_AGGREGATE_OUT}"
         fi
 
         cat "${CLIENT_OUTPUT_ERR}" >> "${CLIENT_AGGREGATE_ERR}"
@@ -340,14 +354,14 @@ big_test() {
         # The client binary will always be in the same directory as the library.
 
         if [ $((CLIENT_NUM%4)) -eq 0 ]; then
-            timeout 1s "${CLIENT_BIN}" "libspecial.so" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
+            timeout 1s "${CLIENT_BIN}" "${CHECKER_DIR}/libspecial.so" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
         elif [ $((CLIENT_NUM%4)) -eq 1 ]; then
-            timeout 1s "${CLIENT_BIN}" "libbasic.so" "cat" "${BIG_DIR}/test_${CLIENT_NUM}" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
+            timeout 1s "${CLIENT_BIN}" "${CHECKER_DIR}/libbasic.so" "cat" "${BIG_DIR}/test_${CLIENT_NUM}" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
         elif [ $((CLIENT_NUM%4)) -eq 2 ]; then
-            timeout 1s "${CLIENT_BIN}" "libspecial.so" "reset" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
+            timeout 1s "${CLIENT_BIN}" "${CHECKER_DIR}/libspecial.so" "reset" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
         else
             # -eq 3
-            timeout 1s "${CLIENT_BIN}" "libfictional.so" "reset" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
+            timeout 1s "${CLIENT_BIN}" "${CHECKER_DIR}/libfictional.so" "reset" 1> "${CLIENT_OUTPUT}" 2> "${CLIENT_OUTPUT_ERR}" &
         fi
         CLIENT_PIDS[$CLIENT_NUM]=$!
     done
@@ -375,9 +389,7 @@ big_test() {
 
         if grep -q "Output file:" "${CLIENT_OUTPUT}"; then
             OUTPUT_FILE=$(awk '{ print $3 }' "${CLIENT_OUTPUT}")
-            if [ -f "${OUTPUT_FILE}" ]; then
-                cat "${OUTPUT_FILE}" >> "${CLIENT_AGGREGATE_OUT}"
-            fi
+            echo "${OUTPUT_FILE}" >> "${CLIENT_AGGREGATE_OUT}"
         fi
 
         cat "${CLIENT_OUTPUT_ERR}" >> "${CLIENT_AGGREGATE_ERR}"
@@ -415,22 +427,22 @@ run_tests() {
 
     TESTS=(
 
-    'test_harness         1 "Basic response"               5 test_simple_response 1    "libbasic.so"'
-    'test_harness         2 "Basic file"                   5 test_output_exists   1    "libbasic.so"'
-    'test_harness         3 "Basic file content"           5 test_output_with_ref 1    "libbasic.so"'
-    'test_harness         4 "Basic cat file content"      10 test_output_with_ref 1    "libbasic.so"      "cat"   "$CHECKER_DIR/client.c"'
+    'test_harness         1 "Basic response"               5 test_simple_response 1    "${CHECKER_DIR}/libbasic.so"'
+    'test_harness         2 "Basic file"                   5 test_output_exists   1    "${CHECKER_DIR}/libbasic.so"'
+    'test_harness         3 "Basic file content"           5 test_output_with_ref 1    "${CHECKER_DIR}/libbasic.so"'
+    'test_harness         4 "Basic cat file content"      10 test_output_with_ref 1    "${CHECKER_DIR}/libbasic.so"      "cat"   "$CHECKER_DIR/client.c"'
 
-    'test_harness         5 "Wrong library"               10 test_output_with_ref 1    "libfictional.so"  "solve" "all_my_problems"'
-    'test_harness         6 "Wrong function"              10 test_output_with_ref 1    "libbasic.so"      "solve" "all_my_problems"'
+    'test_harness         5 "Wrong library"               10 test_output_with_ref 1    "${CHECKER_DIR}/libfictional.so"  "solve" "all_my_problems"'
+    'test_harness         6 "Wrong function"              10 test_output_with_ref 1    "${CHECKER_DIR}/libbasic.so"      "solve" "all_my_problems"'
 
-    'test_harness         7 "Parallel calls"              15 test_output_with_ref 10   "libadvanced.so"   "sleepy"'
-    'test_harness         8 "Parallel calls, but cooler"  15 test_output_with_ref 100  "libspecial.so"'
+    'test_harness         7 "Parallel calls"              15 test_output_with_ref 10   "${CHECKER_DIR}/libadvanced.so"   "sleepy"'
+    'test_harness         8 "Parallel calls, but cooler"  15 test_output_with_ref 100  "${CHECKER_DIR}/libspecial.so"'
 
     'big_test             9 "Can you handle this?"        25 test_output_with_ref 1000'
 
     # Bonus tests
-    'test_harness        10 "Clumsy pointers"             10 test_output_with_ref 1     "libadvanced.so"  "clumsy"'
-    'test_harness        11 "Sleepy program"              10 test_output_with_ref 1     "libadvanced.so"  "going_to_sleep"'
+    'test_harness        10 "Clumsy pointers"             10 test_output_with_ref 1     "${CHECKER_DIR}/libadvanced.so"  "clumsy"'
+    'test_harness        11 "Sleepy program"              10 test_output_with_ref 1     "${CHECKER_DIR}/libadvanced.so"  "going_to_sleep"'
     )
 
     FIRST_TEST=1
@@ -462,6 +474,7 @@ run_tests() {
 
 main() {
     make_all
+    gen_err_test
     gen_big_test 1000
     run_tests $@
 
