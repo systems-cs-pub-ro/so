@@ -402,26 +402,60 @@ big_test() {
     kill_server_per_test
 }
 
+bad_input() {
+    err "Bad input (maybe test number out of bounds)"
+    err "Run like ./checker"
+    err "         or"
+    err "         ./checker <test_number>"
+}
+
 # actual tests
 run_tests() {
     start_server_once
 
-    test_harness         1 "Basic response"               5 test_simple_response 1    "libbasic.so"
-    test_harness         2 "Basic file"                   5 test_output_exists   1    "libbasic.so"
-    test_harness         3 "Basic file content"           5 test_output_with_ref 1    "libbasic.so"
-    test_harness         4 "Basic cat file content"      10 test_output_with_ref 1    "libbasic.so"      "cat"   "$CHECKER_DIR/client.c"
+    TESTS=(
 
-    test_harness         5 "Wrong library"               10 test_output_with_ref 1    "libfictional.so"  "solve" "all_my_problems"
-    test_harness         6 "Wrong function"              10 test_output_with_ref 1    "libbasic.so"      "solve" "all_my_problems"
+    'test_harness         1 "Basic response"               5 test_simple_response 1    "libbasic.so"'
+    'test_harness         2 "Basic file"                   5 test_output_exists   1    "libbasic.so"'
+    'test_harness         3 "Basic file content"           5 test_output_with_ref 1    "libbasic.so"'
+    'test_harness         4 "Basic cat file content"      10 test_output_with_ref 1    "libbasic.so"      "cat"   "$CHECKER_DIR/client.c"'
 
-    test_harness         7 "Parallel calls"              15 test_output_with_ref 10   "libadvanced.so"   "sleepy"
-    test_harness         8 "Parallel calls, but cooler"  15 test_output_with_ref 100  "libspecial.so"
+    'test_harness         5 "Wrong library"               10 test_output_with_ref 1    "libfictional.so"  "solve" "all_my_problems"'
+    'test_harness         6 "Wrong function"              10 test_output_with_ref 1    "libbasic.so"      "solve" "all_my_problems"'
 
-    big_test             9 "Can you handle this?"        25 test_output_with_ref 1000
+    'test_harness         7 "Parallel calls"              15 test_output_with_ref 10   "libadvanced.so"   "sleepy"'
+    'test_harness         8 "Parallel calls, but cooler"  15 test_output_with_ref 100  "libspecial.so"'
+
+    'big_test             9 "Can you handle this?"        25 test_output_with_ref 1000'
 
     # Bonus tests
-    test_harness        10 "Clumsy pointers"             10 test_output_with_ref 1     "libadvanced.so"  "clumsy"
-    test_harness        11 "Sleepy program"              10 test_output_with_ref 1     "libadvanced.so"  "going_to_sleep"
+    'test_harness        10 "Clumsy pointers"             10 test_output_with_ref 1     "libadvanced.so"  "clumsy"'
+    'test_harness        11 "Sleepy program"              10 test_output_with_ref 1     "libadvanced.so"  "going_to_sleep"'
+    )
+
+    FIRST_TEST=1
+    LAST_TEST=${#TESTS[@]}
+
+    if [ $# -eq 1 ]; then
+        if [ $1 -le $LAST_TEST -a $1 -ge 1 ]; then
+            FIRST_TEST=$1
+            LAST_TEST=$1
+        else
+            bad_input
+            return
+        fi
+    elif [ $# -eq 0 ];then
+        # is ok
+        :
+    else
+        bad_input
+        return
+    fi
+
+    for TEST_NO in `seq $FIRST_TEST $LAST_TEST`
+    do
+        eval "${TESTS[$((TEST_NO-1))]}"
+    done
 
     # stop_server_once is taken care of by trap command
 }
@@ -429,10 +463,10 @@ run_tests() {
 main() {
     make_all
     gen_big_test 1000
-    run_tests
+    run_tests $@
 
     PADDING=$(printf '.%.0s' $(eval echo {1..$(($PADDING_LEN+6))}))
     printf "Total Score%s[%+3s/%-3s]\n" $PADDING $TOTAL_SCORE $MAX_TOTAL_SCORE
 }
 
-main
+main $@
