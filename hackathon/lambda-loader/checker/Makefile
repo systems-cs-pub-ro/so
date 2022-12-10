@@ -23,4 +23,4 @@ lib%.so: %.o
 
 .PHONY: clean
 clean:
-	rm -rf *.o client *.so output ref/big ref/test9
+	rm -rf *.o client *.so output ref/big ref/test[569]
