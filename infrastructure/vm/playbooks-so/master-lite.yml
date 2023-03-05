@@ -16,5 +16,17 @@
   - name: Dev-tools setup
     include: ../playbooks-common/dev-tools.yml
 
+  - name: Docker setup
+    include: ../playbooks-common/docker.yml
+
+  - name: D setup
+    include: ../playbooks-common/dlang.yml
+
+  - name: Java setup
+    include: ../playbooks-common/java.yml
+
+  - name: SO repo setup
+    include: ../playbooks-common/utils.yml
+
   - name: Dev-tools setup
     include: dev-tools.yml
