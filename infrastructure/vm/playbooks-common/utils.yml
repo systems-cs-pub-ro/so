@@ -1,0 +1,7 @@
+- name: Clone the official OS repository
+  git:
+    repo: https://github.com/open-education-hub/operating-systems.git
+    dest: /home/student/operating-systems
+    clone: yes
+  become: true
+  become_user: student

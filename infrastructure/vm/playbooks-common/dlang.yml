@@ -1,0 +1,29 @@
+- name: "Create dlang path"
+  file:
+      path: ~/dlang
+      state: directory
+  become : true
+  become_user : student
+
+- name: "Download dlang.org/install.sh"
+  get_url:
+      url: "https://dlang.org/install.sh"
+      dest: ~/dlang/install.sh
+      mode: 0775
+  register: r_dlang
+  become : true
+  become_user : student
+
+- name: "Install dmd"
+  shell:
+      cmd: ~/dlang/install.sh install dmd && echo "source ~/dlang/dmd*/activate" >> ~/.bashrc
+      executable: /bin/bash  
+  become : true
+  become_user : student    
+  when: r_dlang.changed != false
+
+- name: Update apt and install vibe-d deps
+  apt:
+    name: ["libevent-dev", "libssl-dev"]
+    state: latest
+    update_cache: true
