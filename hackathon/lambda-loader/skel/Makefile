@@ -3,7 +3,7 @@ CFLAGS=-fPIC -Wall -Wextra
 LDFLAGS=-ldl
 OUTPUT_DIR=$(abspath ../checker/output/)
 CFLAGS+=-DOUTPUT_TEMPLATE="\"$(OUTPUT_DIR)/out-XXXXXX\""
-LDLIBS=.$(abspath ./libipc.so)
+LDLIBS=$(abspath ./libipc.so)
 
 build: outdir server
 
