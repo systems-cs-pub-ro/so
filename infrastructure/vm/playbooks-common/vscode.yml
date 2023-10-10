@@ -1,0 +1,20 @@
+- name: Add VSCode key
+  apt_key:
+    id: EB3E94ADBE1229CF
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+
+- name: Add VSCode repo
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    filename: vscode
+    state: present
+
+## SQLite3 is used to fix VSCode's default configuration file.
+## By default, when it first starts it opens a browser window.
+
+- name: Install VSCode
+  apt:
+    name: ['code']
+    state: present
+    update_cache: yes

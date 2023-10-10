@@ -4,11 +4,21 @@
 
   vars:
     username: "student"
-    hostname: "so-vm-lite"
+    hostname: "so-vm"
+    interface: "gui"
 
   tasks:
+
+  - name: update apt cache on ubuntu
+    become: true
+    apt:
+      update_cache: yes
+
   - name: Basic setup
-    include: basic.yml
+    include: ../playbooks-common/basic.yml
+
+  - name: Install dependencies
+    include: ../playbooks-common/dependencies.yml
 
   - name: Reboot the machine
     reboot:
@@ -18,6 +28,9 @@
 
   - name: Docker setup
     include: ../playbooks-common/docker.yml
+
+  - name: Ltrace setup
+    include: ../playbooks-common/ltrace.yml
 
   - name: D setup
     include: ../playbooks-common/dlang.yml
@@ -30,3 +43,7 @@
 
   - name: Dev-tools setup
     include: dev-tools.yml
+
+  - name: VSCode setup
+    include: ../playbooks-common/vscode.yml
+  

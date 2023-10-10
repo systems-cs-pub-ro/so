@@ -1,0 +1,13 @@
+- name: Clone ltrace
+  git:
+    repo: https://gitlab.com/cespedes/ltrace.git 
+    dest: /build/ltrace
+    clone: yes
+    version: 5cffc0d2134f697fbac8627ec5b5f0085cd47c8a
+  become: true
+  become_user: root
+
+- name: Configure ltrace
+  command:  bash -lc "cd /build/ltrace && ./autogen.sh  && ./configure --prefix=/usr --sysconfdir=/etc && make && make install"
+  become: true
+  become_user: root
