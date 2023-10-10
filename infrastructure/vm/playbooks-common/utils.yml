@@ -1,6 +1,6 @@
 - name: Clone the official OS repository
   git:
-    repo: https://github.com/open-education-hub/operating-systems.git
+    repo: https://github.com/cs-pub-ro/operating-systems.git
     dest: /home/student/operating-systems
     clone: yes
   become: true

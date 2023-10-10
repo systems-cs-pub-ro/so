@@ -1,13 +1,60 @@
 - name: Install helper packages (driver-level)
   apt:
-    # open-vm-tools are necessary for exporting to VMware
     name: ['virtualbox-guest-dkms', 'open-vm-tools', 'acl']
     state: present
     update_cache: yes
 
+# 'dpkg_selections' requires having 'dselect' already installed
+- name: Install 'dselect'
+  apt:
+    name: dselect
+    state: present
+
+# 'dselect' requires an up-to-date database
+- name: Update 'dselect' database
+  shell: dselect update
+
+# 'gnome-shell' pulls a lot of other packages - blacklisting it
+- name: Blacklist 'gnome-shell'
+  dpkg_selections:
+    name: gnome-shell
+    selection: hold
+
+- name: Install desktop environment
+  apt:
+    name: ['xubuntu-desktop', 'xfce4-goodies', 'network-manager']
+    state: present
+    install_recommends: no
+  when: interface == "gui"
+
+- name: Make the lightdm-cache-folder
+  file:
+    path: /var/lib/lightdm/.cache/lightdm-gtk-greeter/
+    state: directory
+  when: interface == "gui"
+
+- name: Set the 'student' user as default
+  copy:
+    dest: /var/lib/lightdm/.cache/lightdm-gtk-greeter/state
+    content: |
+      [greeter]
+      last-user={{ username }}
+  when: interface == "gui"
+
+- name: Disable auto-zoom
+  lineinfile:
+    path: /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
+    line: <property name="zoom_desktop" type="bool" value="false">
+    insertafter: .*wrap_workspaces.*
+  when: interface == "gui"
+
+- name: Install helper packages (GUI)
+  apt:
+    name: ['virtualbox-guest-x11', 'open-vm-tools-desktop']
+    state: present
+  when: interface == "gui"
+
 - name: Upgrade all the packages
   apt:
-    update_cache: yes
-    force_apt_get: yes
-    upgrade: dist
+    upgrade: yes
     autoclean: yes
