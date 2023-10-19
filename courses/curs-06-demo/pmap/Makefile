@@ -1,0 +1,15 @@
+CC = gcc
+CPPFLAGS = -I../utils
+CFLAGS = -Wall -Wextra -g
+
+.PHONY: all clean
+
+all: pmap
+
+pmap: pmap.o
+
+pmap.o: pmap.c ../utils/utils.h
+
+
+clean:
+	-rm -f *.o *~ pmap

@@ -1,0 +1,14 @@
+CC = gcc
+CPPFLAGS = -I../utils
+CFLAGS = -Wall -Wextra -g
+
+.PHONY: all clean
+
+all: stdout-stderr
+
+stdout-stderr: stdout-stderr.o
+
+open.o: stdout-stderr.c
+
+clean:
+	-rm -f *.o *~ stdout-stderr
