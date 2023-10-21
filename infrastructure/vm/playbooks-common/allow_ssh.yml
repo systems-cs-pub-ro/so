@@ -1,0 +1,11 @@
+- name: Allow PasswordAuthentication in sshd config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication.*no'
+    line: 'PasswordAuthentication=yes'
+  notify: restart_sshd
+
+- name: restart_sshd
+  service:
+    name: sshd
+    state: restarted

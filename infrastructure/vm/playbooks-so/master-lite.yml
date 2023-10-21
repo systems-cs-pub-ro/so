@@ -46,4 +46,12 @@
 
   - name: VSCode setup
     include: ../playbooks-common/vscode.yml
-  
+
+  - name: Basic setup
+    include: ../playbooks-common/allow_ssh.yml 
+
+  handlers:
+  - name: restart_sshd
+    service:
+      name: sshd
+      state: restarted

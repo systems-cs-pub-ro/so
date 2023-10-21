@@ -1,6 +1,6 @@
 - name: Install helper packages (driver-level)
   apt:
-    name: ['virtualbox-guest-dkms', 'open-vm-tools', 'acl']
+    name: ['open-vm-tools', 'acl']
     state: present
     update_cache: yes
 

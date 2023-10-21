@@ -1,6 +1,6 @@
 - name: Install misc tools
   apt:
-    name: ['sudo', 'man', 'git', 'tmux', 'wget', 'curl', 'linux-tools-5.15.0-60-generic', 
+    name: ['sudo', 'man', 'git', 'tmux', 'wget', 'curl', 'linux-tools-5.15.0-75-generic', 
     'build-essential', 'golang', 'nasm', 'strace', 'ltrace', 'gawk', 'gdc', 'busybox-static',
     'valgrind', 'libjemalloc-dev', 'default-jre', 'lsof', 'bind9-host', 'net-tools', 'netcat',
     'libssl-dev', 'cmake', 'libboost-context-dev', 'libboost-fiber-dev', 'automake', 'autoconf',
